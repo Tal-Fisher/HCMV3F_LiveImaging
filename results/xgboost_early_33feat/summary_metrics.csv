@@ -1,0 +1,13 @@
+metric,value
+AUC-ROC,0.683
+Spearman rho,0.2291
+Permutation p-value,0.002
+Sensitivity,0.74
+Specificity,0.521
+Balanced acc,0.631
+n_cells,497.0
+n_features,33.0
+TP (early correct),57.0
+FN (early missed),20.0
+TN (rest correct),219.0
+FP (rest as early),201.0

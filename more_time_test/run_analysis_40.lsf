@@ -1,0 +1,27 @@
+#!/bin/bash
+#BSUB -J more_time_test_40
+#BSUB -q long
+#BSUB -n 2
+#BSUB -R "rusage[mem=8000]"
+#BSUB -W 4:00
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/more_time_test/logs/run_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/more_time_test/logs/run_%J.err
+
+set -e
+
+module load R/4.4.2-gfbf-2024a
+
+mkdir -p /home/labs/ginossar/talfis/LiveImaging/more_time_test/logs
+
+cd /home/labs/ginossar/talfis/LiveImaging/more_time_test
+
+echo "=== Step 1: feature extraction A2 (40-frame window) ==="
+Rscript 04_features_40.R A2
+
+echo "=== Step 2: feature extraction A3 (40-frame window) ==="
+Rscript 04_features_40.R A3
+
+echo "=== Step 3: combine A2+A3, run models ==="
+Rscript 05_combine_and_model_40.R
+
+echo "=== Done. Figures in more_time_test/figures/combined/ ==="

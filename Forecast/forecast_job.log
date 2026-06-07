@@ -1,0 +1,417 @@
+Job started: Sun May 10 01:09:51 PM IDT 2026
+Host: hgn41.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+Loading frame timing ...
+  Train cells: 372, Test cells: 125
+Calibrating mCherry threshold ...
+  mCherry red threshold (median at red onset, training cells): 2.302
+
+Building test windows ...
+  Test windows: 4,388
+
+Horizon H=10 (150 min): 4,011 windows
+  context_df shape: (64176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=10) ...
+Job finished: Sun May 10 01:11:12 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 547762: <tabicl_forecast> in cluster <wexac> Done
+
+Job <tabicl_forecast> was submitted from host <login4> by user <talfis> in cluster <wexac> at Sun May 10 13:09:42 2026
+Job was executed on host(s) <1*hgn41>, in queue <short-gpu>, as user <talfis> in cluster <wexac> at Sun May 10 13:09:43 2026
+                            <2*hgn43>
+                            <1*hgn60>
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis/LiveImaging/Forecast> was used as the working directory.
+Started at Sun May 10 13:09:43 2026
+Terminated at Sun May 10 13:11:13 2026
+Results reported at Sun May 10 13:11:13 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q short-gpu
+#BSUB -gpu num=1:gmem=8G
+#BSUB -J tabicl_forecast
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err
+#BSUB -n 4
+
+PYTHON=/home/labs/ginossar/talfis/envs/tabicl_forecast/bin/python3.12
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/Forecast/03_run_forecaster.py
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   76.59 sec.
+    Max Memory :                                 3857 MB
+    Average Memory :                             1870.86 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              15
+    Max Threads :                                19
+    Run time :                                   90 sec.
+    Turnaround time :                            91 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err> for stderr output of this job.
+
+Job started: Sun May 10 01:15:08 PM IDT 2026
+Host: hgn41.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+Loading frame timing ...
+  Train cells: 372, Test cells: 125
+Calibrating mCherry threshold ...
+  mCherry red threshold (median at red onset, training cells): 2.302
+
+Building test windows ...
+  Test windows: 4,388
+
+Horizon H=10 (150 min): 4,011 windows
+  context_df shape: (64176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=10) ...
+  Predictions shape: (40110, 10)
+Job finished: Sun May 10 02:30:17 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 549908: <tabicl_forecast> in cluster <wexac> Done
+
+Job <tabicl_forecast> was submitted from host <login4> by user <talfis> in cluster <wexac> at Sun May 10 13:15:00 2026
+Job was executed on host(s) <1*hgn41>, in queue <short-gpu>, as user <talfis> in cluster <wexac> at Sun May 10 13:15:01 2026
+                            <3*hgn49>
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis/LiveImaging/Forecast> was used as the working directory.
+Started at Sun May 10 13:15:01 2026
+Terminated at Sun May 10 14:30:17 2026
+Results reported at Sun May 10 14:30:17 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q short-gpu
+#BSUB -gpu num=1:gmem=8G
+#BSUB -J tabicl_forecast
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err
+#BSUB -n 4
+
+PYTHON=/home/labs/ginossar/talfis/envs/tabicl_forecast/bin/python3.12
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/Forecast/03_run_forecaster.py
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   4472.26 sec.
+    Max Memory :                                 5450 MB
+    Average Memory :                             5110.93 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              15
+    Max Threads :                                19
+    Run time :                                   4520 sec.
+    Turnaround time :                            4517 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err> for stderr output of this job.
+
+Job started: Sun May 10 02:35:46 PM IDT 2026
+Host: hgn43.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+Loading frame timing ...
+  Train cells: 372, Test cells: 125
+  Saved train_test_split.csv
+Calibrating mCherry threshold ...
+  mCherry red threshold (median at red onset, training cells): 2.302
+
+Building test windows ...
+  Test windows: 4,388
+Saved forecaster object → tabicl_forecaster.pkl
+
+Horizon H=10 (150 min): 4,011 windows
+  context_df shape: (64176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=10) ...
+  Predictions shape: (40110, 10)
+  Saved predictions_h010.csv (4,011 rows)
+  Overall  MAE=987.8 min  RMSE=1216.1 min
+    early     n= 102  MAE=185.0  RMSE=215.9 min
+    medium    n=1,593  MAE=660.0  RMSE=779.6 min
+    late      n=2,316  MAE=1248.6  RMSE=1463.2 min
+
+Horizon H=50 (750 min): 2,559 windows
+  context_df shape: (40944, 12)
+  Running TabICLForecaster.predict_df(prediction_length=50) ...
+Job started: Sun May 10 03:50:14 PM IDT 2026
+Host: hgn60.wexac.weizmann.ac.il
+GPU: NVIDIA A100-SXM4-80GB
+NVIDIA A100-SXM4-80GB
+NVIDIA A100-SXM4-80GB
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+Loading frame timing ...
+  Train cells: 372, Test cells: 125
+  Saved train_test_split.csv
+Calibrating mCherry threshold ...
+  mCherry red threshold (median at red onset, training cells): 2.302
+
+Building test windows ...
+  Test windows: 4,388
+Saved forecaster object → tabicl_forecaster.pkl
+
+Horizon H=10 (150 min): 4,011 windows
+  context_df shape: (64176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=10) ...
+  Predictions shape: (40110, 10)
+  Saved predictions_h010.csv (4,011 rows)
+  Overall  MAE=987.8 min  RMSE=1216.1 min
+    early     n= 102  MAE=185.0  RMSE=215.9 min
+    medium    n=1,593  MAE=660.0  RMSE=779.6 min
+    late      n=2,316  MAE=1248.6  RMSE=1463.2 min
+
+Horizon H=50 (750 min): 2,559 windows
+  context_df shape: (40944, 12)
+  Running TabICLForecaster.predict_df(prediction_length=50) ...
+  Predictions shape: (127950, 10)
+  Saved predictions_h050.csv (2,559 rows)
+  Overall  MAE=797.9 min  RMSE=993.8 min
+    medium    n= 812  MAE=431.4  RMSE=527.7 min
+    late      n=1,747  MAE=968.2  RMSE=1147.7 min
+
+Horizon H=100 (1500 min): 1,136 windows
+  context_df shape: (18176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=100) ...
+  Predictions shape: (127950, 10)
+  Saved predictions_h050.csv (2,559 rows)
+  Overall  MAE=797.9 min  RMSE=993.8 min
+    medium    n= 812  MAE=431.4  RMSE=527.7 min
+    late      n=1,747  MAE=968.2  RMSE=1147.7 min
+
+Horizon H=100 (1500 min): 1,136 windows
+  context_df shape: (18176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=100) ...
+  Predictions shape: (113600, 10)
+  Saved predictions_h100.csv (1,136 rows)
+  Overall  MAE=591.9 min  RMSE=763.6 min
+    medium    n= 104  MAE=188.7  RMSE=339.0 min
+    late      n=1,032  MAE=632.5  RMSE=793.9 min
+
+Saved eval_summary.csv
+All done.
+Job finished: Sun May 10 04:59:21 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 578811: <tabicl_forecast> in cluster <wexac> Done
+
+Job <tabicl_forecast> was submitted from host <login4> by user <talfis> in cluster <wexac> at Sun May 10 15:50:05 2026
+Job was executed on host(s) <3*hgn60>, in queue <long-gpu>, as user <talfis> in cluster <wexac> at Sun May 10 15:50:05 2026
+                            <1*hgn43>
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis> was used as the working directory.
+Started at Sun May 10 15:50:05 2026
+Terminated at Sun May 10 16:59:23 2026
+Results reported at Sun May 10 16:59:23 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q long-gpu
+#BSUB -gpu num=1:gmem=8G
+#BSUB -J tabicl_forecast
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err
+#BSUB -n 4
+
+PYTHON=/home/labs/ginossar/talfis/envs/tabicl_forecast/bin/python3.12
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/Forecast/03_run_forecaster.py
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   12217.00 sec.
+    Max Memory :                                 5719 MB
+    Average Memory :                             5287.50 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              15
+    Max Threads :                                25
+    Run time :                                   4157 sec.
+    Turnaround time :                            4158 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err> for stderr output of this job.
+
+Job started: Sun May 10 05:23:41 PM IDT 2026
+Host: hgn43.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+Loading frame timing ...
+  Train cells: 372, Test cells: 125
+  Saved train_test_split.csv
+Calibrating mCherry threshold ...
+  mCherry red threshold (median at red onset, training cells): 2.302
+
+Building test windows ...
+  Test windows: 4,388
+Saved forecaster object → tabicl_forecaster.pkl
+
+Horizon H=10 (150 min): 4,011 windows
+  context_df shape: (64176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=10) ...
+  Predictions shape: (40110, 10)
+  Saved predictions_h010.csv (4,011 rows)
+  Overall  MAE=987.8 min  RMSE=1216.1 min
+    early     n= 102  MAE=185.0  RMSE=215.9 min
+    medium    n=1,593  MAE=660.0  RMSE=779.6 min
+    late      n=2,316  MAE=1248.6  RMSE=1463.2 min
+
+Horizon H=50 (750 min): 2,559 windows
+  context_df shape: (40944, 12)
+  Running TabICLForecaster.predict_df(prediction_length=50) ...
+  Predictions shape: (127950, 10)
+  Saved predictions_h050.csv (2,559 rows)
+  Overall  MAE=797.9 min  RMSE=993.8 min
+    medium    n= 812  MAE=431.4  RMSE=527.7 min
+    late      n=1,747  MAE=968.2  RMSE=1147.7 min
+
+Horizon H=100 (1500 min): 1,136 windows
+  context_df shape: (18176, 12)
+  Running TabICLForecaster.predict_df(prediction_length=100) ...
+  Predictions shape: (113600, 10)
+  Saved predictions_h100.csv (1,136 rows)
+  Overall  MAE=591.9 min  RMSE=763.6 min
+    medium    n= 104  MAE=188.7  RMSE=339.0 min
+    late      n=1,032  MAE=632.5  RMSE=793.9 min
+
+Saved eval_summary.csv
+All done.
+Job finished: Sun May 10 06:53:30 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 567351: <tabicl_forecast> in cluster <wexac> Done
+
+Job <tabicl_forecast> was submitted from host <login4> by user <talfis> in cluster <wexac> at Sun May 10 14:35:39 2026
+Job was executed on host(s) <2*hgn43>, in queue <short-gpu>, as user <talfis> in cluster <wexac> at Sun May 10 17:23:34 2026
+                            <1*dgn07>
+                            <1*hgn33>
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis/LiveImaging/Forecast> was used as the working directory.
+Started at Sun May 10 17:23:34 2026
+Terminated at Sun May 10 18:53:31 2026
+Results reported at Sun May 10 18:53:31 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q short-gpu
+#BSUB -gpu num=1:gmem=8G
+#BSUB -J tabicl_forecast
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err
+#BSUB -n 4
+
+PYTHON=/home/labs/ginossar/talfis/envs/tabicl_forecast/bin/python3.12
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/Forecast/03_run_forecaster.py
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   20315.43 sec.
+    Max Memory :                                 5657 MB
+    Average Memory :                             5271.11 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              15
+    Max Threads :                                22
+    Run time :                                   5397 sec.
+    Turnaround time :                            15472 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_job.err> for stderr output of this job.
+

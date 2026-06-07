@@ -1,0 +1,2 @@
+task,n_dims,n,cv_r2,cv_r,cv_mae,n_nonzero,ref_gfp_r
+regression_b2r_top20,20,175,-0.0719,-0.0126,723.8,0,0.297

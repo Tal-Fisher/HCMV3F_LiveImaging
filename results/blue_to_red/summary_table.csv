@@ -1,0 +1,7 @@
+Method,Target,Pearson r,Spearman r,R²
+ElasticNet,Green→Red,0.3,0.294,0.09
+ElasticNet,Blue→Red,0.285,0.28,0.081
+XGBoost,Green→Red,0.347,0.349,0.061
+XGBoost,Blue→Red,0.323,0.322,0.042
+TabICL,Green→Red,0.398,0.377,0.158
+TabICL,Blue→Red,0.382,0.362,0.146

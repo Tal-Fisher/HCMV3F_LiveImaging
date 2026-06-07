@@ -1,0 +1,125 @@
+Job started: Sun May 10 02:57:02 PM IDT 2026
+Host: cn394.wexac.weizmann.ac.il
+Job finished: Sun May 10 02:57:02 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 569503: <perm_test> in cluster <wexac> Done
+
+Job <perm_test> was submitted from host <login4> by user <talfis> in cluster <wexac> at Sun May 10 14:56:57 2026
+Job was executed on host(s) <1*cn394>, in queue <short>, as user <talfis> in cluster <wexac> at Sun May 10 14:56:58 2026
+                            <1*cn381>
+                            <2*cn372>
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis> was used as the working directory.
+Started at Sun May 10 14:56:58 2026
+Terminated at Sun May 10 14:57:02 2026
+Results reported at Sun May 10 14:57:02 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q short
+#BSUB -J perm_test
+#BSUB -n 4
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/scripts/permtest_job.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/scripts/permtest_job.err
+
+module load R/4.3.1-foss-2022b
+
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/scripts/05b_permutation_test.R
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+Rscript $SCRIPT
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   3.47 sec.
+    Max Memory :                                 14 MB
+    Average Memory :                             14.00 MB
+    Total Requested Memory :                     4096.00 MB
+    Delta Memory :                               4082.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   4 sec.
+    Turnaround time :                            5 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/scripts/permtest_job.err> for stderr output of this job.
+
+Job started: Sun May 10 02:57:40 PM IDT 2026
+Host: cn381.wexac.weizmann.ac.il
+Job finished: Sun May 10 02:57:40 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 569583: <perm_test> in cluster <wexac> Done
+
+Job <perm_test> was submitted from host <login4> by user <talfis> in cluster <wexac> at Sun May 10 14:57:35 2026
+Job was executed on host(s) <3*cn381>, in queue <short>, as user <talfis> in cluster <wexac> at Sun May 10 14:57:36 2026
+                            <1*cn394>
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis> was used as the working directory.
+Started at Sun May 10 14:57:36 2026
+Terminated at Sun May 10 14:57:40 2026
+Results reported at Sun May 10 14:57:40 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q short
+#BSUB -J perm_test
+#BSUB -n 4
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/scripts/permtest_job.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/scripts/permtest_job.err
+
+module load R/4.4.2-gfbf-2024a
+
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/scripts/05b_permutation_test.R
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+Rscript $SCRIPT
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   2.82 sec.
+    Max Memory :                                 12 MB
+    Average Memory :                             12.00 MB
+    Total Requested Memory :                     4096.00 MB
+    Delta Memory :                               4084.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   11 sec.
+    Turnaround time :                            5 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/scripts/permtest_job.err> for stderr output of this job.
+

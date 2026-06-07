@@ -1,0 +1,93 @@
+Job started: Thu May 14 01:58:11 PM IDT 2026
+Host: hgn36.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+NVIDIA A40
+NVIDIA A40
+NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+Loading frame timing ...
+  Train: 372  Test: 125
+Calibrating mCherry threshold ...
+  RED_THRESHOLD = 2.302
+
+Building test windows ...
+  Test windows: 4,388
+Saved tabicl_forecaster_h001.pkl
+
+Horizon H=1 (15 min): 4,369 windows
+  context_df shape: (69904, 12)
+  Running predict_df(prediction_length=1) ...
+  Predictions shape: (4369, 10)
+Saved trajectories_h001.npz
+Saved predictions_h001.csv (4,369 rows)
+
+Overall  MAE=0.0717  RMSE=0.1137
+  early     n= 153  MAE=0.1014  RMSE=0.1785  naive_MAE(last)=0.0984
+  medium    n=1,770  MAE=0.0845  RMSE=0.1338  naive_MAE(last)=0.0753
+  late      n=2,446  MAE=0.0607  RMSE=0.0902  naive_MAE(last)=0.0574
+Saved forecast_scatter_h001.png
+
+All done.
+Job finished: Thu May 14 02:21:28 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 225506: <tabicl_h001> in cluster <wexac> Done
+
+Job <tabicl_h001> was submitted from host <login4> by user <talfis> in cluster <wexac> at Thu May 14 13:58:06 2026
+Job was executed on host(s) <4*hgn36>, in queue <long-gpu>, as user <talfis> in cluster <wexac> at Thu May 14 13:58:07 2026
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis/LiveImaging/Forecast> was used as the working directory.
+Started at Thu May 14 13:58:07 2026
+Terminated at Thu May 14 14:21:28 2026
+Results reported at Thu May 14 14:21:28 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q long-gpu
+#BSUB -gpu num=1:gmem=8G
+#BSUB -J tabicl_h001
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_h001.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_h001.err
+#BSUB -n 4
+
+PYTHON=/home/labs/ginossar/talfis/envs/tabicl_forecast/bin/python3.12
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/Forecast/03_run_forecaster_h001.py
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   5392.00 sec.
+    Max Memory :                                 5463 MB
+    Average Memory :                             5068.62 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              15
+    Max Threads :                                28
+    Run time :                                   1401 sec.
+    Turnaround time :                            1402 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_h001.err> for stderr output of this job.
+

@@ -1,0 +1,102 @@
+Job started: Sun May 17 10:59:13 AM IDT 2026
+Host: hgn42.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+NVIDIA A40
+NVIDIA A40
+NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+  Test cells: 125
+
+Building windows ...
+  Total windows: 7,092
+    early   : 883
+    medium  : 3,202
+    late    : 3,007
+
+Building context_df ...
+  context_df shape: (113472, 12)
+Saved tabicl_forecaster_allwindows_h005.pkl
+Running predict_df(prediction_length=5) ...
+  Predictions shape: (35460, 10)
+Saved trajectories_allwindows_h005.npz
+Saved predictions_allwindows_h005.csv (7,092 rows)
+
+=== Evaluation ===
+Overall  MAE=0.2494  RMSE=0.9476  naive_MAE=0.2272  skill=-0.098
+  early     n= 883  MAE=0.4173  RMSE=1.3189  naive_MAE=0.3748  skill=-0.113
+  medium    n=3,202  MAE=0.2902  RMSE=1.0761  naive_MAE=0.2619  skill=-0.108
+  late      n=3,007  MAE=0.1567  RMSE=0.6114  naive_MAE=0.1470  skill=-0.066
+Saved eval_allwindows_h005.csv
+
+Generating PDF ...
+  Page 1/5 done
+  Page 2/5 done
+  Page 3/5 done
+  Page 4/5 done
+  Page 5/5 done
+Saved /home/labs/ginossar/talfis/LiveImaging/Forecast/windows_allwindows_h005_100examples.pdf
+
+All done.
+Job finished: Sun May 17 11:32:08 AM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 568387: <tabicl_h005> in cluster <wexac> Done
+
+Job <tabicl_h005> was submitted from host <login4> by user <talfis> in cluster <wexac> at Sun May 17 10:59:04 2026
+Job was executed on host(s) <4*hgn42>, in queue <long-gpu>, as user <talfis> in cluster <wexac> at Sun May 17 10:59:06 2026
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis/LiveImaging/Forecast> was used as the working directory.
+Started at Sun May 17 10:59:06 2026
+Terminated at Sun May 17 11:32:08 2026
+Results reported at Sun May 17 11:32:08 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q long-gpu
+#BSUB -gpu num=1:gmem=8G
+#BSUB -J tabicl_h005
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/Forecast/allwindows_h005.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/Forecast/allwindows_h005.err
+#BSUB -n 4
+
+PYTHON=/home/labs/ginossar/talfis/envs/tabicl_forecast/bin/python3.12
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/Forecast/05_run_forecaster_allwindows_h005.py
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   7487.08 sec.
+    Max Memory :                                 5546 MB
+    Average Memory :                             5039.57 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              15
+    Max Threads :                                28
+    Run time :                                   1983 sec.
+    Turnaround time :                            1984 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/Forecast/allwindows_h005.err> for stderr output of this job.
+

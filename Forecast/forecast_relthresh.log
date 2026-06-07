@@ -1,0 +1,187 @@
+Job started: Mon May 11 02:26:48 PM IDT 2026
+Host: hgn25.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+  Train: 372, Test: 125
+  Absolute threshold (reference): 2.302
+
+============================================================
+Horizon H=10 (150 min = 2 h)
+  Qualifying windows: 4,011
+  context_df: (64176, 12)    Running TabICLForecaster.predict_df(H=10) ...
+  Predictions done.
+  Saved predictions_relthresh_h010.csv (4,011 rows)
+  Saved trajectories_h010.npz (4011 trajectories)
+
+  Method                unique  cap%     MAE    RMSE
+  -------------------------------------------------------
+  absolute                 11   94.9%    987.8   1216.1 min
+  k=2                      11   85.4%    999.2   1226.9 min
+  k=3                      10   97.8%    983.4   1215.2 min
+  k=5                       1  100.0%    980.8   1213.1 min
+
+  Group breakdown  (k=3):
+    early     n= 102  MAE=161.5  RMSE=197.7 min
+    medium    n=1,593  MAE=652.9  RMSE=776.6 min
+    late      n=2,316  MAE=1247.0  RMSE=1463.2 min
+  Saved forecast_scatter_relthresh_h010.png
+
+============================================================
+Horizon H=50 (750 min = 12 h)
+  Qualifying windows: 2,559
+  context_df: (40944, 12)    Running TabICLForecaster.predict_df(H=50) ...
+Job started: Mon May 11 05:06:08 PM IDT 2026
+Host: hgn25.wexac.weizmann.ac.il
+GPU: NVIDIA A40
+Loading tensors ...
+  497 cells, tensor shape (497, 275, 9)
+  Train: 372, Test: 125
+  Absolute threshold (reference): 2.302
+
+============================================================
+Horizon H=10 (150 min = 2 h)
+  Qualifying windows: 4,011
+  context_df: (64176, 12)    Running TabICLForecaster.predict_df(H=10) ...
+  Predictions done.
+  Saved predictions_relthresh_h010.csv (4,011 rows)
+  Saved trajectories_h010.npz (4011 trajectories)
+
+  Method                unique  cap%     MAE    RMSE
+  -------------------------------------------------------
+  absolute                 11   94.9%    987.8   1216.1 min
+  k=2                      11   85.4%    999.2   1226.9 min
+  k=3                      10   97.8%    983.4   1215.2 min
+  k=5                       1  100.0%    980.8   1213.1 min
+
+  Group breakdown  (k=3):
+    early     n= 102  MAE=161.5  RMSE=197.7 min
+    medium    n=1,593  MAE=652.9  RMSE=776.6 min
+    late      n=2,316  MAE=1247.0  RMSE=1463.2 min
+  Saved forecast_scatter_relthresh_h010.png
+
+============================================================
+Horizon H=50 (750 min = 12 h)
+  Qualifying windows: 2,559
+  context_df: (40944, 12)    Running TabICLForecaster.predict_df(H=50) ...
+  Predictions done.
+  Saved predictions_relthresh_h050.csv (2,559 rows)
+  Saved trajectories_h050.npz (2559 trajectories)
+
+  Method                unique  cap%     MAE    RMSE
+  -------------------------------------------------------
+  absolute                 21   97.0%    797.9    993.8 min
+  k=2                      40   82.8%    889.5   1093.8 min
+  k=3                      21   97.1%    795.8    997.1 min
+  k=5                       1  100.0%    777.3    975.6 min
+
+  Group breakdown  (k=3):
+    medium    n= 812  MAE=414.3  RMSE=518.4 min
+    late      n=1,747  MAE=973.1  RMSE=1153.9 min
+  Saved forecast_scatter_relthresh_h050.png
+
+============================================================
+Horizon H=100 (1500 min = 25 h)
+  Qualifying windows: 1,136
+  context_df: (18176, 12)    Running TabICLForecaster.predict_df(H=100) ...
+  Predictions done.
+  Saved predictions_relthresh_h100.csv (1,136 rows)
+  Saved trajectories_h100.npz (1136 trajectories)
+
+  Method                unique  cap%     MAE    RMSE
+  -------------------------------------------------------
+  absolute                 15   97.9%    591.9    763.6 min
+  k=2                      47   81.0%    806.3   1051.9 min
+  k=3                      21   96.2%    612.9    797.8 min
+  k=5                       1  100.0%    569.7    721.4 min
+
+  Group breakdown  (k=3):
+    medium    n= 104  MAE=248.0  RMSE=478.7 min
+    late      n=1,032  MAE=649.7  RMSE=823.1 min
+  Saved forecast_scatter_relthresh_h100.png
+
+============================================================
+Horizon H=200 (3000 min = 50 h)
+  Qualifying windows: 41
+  context_df: (656, 12)    Running TabICLForecaster.predict_df(H=200) ...
+  Predictions done.
+  Saved predictions_relthresh_h200.csv (41 rows)
+  Saved trajectories_h200.npz (41 trajectories)
+
+  Method                unique  cap%     MAE    RMSE
+  -------------------------------------------------------
+  absolute                  5   90.2%    481.9   1055.3 min
+  k=2                      13   56.1%   1314.6   1925.6 min
+  k=3                       7   82.9%    647.7   1252.3 min
+  k=5                       1  100.0%    197.3    238.3 min
+
+  Group breakdown  (k=3):
+    late      n=  41  MAE=647.7  RMSE=1252.3 min
+  Saved forecast_scatter_relthresh_h200.png
+
+Saved eval_summary_relthresh.csv
+All done.
+Job finished: Mon May 11 08:40:17 PM IDT 2026
+
+------------------------------------------------------------
+Sender: LSF System <DoNotReply>
+Subject: Job 709915: <tabicl_relthresh> in cluster <wexac> Done
+
+Job <tabicl_relthresh> was submitted from host <login4> by user <talfis> in cluster <wexac> at Mon May 11 14:26:29 2026
+Job was executed on host(s) <1*hgn25>, in queue <long-gpu>, as user <talfis> in cluster <wexac> at Mon May 11 17:05:46 2026
+                            <1*hgn16>
+                            <2*hgn22>
+</home/labs/ginossar/talfis> was used as the home directory.
+</home/labs/ginossar/talfis/LiveImaging/Forecast> was used as the working directory.
+Started at Mon May 11 17:05:46 2026
+Terminated at Mon May 11 20:40:17 2026
+Results reported at Mon May 11 20:40:17 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -q long-gpu
+#BSUB -gpu num=1:gmem=12G
+#BSUB -J tabicl_relthresh
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_relthresh.log
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_relthresh.err
+#BSUB -n 4
+
+PYTHON=/home/labs/ginossar/talfis/envs/tabicl_forecast/bin/python3.12
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/Forecast/03_run_forecaster_relthresh.py
+
+echo "Job started: $(date)"
+echo "Host: $(hostname)"
+echo "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'unknown')"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   21883.16 sec.
+    Max Memory :                                 6038 MB
+    Average Memory :                             5397.11 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              15
+    Max Threads :                                19
+    Run time :                                   12871 sec.
+    Turnaround time :                            22428 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file </home/labs/ginossar/talfis/LiveImaging/Forecast/forecast_relthresh.err> for stderr output of this job.
+

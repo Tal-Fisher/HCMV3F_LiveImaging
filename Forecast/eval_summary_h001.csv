@@ -1,0 +1,4 @@
+horizon_frames,group,n_windows,MAE,RMSE,naive_MAE_last
+1,early,153,0.1014,0.1785,0.0984
+1,medium,1770,0.0845,0.1338,0.0753
+1,late,2446,0.0607,0.0902,0.0574

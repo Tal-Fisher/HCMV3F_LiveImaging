@@ -1,0 +1,2 @@
+task,n_dims,n,n_early,auc,sens,spec,bal_acc,n_nonzero,ref_116dim_auc,ref_tabular_auc
+classify_early_vs_rest,20,274,42,0.742,0.619,0.759,0.689,16,0.668,0.674

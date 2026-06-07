@@ -1,0 +1,2162 @@
+---
+title: "LiveImagingAnalysis_test"
+output: html_document
+date: "2026-03-17"
+---
+
+```{r setup, include=FALSE}
+library(gridExtra)
+library(reshape2)
+library(LSD)
+library(MASS)
+library(ggplot2)
+library(corrplot)
+library( dplyr )
+library( plotly )
+library( DT )    
+library(magrittr)
+library( viridis )
+library( pheatmap )
+library( ggrepel )
+library( tidyr )
+library(tidyverse)
+library( rbioapi )
+library( ggthemes )
+library(zoo)
+library(corrplot)
+library(glmnet)
+
+
+source( "/Users/talfis/Desktop/Tal/R_scripts/AUXI.R" )
+```
+
+```{r}
+    draw_it <- function( df, P1="", P2="", title = "" ) {
+  dftmp = df[is.finite(df[[P1]]) & is.finite(df[[P2]]),]
+  dftmp$dens1 = get_density(dftmp[[P1]],dftmp[[P2]], n = 100)
+  ggplot(dftmp, aes(dftmp[[P1]],dftmp[[P2]])) +
+  geom_point(aes(color = dens1)) +
+  scale_color_viridis() +
+  labs(x = P1, y = P2) + 
+  ggtitle(paste0(title, " Pearson R = ", signif(cor(dftmp[[P1]],dftmp[[P2]], use = "complete.obs"),3), ", Spearman R = ", signif(cor(dftmp[[P1]],dftmp[[P2]], use = "complete.obs", method = "spearman"),3), ",\n number of genes = ",  ... = nrow(dftmp))) + theme(legend.position = "none")
+    }
+
+roll_mean_partial <- function(x, k) {
+  rollapply(
+    x,
+    width = k,
+    FUN = function(v) {
+      if (all(is.na(v))) return(NA_real_)
+      mean(v, na.rm = TRUE)
+    },
+    fill = NA,
+    align = "center",
+    partial = TRUE
+  )
+}
+
+plot_metric = function(data, y_col, y_label, title_text) {
+  ggplot(data, aes(x = `T..sec.`, y = .data[[y_col]], color = factor(`Track.ID`), group = `Track.ID`)) +
+    geom_line(linewidth = 0.7, alpha = 0.9) +
+    geom_point(size = 0.8, alpha = 0.7) +
+    labs(
+      title = title_text,
+      x = "Time (sec)",
+      y = y_label,
+      color = "Track ID"
+    ) + xlim(0, NA) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(face = "bold"),
+      legend.position = "none"
+    )
+}
+
+ellipse_score <- function(x_pt, y_pt, x0, y0, long_axis, short_axis, angle_rad) {
+  a <- long_axis / 2
+  b <- short_axis / 2
+  
+  if (is.na(a) || is.na(b) || is.na(x0) || is.na(y0) || is.na(angle_rad) || a <= 0 || b <= 0) {
+    return(NA_real_)
+  }
+  
+  dx <- x_pt - x0
+  dy <- y_pt - y0
+  
+  x_rot <-  dx * cos(angle_rad) + dy * sin(angle_rad)
+  y_rot <- -dx * sin(angle_rad) + dy * cos(angle_rad)
+  
+  (x_rot^2)/(a^2) + (y_rot^2)/(b^2)
+}
+
+plot_mean_sd <- function(data, mean_col, sd_col, ylab, title) {
+
+  ggplot(data, aes(x = T..sec., y = .data[[mean_col]])) +
+    geom_ribbon(
+      aes(
+        ymin = .data[[mean_col]] - .data[[sd_col]],
+        ymax = .data[[mean_col]] + .data[[sd_col]]
+      ),
+      alpha = 0.25
+    ) +
+    geom_line(linewidth = 1) +
+    theme_bw() +
+    labs(
+      x = "Time (sec)",
+      y = ylab,
+      title = title
+    )
+}
+
+zscore_safe <- function(v) {
+  s <- sd(v, na.rm = TRUE)
+  m <- mean(v, na.rm = TRUE)
+  if (is.na(s) || s == 0) return(rep(NA_real_, length(v)))
+  (v - m) / s
+}
+
+mean_sem <- function(x) {
+  n <- sum(!is.na(x))
+  if (n == 0) return(c(mean = NA_real_, sem = NA_real_))
+  c(
+    mean = mean(x, na.rm = TRUE),
+    sem = sd(x, na.rm = TRUE) / sqrt(n)
+  )
+}
+
+plot_avg_ccf <- function(data,
+                         feature_x,
+                         feature_y,
+                         track_col = "Track.ID",
+                         time_col = "cell_Frame",
+                         lag_max = 20,
+                         min_points = 10,
+                         zscore = TRUE) {
+  
+  ccf_per_track <- data %>%
+    arrange(.data[[track_col]], .data[[time_col]]) %>%
+    group_by(.data[[track_col]]) %>%
+    group_split() %>%
+    map_dfr(function(df) {
+      
+      df <- df %>% arrange(.data[[time_col]])
+      
+      x <- df[[feature_x]]
+      y <- df[[feature_y]]
+      
+      if (zscore) {
+        x <- zscore_safe(x)
+        y <- zscore_safe(y)
+      }
+      
+      keep <- complete.cases(x, y)
+      
+      if (sum(keep) < min_points) {
+        return(NULL)
+      }
+      
+      cc <- ccf(x[keep], y[keep], lag.max = lag_max, plot = FALSE)
+      
+      tibble(
+        track_id = unique(df[[track_col]])[1],
+        lag = as.numeric(cc$lag),
+        ccf = as.numeric(cc$acf)
+      )
+    })
+  
+  ccf_summary <- ccf_per_track %>%
+    group_by(lag) %>%
+    summarise(
+      mean_ccf = mean(ccf, na.rm = TRUE),
+      sem_ccf = sd(ccf, na.rm = TRUE) / sqrt(sum(!is.na(ccf))),
+      n_tracks = sum(!is.na(ccf)),
+      .groups = "drop"
+    )
+  
+  p <- ggplot(ccf_summary, aes(x = lag, y = mean_ccf)) +
+    geom_line() +
+    geom_ribbon(
+      aes(ymin = mean_ccf - sem_ccf,
+          ymax = mean_ccf + sem_ccf),
+      alpha = 0.3
+    ) +
+    theme_bw() +
+    labs(
+      title = paste("Average cross-correlation:", feature_x, "vs", feature_y),
+      x = "Lag",
+      y = "Cross-correlation"
+    )
+  
+  list(
+    per_track = ccf_per_track,
+    summary = ccf_summary,
+    plot = p
+  )
+}
+
+
+safe_first <- function(x) {
+  x <- x[!is.na(x)]
+  if (length(x) == 0) return(NA_real_)
+  x[1]
+}
+
+safe_last <- function(x) {
+  x <- x[!is.na(x)]
+  if (length(x) == 0) return(NA_real_)
+  x[length(x)]
+}
+
+safe_sd <- function(x) {
+  if (sum(!is.na(x)) < 2) return(NA_real_)
+  sd(x, na.rm = TRUE)
+}
+
+safe_slope <- function(x, t) {
+  x <- as.numeric(x)
+  t <- as.numeric(t)
+  
+  keep <- is.finite(x) & is.finite(t)
+  
+  if (sum(keep) < 2) {
+    return(NA_real_)
+  }
+  
+  fit <- lm(x[keep] ~ t[keep])
+  unname(coef(fit)[2])
+}
+
+safe_auc <- function(x, t) {
+  keep <- complete.cases(x, t)
+  if (sum(keep) < 2) return(NA_real_)
+  
+  x <- x[keep]
+  t <- t[keep]
+  
+  sum(diff(t) * (head(x, -1) + tail(x, -1)) / 2)
+}
+
+safe_rel_change <- function(start, end) {
+  if (is.na(start) || is.na(end) || start == 0) return(NA_real_)
+  (end - start) / start
+}
+
+safe_cv <- function(x) {
+  m <- mean(x, na.rm = TRUE)
+  s <- safe_sd(x)
+  if (is.na(m) || is.na(s) || m == 0) return(NA_real_)
+  s / m
+}
+
+safe_mean <- function(x) {
+  x <- as.numeric(x)
+  x <- x[is.finite(x)]
+  if (length(x) == 0) return(NA_real_)
+  mean(x)
+}
+
+safe_time_to_thresh <- function(x, t, thresh, n_consecutive = 1) {
+  pos <- !is.na(x) & x > thresh
+  
+  if (n_consecutive == 1) {
+    if (!any(pos)) return(Inf)
+    return(min(t[pos], na.rm = TRUE))
+  }
+  
+  run_hit <- pos
+  for (k in 1:(n_consecutive - 1)) {
+    run_hit <- run_hit & lag(pos, k, default = FALSE)
+  }
+  
+  if (!any(run_hit, na.rm = TRUE)) return(Inf)
+  
+  first_hit_idx <- which(run_hit)[1]
+  start_idx <- first_hit_idx - (n_consecutive - 1)
+  t[start_idx]
+}
+
+zscore_feature <- function(x) {
+  mu <- mean(x, na.rm = TRUE)
+  s  <- sd(x, na.rm = TRUE)
+  
+  if (is.na(s) || s == 0) {
+    return(rep(NA_real_, length(x)))
+  }
+  
+  (x - mu) / s
+}
+```
+
+```{r}
+
+spots_table = my_read_table("/Users/talfis/Desktop/LiveImaging/test/CompleteImage/A2_Merged_spots.csv")
+#spots_table = my_read_table("/Users/talfis/Desktop/LiveImaging/test/CompleteImage/A3_Merged_spots.csv")
+
+#Group and order by time
+spots_table = spots_table %>%
+  filter(!is.na(`Track.ID`))
+spots_table = spots_table %>%
+  arrange(`Track.ID`, `T..sec.`)
+
+#Calculate speed
+spots_table <- spots_table %>%
+  group_by(`Track.ID`) %>%
+  mutate(
+    dX = X - lag(X),
+    dY = Y - lag(Y),
+    dT = `T..sec.` - lag(`T..sec.`),
+    step_distance = sqrt(dX^2 + dY^2),
+    speed = step_distance / dT
+  ) %>%
+  ungroup()
+
+spots_table <- spots_table %>%
+  mutate(speed = ifelse(is.na(speed), 0, speed))
+
+spots_table <- spots_table %>%
+  mutate(speed = ifelse(is.infinite(speed) | dT <= 0, NA, speed))
+
+```
+
+#Filtering split tracks (start at high GFP)
+```{r}
+
+time_to_green <- spots_table %>%
+  group_by(Track.ID) %>%
+  arrange(`T..sec.`, .by_group = TRUE) %>%
+  summarise(
+    time_to_green = first(`T..sec.`),
+    first_gfp = first(Mean.ch2),
+    .groups = "drop"
+  )
+
+ggplot(time_to_green, aes(x = time_to_green)) +
+  geom_histogram(binwidth = 500) +
+  labs(x = "Time to appearance (sec)", y = "Number of cells") +
+  theme_bw()
+
+time_to_green_1 = time_to_green[time_to_green$time_to_green<50000,]
+time_to_green_2 = time_to_green[time_to_green$time_to_green>=100000,]
+
+time_to_green_1$group <- "Early (<50000)"
+time_to_green_2$group <- "Late (>=100000)"
+
+combined_df <- bind_rows(time_to_green_1, time_to_green_2)
+ggplot(combined_df, aes(x = first_gfp, color = group, fill = group)) +
+  geom_density(alpha = 0.3) +
+  labs(x = "GFP at first appearance", y = "Density") +
+  theme_bw()
+
+filtered_tracks <- time_to_green %>%
+  filter(first_gfp < 2.5) %>%
+  pull(Track.ID)
+
+spots_table <- spots_table %>%
+  filter(Track.ID %in% filtered_tracks)
+
+length(unique(spots_table$Track.ID))
+```
+
+#Assign nuclei - simple nearest nucleus + temporal consistency
+```{r}
+
+nuc_table = my_read_table("/Users/talfis/Desktop/LiveImaging/test/CompleteImage/A2_nuclei_spots.csv")
+#nuc_table = my_read_table("/Users/talfis/Desktop/LiveImaging/test/CompleteImage/A3_nuclei_spots.csv")
+
+#----------------------------
+# 0. clean tables
+#----------------------------
+spots_table <- spots_table %>%
+  mutate(
+    X = as.numeric(as.character(X)),
+    Y = as.numeric(as.character(Y))
+  ) %>%
+  arrange(`Track.ID`, `T..sec.`)
+
+nuc_table <- nuc_table %>%
+  mutate(
+    X = as.numeric(as.character(X)),
+    Y = as.numeric(as.character(Y))
+  ) %>%
+  arrange(`Track.ID`, `T..sec.`)
+
+#----------------------------
+# 1. frame-wise nearest matches
+#----------------------------
+make_frame_matches_nearest <- function(t_now, nuc_table, spots_table, max_dist = 100) {
+  
+  nuc_sub <- nuc_table %>%
+    filter(`T..sec.` == t_now) %>%
+    transmute(
+      nuc_track = `Track.ID`,
+      t = `T..sec.`,
+      nuc_x = X,
+      nuc_y = Y
+    )
+  
+  cell_sub <- spots_table %>%
+    filter(`T..sec.` == t_now) %>%
+    transmute(
+      cell_track = `Track.ID`,
+      t = `T..sec.`,
+      cell_x = X,
+      cell_y = Y
+    )
+  
+  if (nrow(nuc_sub) == 0 || nrow(cell_sub) == 0) {
+    return(NULL)
+  }
+  
+  all_pairs <- merge(cell_sub, nuc_sub, by = "t") %>%
+    mutate(
+      centroid_dist = sqrt((cell_x - nuc_x)^2 + (cell_y - nuc_y)^2)
+    ) %>%
+    filter(centroid_dist <= max_dist)
+  
+  if (nrow(all_pairs) == 0) {
+    return(NULL)
+  }
+  
+  # mark the nearest nucleus for each cell in this frame
+  all_pairs %>%
+    group_by(cell_track, t) %>%
+    mutate(
+      is_nearest_for_cell = centroid_dist == min(centroid_dist, na.rm = TRUE)
+    ) %>%
+    ungroup()
+}
+
+all_times <- intersect(unique(nuc_table$`T..sec.`), unique(spots_table$`T..sec.`))
+
+frame_matches <- map_dfr(
+  all_times,
+  make_frame_matches_nearest,
+  nuc_table = nuc_table,
+  spots_table = spots_table,
+  max_dist = 100
+)
+
+#----------------------------
+# 2. checkpoint setup
+#----------------------------
+checkpoint_props <- seq(0, 1, by = 0.1)
+
+cell_track_times <- spots_table %>%
+  group_by(cell_track = `Track.ID`) %>%
+  summarise(
+    t_min = min(`T..sec.`, na.rm = TRUE),
+    t_max = max(`T..sec.`, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+checkpoint_targets <- cell_track_times %>%
+  crossing(check_prop = checkpoint_props) %>%
+  mutate(
+    target_t = t_min + check_prop * (t_max - t_min),
+    checkpoint = paste0("cp_", sprintf("%02d", round(check_prop * 100)))
+  )
+
+#----------------------------
+# 3. checkpoint-level consistency
+#----------------------------
+checkpoint_scores <- checkpoint_targets %>%
+  inner_join(frame_matches, by = "cell_track") %>%
+  mutate(dt = abs(t - target_t)) %>%
+  group_by(cell_track, nuc_track, checkpoint) %>%
+  slice_min(dt, n = 1, with_ties = FALSE) %>%
+  ungroup()
+
+pair_checkpoint_summary <- checkpoint_scores %>%
+  group_by(cell_track, nuc_track) %>%
+  summarise(
+    n_checkpoints_found = n(),
+    cp_nearest_count = sum(is_nearest_for_cell, na.rm = TRUE),
+    cp_frac_nearest = mean(is_nearest_for_cell, na.rm = TRUE),
+    cp_mean_dist = mean(centroid_dist, na.rm = TRUE),
+    cp_median_dist = median(centroid_dist, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+#----------------------------
+# 4. full movie consistency
+#----------------------------
+pair_all_frame_summary <- frame_matches %>%
+  group_by(cell_track, nuc_track) %>%
+  summarise(
+    n_overlap_frames = n(),
+    nearest_count_all = sum(is_nearest_for_cell, na.rm = TRUE),
+    frac_nearest_all = mean(is_nearest_for_cell, na.rm = TRUE),
+    mean_dist_all = mean(centroid_dist, na.rm = TRUE),
+    median_dist_all = median(centroid_dist, na.rm = TRUE),
+    max_dist_all = max(centroid_dist, na.rm = TRUE),
+    t_start = min(t, na.rm = TRUE),
+    t_end = max(t, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+pair_summary <- pair_all_frame_summary %>%
+  left_join(pair_checkpoint_summary, by = c("cell_track", "nuc_track")) %>%
+  mutate(
+    n_checkpoints_found = coalesce(n_checkpoints_found, 0L),
+    cp_nearest_count = coalesce(cp_nearest_count, 0),
+    cp_frac_nearest = coalesce(cp_frac_nearest, 0),
+    cp_mean_dist = coalesce(cp_mean_dist, Inf),
+    cp_median_dist = coalesce(cp_median_dist, Inf)
+  )
+
+#----------------------------
+# 5. choose best nucleus for each cell
+#----------------------------
+best_nucleus_per_cell <- pair_summary %>%
+  group_by(cell_track) %>%
+  arrange(
+    desc(cp_nearest_count),
+    desc(cp_frac_nearest),
+    desc(frac_nearest_all),
+    cp_mean_dist,
+    mean_dist_all,
+    .by_group = TRUE
+  ) %>%
+  slice(1) %>%
+  ungroup()
+
+#----------------------------
+# 6. resolve nuclei assigned to several cells
+#----------------------------
+best_unique_assignments <- best_nucleus_per_cell %>%
+  group_by(nuc_track) %>%
+  arrange(
+    desc(cp_nearest_count),
+    desc(cp_frac_nearest),
+    desc(frac_nearest_all),
+    cp_mean_dist,
+    mean_dist_all,
+    .by_group = TRUE
+  ) %>%
+  slice(1) %>%
+  ungroup()
+
+#----------------------------
+# 7. confidence and filtering
+#----------------------------
+final_assignments <- best_unique_assignments %>%
+  mutate(
+    assignment_confidence = case_when(
+      n_overlap_frames >= 5 &
+        frac_nearest_all >= 0.8 &
+        cp_frac_nearest >= 0.8 ~ "high",
+      
+      n_overlap_frames >= 5 &
+        frac_nearest_all >= 0.6 &
+        cp_frac_nearest >= 0.6 ~ "medium",
+      
+      TRUE ~ "low"
+    )
+  )
+
+good_assignments <- final_assignments %>%
+  filter(
+    n_overlap_frames >= 5,
+    frac_nearest_all >= 0.6,
+    cp_frac_nearest >= 0.6
+  )
+
+#----------------------------
+# 8. QC
+#----------------------------
+cell_conflicts_after_resolution <- good_assignments %>%
+  count(cell_track) %>%
+  filter(n > 1)
+
+nuc_conflicts_after_resolution <- good_assignments %>%
+  count(nuc_track) %>%
+  filter(n > 1)
+
+one_to_one_ok <- nrow(good_assignments) == n_distinct(good_assignments$cell_track) &&
+  nrow(good_assignments) == n_distinct(good_assignments$nuc_track)
+
+#----------------------------
+# 9. relabel nucleus table into cell IDs
+#----------------------------
+nuc_table_filt <- nuc_table %>%
+  inner_join(
+    good_assignments %>% select(cell_track, nuc_track),
+    by = c("Track.ID" = "nuc_track")
+  ) %>%
+  mutate(`Track.ID` = cell_track) %>%
+  select(-cell_track)
+
+# optional summaries
+assignment_summary <- tibble(
+  n_total_cells = n_distinct(spots_table$`Track.ID`),
+  n_cells_kept = n_distinct(good_assignments$cell_track),
+  pct_cells_kept = 100 * n_cells_kept / n_total_cells
+)
+
+length(unique(nuc_table_filt$Track.ID))
+```
+
+#BFP -> GFP bleedthrough correction
+```{r}
+# Estimate bleedthrough coefficient alpha from first n_baseline frames of each
+# track. After filtering (first_gfp < 2.5), these frames are at or before true
+# GFP onset, so observed ch2 ≈ alpha * ch1 (bleedthrough only).
+
+n_baseline <- 5
+
+baseline_df <- spots_table %>%
+  filter(Track.ID %in% filtered_tracks) %>%
+  arrange(Track.ID, `T..sec.`) %>%
+  group_by(Track.ID) %>%
+  slice_head(n = n_baseline) %>%
+  ungroup() %>%
+  filter(is.finite(Mean.ch1), Mean.ch1 > 0, is.finite(Mean.ch2))
+
+# Global fit
+bleed_fit0 <- lm(Mean.ch2 ~ Mean.ch1 - 1, data = baseline_df)   # through origin
+bleed_fit1 <- lm(Mean.ch2 ~ Mean.ch1,     data = baseline_df)   # with intercept
+
+bleed_alpha     <- unname(coef(bleed_fit0)[1])
+bleed_alpha_int <- unname(coef(bleed_fit1)[2])
+bleed_intercept <- unname(coef(bleed_fit1)[1])
+
+cat(sprintf("alpha (through origin):  %.5f  R2 = %.4f\n",
+            bleed_alpha, summary(bleed_fit0)$r.squared))
+cat(sprintf("alpha (with intercept):  %.5f  R2 = %.4f  intercept = %.4f\n",
+            bleed_alpha_int, summary(bleed_fit1)$r.squared, bleed_intercept))
+
+# Per-cell alpha to assess consistency
+per_cell_alpha <- baseline_df %>%
+  group_by(Track.ID) %>%
+  summarise(
+    n = n(),
+    alpha_cell = if (n() >= 3 && sd(Mean.ch1, na.rm = TRUE) > 1e-6)
+      unname(coef(lm(Mean.ch2 ~ Mean.ch1 - 1))[1])
+    else NA_real_,
+    .groups = "drop"
+  )
+
+# Diagnostic plots
+p_scatter <- ggplot(baseline_df, aes(x = Mean.ch1, y = Mean.ch2)) +
+  geom_point(alpha = 0.1, size = 0.5) +
+  geom_abline(slope = bleed_alpha,     intercept = 0,               color = "red",  linewidth = 1) +
+  geom_abline(slope = bleed_alpha_int, intercept = bleed_intercept, color = "blue", linewidth = 1, linetype = "dashed") +
+  labs(
+    title = sprintf("BFP → GFP bleedthrough  (first %d frames per cell)", n_baseline),
+    subtitle = sprintf("Through origin: α=%.4f  R²=%.3f   |   With intercept: α=%.4f  R²=%.3f",
+                       bleed_alpha,     summary(bleed_fit0)$r.squared,
+                       bleed_alpha_int, summary(bleed_fit1)$r.squared),
+    x = "Cell BFP (ch1)", y = "Cell GFP (ch2)"
+  ) + theme_bw()
+
+p_alpha_dist <- ggplot(per_cell_alpha %>% filter(is.finite(alpha_cell)),
+                       aes(x = alpha_cell)) +
+  geom_histogram(bins = 40, fill = "steelblue", color = "white") +
+  geom_vline(xintercept = bleed_alpha, color = "red",    linewidth = 1) +
+  geom_vline(xintercept = median(per_cell_alpha$alpha_cell, na.rm = TRUE),
+             color = "orange", linewidth = 1, linetype = "dashed") +
+  labs(title = "Per-cell bleedthrough coefficient α",
+       x = "α", y = "Cells") + theme_bw()
+
+print(p_scatter)
+print(p_alpha_dist)
+
+# Apply correction (use through-origin alpha; swap to bleed_alpha_int if preferred)
+spots_table <- spots_table %>%
+  mutate(Mean.ch2.corrected = Mean.ch2 - bleed_alpha * Mean.ch1)
+```
+
+#Red rising rate
+```{r}
+red_thresh_cell <- 2.25
+
+spots <- spots_table %>%
+  arrange(`Track.ID`, Frame) %>%
+  group_by(`Track.ID`) %>%
+  mutate(
+    ch3_pos = Mean.ch3 > red_thresh_cell,
+    red_now = ch3_pos &
+      lag(ch3_pos, 1, default = FALSE) &
+      lag(ch3_pos, 2, default = FALSE) &
+      lag(ch3_pos, 3, default = FALSE) &
+      lag(ch3_pos, 4, default = FALSE)
+  ) %>%
+  ungroup()
+
+spots <- spots %>%
+  group_by(`Track.ID`) %>%
+  mutate(
+    red_onset_candidate = ifelse(
+      any(red_now, na.rm = TRUE),
+      min(Frame[red_now], na.rm = TRUE) - 4,
+      NA_real_
+    )
+  ) %>%
+  ungroup()
+
+red_rate_qc <- spots %>%
+  filter(!is.na(red_onset_candidate)) %>%
+  group_by(`Track.ID`) %>%
+  filter(
+    Frame >= first(red_onset_candidate),
+    Frame <= first(red_onset_candidate) + 4
+  ) %>%
+  summarise(
+    red_rise_rate = {
+      t <- `T..sec.` - min(`T..sec.`, na.rm = TRUE)
+      y <- Mean.ch3
+      keep <- is.finite(t) & is.finite(y)
+
+      if (sum(keep) >= 3) {
+        unname(coef(lm(y[keep] ~ t[keep]))[2])
+      } else {
+        NA_real_
+      }
+    },
+    red_int_start = first(Mean.ch3),
+    red_int_end   = last(Mean.ch3),
+    red_delta_5f  = red_int_end - red_int_start,
+    .groups = "drop"
+  )
+
+red_rate_qc <- spots %>%
+  left_join(red_rate_qc, by = "Track.ID")
+
+slope_cutoff <- 0.002
+delta_cutoff <- 0.3 
+
+red_rate_qc <- red_rate_qc %>%
+  mutate(
+    red_start_valid = !is.na(red_onset_candidate) &
+      !is.na(red_rise_rate) &
+      red_rise_rate > slope_cutoff &
+      red_delta_5f > delta_cutoff
+  )
+
+
+red_start_summary <- red_rate_qc %>%
+  group_by(`Track.ID`) %>%
+  summarise(
+    red_start_frame = ifelse(any(red_start_valid), first(red_onset_candidate), NA_real_),
+    red_rise_rate = first(red_rise_rate),
+    red_delta_5f = first(red_delta_5f),
+    .groups = "drop"
+  )
+
+red_rate_qc = red_rate_qc[red_rate_qc$red_rise_rate>0 & red_rate_qc$red_delta_5f>0,]
+
+
+ggplot(red_rate_qc, aes(x = red_rise_rate*60)) +
+  geom_histogram(bins = 40, fill = "red", alpha = 0.6) +
+  theme_minimal() + labs(x = "mCherry signal rise per minute")
+
+slope_cutoff <- quantile(red_rate_qc$red_rise_rate[red_rate_qc$red_rise_rate > 0], 0.1, na.rm = TRUE)
+delta_cutoff <- quantile(red_rate_qc$red_delta_5f[red_rate_qc$red_delta_5f > 0], 0.1, na.rm = TRUE)
+
+
+
+```
+
+
+#Time to GFP and time to mCherry
+```{r}
+
+smooth_k <- 3
+baseline_n <- 5
+
+gfp_thresh <- 0
+blue_thresh <- 0
+blue_run <- 3
+gfp_run <- 3
+
+red_run <- 5
+red_k_sd <- 3
+rise_lag <- 3
+
+spots2 <- spots_table %>%
+  filter(Track.ID %in% unique(nuc_table_filt$Track.ID)) %>%
+  arrange(Track.ID, `T..sec.`) %>%
+  group_by(Track.ID) %>%
+  mutate(
+    first_time = first(`T..sec.`),
+    norm_time = `T..sec.` - first_time,
+
+    ch2_smooth = roll_mean_partial(Mean.ch2, smooth_k),
+    ch3_smooth = roll_mean_partial(Mean.ch3, smooth_k),
+
+    # per-cell early baseline
+    ch3_baseline = mean(head(ch3_smooth, baseline_n), na.rm = TRUE),
+    ch3_baseline_sd = sd(head(ch3_smooth, baseline_n), na.rm = TRUE),
+
+    # upward change relative to recent past
+    ch3_rise = ch3_smooth - lag(ch3_smooth, rise_lag),
+    gfp_pos = !is.na(ch2_smooth) & ch2_smooth > gfp_thresh,
+
+    red_candidate = !is.na(ch3_smooth) &
+    ch3_smooth > red_thresh_cell,
+
+    green_now = gfp_pos &
+      lag(gfp_pos, 1, default = FALSE) &
+      lag(gfp_pos, 2, default = FALSE),
+
+    # candidate red call: 5 consecutive red_candidate frames
+    red_now_candidate = red_candidate &
+      lag(red_candidate, 1, default = FALSE) &
+      lag(red_candidate, 2, default = FALSE) &
+      lag(red_candidate, 3, default = FALSE) &
+      lag(red_candidate, 4, default = FALSE)
+  ) %>%
+  mutate(
+    green_start_time = ifelse(green_now, lag(`T..sec.`, gfp_run - 1), NA_real_),
+    green_complete_time = ifelse(green_now, `T..sec.`, NA_real_),
+
+    # first frame of the 5-frame red run
+    red_start_time_candidate = ifelse(
+      any(red_now_candidate, na.rm = TRUE),
+      min(`T..sec.`[red_now_candidate], na.rm = TRUE) - 4 * median(diff(`T..sec.`), na.rm = TRUE),
+      NA_real_
+    ),
+
+    red_complete_time_candidate = ifelse(
+      any(red_now_candidate, na.rm = TRUE),
+      min(`T..sec.`[red_now_candidate], na.rm = TRUE),
+      NA_real_
+    )
+  ) %>%
+  mutate(
+    # local 5-frame window starting at candidate onset
+    in_red_qc_window = !is.na(red_start_time_candidate) &
+      `T..sec.` >= red_start_time_candidate &
+      `T..sec.` <= red_start_time_candidate + 4 * median(diff(`T..sec.`), na.rm = TRUE)
+  ) %>%
+  mutate(
+    red_rise_rate = {
+      keep <- in_red_qc_window & is.finite(`T..sec.`) & is.finite(ch3_smooth)
+      if (sum(keep) >= 3) {
+        t <- `T..sec.`[keep] - min(`T..sec.`[keep], na.rm = TRUE)
+        y <- ch3_smooth[keep]
+        unname(coef(lm(y ~ t))[2])
+      } else {
+        NA_real_
+      }
+    },
+
+    red_delta_5f = {
+      keep <- in_red_qc_window & is.finite(ch3_smooth)
+      if (sum(keep) >= 2) {
+        last(ch3_smooth[keep]) - first(ch3_smooth[keep])
+      } else {
+        NA_real_
+      }
+    }
+  ) %>%
+  mutate(
+    red_start_valid =
+      !is.na(red_start_time_candidate) &
+      !is.na(red_rise_rate) &
+      !is.na(red_delta_5f) &
+      red_rise_rate >= slope_cutoff &
+      red_delta_5f >= delta_cutoff,
+
+    # final validated red timings
+    red_start_time = ifelse(red_start_valid, red_start_time_candidate, NA_real_),
+    red_complete_time = ifelse(red_start_valid, red_complete_time_candidate, NA_real_)
+  ) %>%
+  mutate(
+    # final red_now: all frames from validated onset onward
+    red_now = !is.na(red_start_time) & `T..sec.` >= red_start_time
+  ) %>%
+  ungroup()
+
+
+spots3 <- spots2 %>%
+  rename_with(~ paste0("cell_", .x), -c(`Track.ID`, `T..sec.`, `Frame`)) %>%
+  left_join(
+    nuc_table_filt %>%
+      rename_with(~ paste0("nuc_", .x), -c(`Track.ID`, `T..sec.`, `Frame`)),
+    by = c("Track.ID", "Frame", "T..sec.")
+  ) %>%
+  arrange(`Track.ID`, Frame) %>%
+  group_by(`Track.ID`) %>%
+  mutate(
+    # smooth channels
+    blue_smooth = roll_mean_partial(nuc_Mean.ch1, smooth_k),
+    green_smooth = roll_mean_partial(cell_Mean.ch2, smooth_k),
+    red_smooth = roll_mean_partial(cell_Mean.ch3, smooth_k),
+
+    # positive flags
+    blue_pos = !is.na(blue_smooth) & blue_smooth > blue_thresh,
+    green_pos = !is.na(green_smooth) & green_smooth > gfp_thresh,
+    red_pos = !is.na(red_smooth) & red_smooth > red_thresh_cell,
+
+    # consecutive-frame event completion flags
+    blue_now = blue_pos &
+      lag(blue_pos, 1, default = FALSE) &
+      lag(blue_pos, 2, default = FALSE),
+
+    green_now = green_pos &
+      lag(green_pos, 1, default = FALSE) &
+      lag(green_pos, 2, default = FALSE),
+
+    # red_now: use validated onset from spots2 (5-consecutive + slope/delta QC)
+    # loops through ALL valid 5-frame windows, not just the first one
+    red_now = cell_red_now,
+
+    # completion times
+    blue_complete_time  = ifelse(blue_now, `T..sec.`, NA_real_),
+    green_complete_time = ifelse(green_now, `T..sec.`, NA_real_),
+    red_complete_time   = cell_red_complete_time,
+
+    # start times of the run
+    blue_start_time  = ifelse(blue_now, lag(`T..sec.`, blue_run - 1), NA_real_),
+    green_start_time = ifelse(green_now, lag(`T..sec.`, gfp_run - 1), NA_real_),
+    red_start_time   = cell_red_start_time
+  ) %>%
+  ungroup()
+
+
+#Normalized cyto signal
+ spots3 <- spots3 %>%
+   mutate(
+     A_cell = spots3$cell_Area,
+     A_nuc  = spots3$nuc_Area,
+     A_cyto = pmax(A_cell - A_nuc, 1),
+
+     green_cell_total = cell_Mean.ch2 * A_cell,
+     green_nuc_total  = nuc_Mean.ch2 * A_nuc,
+     green_cyto_total = pmax(green_cell_total - green_nuc_total, 0),
+     green_cyto_mean = green_cyto_total / A_cyto,
+     valid_geom = A_nuc > 0 & A_cell > A_nuc) %>%
+     filter(valid_geom)
+   )
+
+cor(spots3$green_cyto_mean, spots3$nuc_Mean.ch1, use = "complete.obs")   # blue vs corrected green
+cor(spots3$nuc_Mean.ch2, spots3$nuc_Mean.ch1, use = "complete.obs")          # blue vs original green
+
+time_summary <- spots3 %>%
+  group_by(`Track.ID`) %>%
+  summarise(
+    first_track_time = min(`T..sec.`, na.rm = TRUE),
+
+    time_to_blue_complete = ifelse(
+      any(blue_now, na.rm = TRUE),
+      min(blue_complete_time, na.rm = TRUE),
+      Inf
+    ),
+    time_to_blue_start = ifelse(
+      any(blue_now, na.rm = TRUE),
+      min(blue_start_time, na.rm = TRUE),
+      Inf
+    ),
+
+    time_to_green_complete = ifelse(
+      any(green_now, na.rm = TRUE),
+      min(green_complete_time, na.rm = TRUE),
+      Inf
+    ),
+    time_to_green_start = ifelse(
+      any(green_now, na.rm = TRUE),
+      min(green_start_time, na.rm = TRUE),
+      Inf
+    ),
+
+    time_to_red_complete = ifelse(
+      any(red_now, na.rm = TRUE),
+      min(red_complete_time, na.rm = TRUE),
+      Inf
+    ),
+    time_to_red_start = ifelse(
+      any(red_now, na.rm = TRUE),
+      min(red_start_time, na.rm = TRUE),
+      Inf
+    ),
+
+    delay_green_to_blue = ifelse(
+      is.finite(time_to_blue_start) & is.finite(time_to_green_start),
+      time_to_blue_start - time_to_green_start,
+      Inf
+    ),
+
+    delay_green_to_red = ifelse(
+      is.finite(time_to_green_start) & is.finite(time_to_red_start),
+      time_to_red_start - time_to_green_start,
+      Inf
+    ),
+    
+    green_at_red_start = ifelse(
+      any(red_now, na.rm = TRUE),
+      cell_Mean.ch2[which(red_now)[1]],
+      NA_real_
+    ),
+    
+    green_one_frame_before_red_start = ifelse(
+      any(red_now, na.rm = TRUE) && which(red_now)[1] > 1,
+      cell_Mean.ch2[which(red_now)[1] - 1],
+      NA_real_
+    ),
+
+    first_blue_smooth = first(blue_smooth[!is.na(blue_smooth)]),
+    first_green_smooth = first(green_smooth[!is.na(green_smooth)]),
+    first_red_smooth = first(red_smooth[!is.na(red_smooth)]),
+
+    max_blue = max(nuc_Mean.ch1, na.rm = TRUE),
+    max_gfp = max(cell_Mean.ch2, na.rm = TRUE),
+    max_red = max(cell_Mean.ch3, na.rm = TRUE),
+
+    .groups = "drop"
+  )
+
+
+min_plausible_delay_min <- 240
+
+
+time_summary <- time_summary %>%
+  mutate(
+    time_to_green_start_min = ifelse(is.finite(time_to_green_start), time_to_green_start / 60, NA),
+    time_to_red_start_min = ifelse(is.finite(time_to_red_start), time_to_red_start / 60, NA),
+    delay_green_to_red_min = ifelse(is.finite(delay_green_to_red), delay_green_to_red / 60, NA),
+
+    suspicious_short_delay = !is.na(delay_green_to_red_min) & delay_green_to_red_min < min_plausible_delay_min
+  )
+
+short_delay_cells <- time_summary %>%
+  filter(suspicious_short_delay) %>%
+  arrange(delay_green_to_red_min)
+
+time_summary %>%
+  summarise(
+    n_cells = n(),
+    n_green = sum(is.finite(time_to_green_start)),
+    n_red = sum(is.finite(time_to_red_start)),
+    n_short_delay = sum(suspicious_short_delay, na.rm = TRUE)
+  )
+
+suspect_ids <- short_delay_cells$Track.ID
+#remove more tracks
+suspect_ids = c(suspect_ids, 9)
+
+time_summary = time_summary %>%
+  filter(!Track.ID %in% suspect_ids)
+
+spots2 = spots2 %>%
+  filter(!Track.ID %in% suspect_ids)
+
+nuc_table_filt = nuc_table_filt %>%
+  filter(!Track.ID %in% suspect_ids)
+
+```
+
+```{r}
+spots_table_tmp = spots3
+
+spots3 <- spots3 %>%
+  filter(Track.ID %in% unique(nuc_table_filt$Track.ID))
+
+
+time_to_red_plot <- time_summary %>%
+  filter(is.finite(time_to_red_complete)) %>%
+  arrange(time_to_red_complete) %>%
+  mutate(
+    cell_order = row_number(),
+    time_to_red_complete = time_to_red_complete / 60
+  )
+
+time_summary_flat = time_summary
+rownames(time_summary_flat) = time_summary_flat$Track.ID
+time_summary_flat = time_summary_flat[,c("time_to_green_start", "time_to_red_complete", "delay_green_to_red")]
+time_summary_flat = time_summary_flat %>%
+  arrange(time_to_green_start) %>%
+  mutate(
+    cell_order = row_number(),
+    time_to_red = time_to_red_complete / 60,
+    time_to_gfp = time_to_green_start / 60,
+    time_green_to_red = delay_green_to_red / 60
+  )
+time_summary_flat[is.infinite(time_summary_flat$time_to_red),"time_to_red"] = NA
+
+ggplot(time_summary_flat, aes(y = cell_order)) +
+  geom_segment(aes(x = 0, xend = time_to_gfp, yend = cell_order), alpha = 0.4) +
+  geom_point(aes(x = time_to_gfp), size = 1.8) +
+  labs(title = "GFP start", x = "Time since start (minutes)", y = "Cells") + theme_bw() + xlim(0,4000)
+
+ggplot(time_to_red_plot, aes(y = cell_order)) +
+  geom_segment(aes(x = 0, xend = time_to_red_complete, yend = cell_order), alpha = 0.4) +
+  geom_point(aes(x = time_to_red_complete), size = 1.8) +
+  labs(title = "mCherry start", x = "Time since start (minutes)", y = "Cells") + theme_bw() + xlim(0,4000)
+
+ggplot(time_to_red_plot, aes(y = cell_order)) +
+  geom_segment(aes(x = 0, xend = delay_green_to_red_min , yend = cell_order), alpha = 0.4) +
+  geom_point(aes(x = delay_green_to_red_min), size = 1.8) +
+  labs(title = "mCherry start",x = "Time since GFP (minutes)", y = "Cells") + theme_bw() + xlim(0,4000)
+
+
+ggplot(time_summary_flat, aes(y = cell_order)) +
+  geom_segment(aes(x = 0, xend = time_to_gfp, yend = cell_order), alpha = 0.1) +
+  geom_point(aes(x = time_to_gfp), size = 1.8, color = "green") +
+  geom_segment(aes(x = 0, xend = time_to_red, yend = cell_order), alpha = 0.05) +
+  geom_point(aes(x = time_to_red), size = 1.8, color = "red") +
+  labs(x = "Time since start (minutes)", y = "Cells") + theme_bw() + xlim(0,4000)
+
+
+ggplot() + 
+  geom_histogram(data = time_summary_flat, aes(x = time_to_gfp), fill = "green", alpha = 0.4, bins = 200) + 
+  geom_histogram(data = time_summary_flat, aes(x = time_to_red), fill = "red", alpha = 0.4, bins = 200) + xlim(0,4000) + labs(x = "Time (minutes)")
+
+
+time_summary$turned_red = "yes"
+time_summary[is.infinite(time_summary$time_to_red_complete),"turned_red"] = "no"
+  
+ggplot(time_summary, aes(x = turned_red)) + geom_bar(width = 0.5) + theme_bw()
+
+
+time_summary_plot <- time_summary %>%
+  arrange(time_to_green_start) %>%
+  mutate(
+    cell_order = row_number(),
+    time_to_blue_start = ifelse(is.infinite(time_to_blue_start), NA, time_to_blue_start / 60),
+    time_to_green_start = ifelse(is.infinite(time_to_green_start), NA, time_to_green_start / 60),
+    time_to_red_start = ifelse(is.infinite(time_to_red_start), NA, time_to_red_start / 60),
+    delay_green_to_red_min = ifelse(is.finite(delay_green_to_red), delay_green_to_red / 60, NA),
+    delay_green_to_blue_min = ifelse(is.finite(delay_green_to_blue), delay_green_to_blue / 60, NA),
+    suspicious_short_delay = !is.na(delay_green_to_red_min) & delay_green_to_red_min < min_plausible_delay_min
+  )
+
+time_summary_plot = time_summary_plot[time_summary_plot$suspicious_short_delay == FALSE,]
+
+ggplot(time_summary_plot, aes(y = cell_order)) +
+  
+  geom_segment(aes(x = 0, xend = time_to_green_start, yend = cell_order), alpha = 0.1, color = "green") +
+  geom_point(aes(x = time_to_green_start), size = 1.5, color = "green") +
+  
+  geom_segment(aes(x = 0, xend = time_to_blue_start, yend = cell_order), alpha = 0.1, color = "blue") +
+  geom_point(aes(x = time_to_blue_start), size = 1.5, color = "blue") +
+
+  geom_segment(aes(x = 0, xend = time_to_red_start, yend = cell_order), alpha = 0.25, color = "red") +
+  geom_point(aes(x = time_to_red_start), size = 1.5, color = "red") +
+
+  labs(
+    x = "Time since start of movie (minutes)",
+    y = "Cells",
+    title = "Blue, green and red first appearance"
+  ) +
+  theme_bw() +
+  coord_cartesian(xlim = c(0, 4000)) + coord_flip()
+
+ggplot() + 
+  geom_histogram(data = time_summary_plot, aes(x = time_to_green_start), fill = "green", alpha = 0.4, bins = 200) + 
+  geom_histogram(data = time_summary_plot, aes(x = time_to_blue_start), fill = "blue", alpha = 0.4, bins = 200) + 
+  geom_histogram(data = time_summary_plot, aes(x = time_to_red_start), fill = "red", alpha = 0.4, bins = 200) + xlim(0,4000) + labs(x = "Time (minutes)")
+
+ggplot() + 
+  geom_density(data = time_summary_plot, aes(x = time_to_green_start), fill = "green", alpha = 0.4) + 
+  geom_density(data = time_summary_plot, aes(x = time_to_blue_start), fill = "blue", alpha = 0.4) + 
+  geom_density(data = time_summary_plot, aes(x = time_to_red_start), fill = "red", alpha = 0.4) + xlim(0,4000) + labs(x = "Time (minutes)")
+
+ggplot(time_summary_plot, aes(x = delay_green_to_red_min)) + geom_density(fill = "red") + labs(title = "green to red delay (minutes)")
+
+gfp_at_red <- spots3 %>%
+  arrange(`Track.ID`, Frame) %>%
+  group_by(`Track.ID`) %>%
+  filter(is.finite(red_start_time)) %>%                
+  slice(1) %>%                      
+  ungroup()
+
+
+
+ggplot(time_summary, aes(x = green_at_red_start)) + geom_density(fill = "green") + labs(title = "green intensity at red transition")
+ggplot(time_summary, aes(x = green_one_frame_before_red_start)) + geom_density(fill = "green") + labs(title = "green intensity one frame before red transition")
+
+draw_it(time_summary, "green_at_red_start", "delay_green_to_red")
+draw_it(time_summary, "green_one_frame_before_red_start", "delay_green_to_red")
+
+
+```
+#Green threshold for red transition and GFP distribution for early infected cells
+```{r}
+
+spots_thresh <- spots3 %>%
+  arrange(`Track.ID`, Frame) %>%
+  group_by(`Track.ID`) %>%
+  mutate(
+    first_red_frame = ifelse(
+      any(red_now),
+      min(Frame[red_now]),
+      Inf
+    )
+  )
+
+spots_thresh <- spots_thresh %>%
+  mutate(
+    red_in_next_3 = 
+      lead(red_now, 1, default = FALSE) |
+      lead(red_now, 2, default = FALSE) |
+      lead(red_now, 3, default = FALSE)
+  ) %>%
+  ungroup()
+
+spots_thresh <- spots_thresh %>%
+  filter(Frame < first_red_frame)
+
+
+
+ggplot(spots_thresh, aes(x = cell_Mean.ch2, fill = red_in_next_3)) +
+  geom_density(alpha = 0.4) +
+  theme_minimal()
+
+spots3 <- spots3 %>%
+  group_by(`Track.ID`) %>%
+  mutate(norm_frame = Frame - min(Frame)) %>%
+  ungroup()
+
+
+ggplot(time_summary_plot, aes(x = delay_green_to_red_min)) +
+  geom_density(alpha = 0.4, fill = "Green") +
+  theme_minimal() + labs(title = "green to red time")
+
+
+ggplot(time_summary_plot[time_summary_plot$time_to_green_start_min<1000,], aes(x = delay_green_to_red_min)) +
+  geom_density(alpha = 0.4, fill = "Green") +
+  theme_minimal() + labs(title = "green to red time for early infected")
+
+early_g2r <- time_summary_plot %>%
+  filter(delay_green_to_red_min < 1000) %>%
+  pull(Track.ID) %>%
+  na.omit()
+
+```
+
+#Individual tracks
+```{r}
+
+spots3_early_g2r = spots3 %>%
+  filter(Track.ID %in% early_g2r)
+
+p_GFP = plot_metric(spots3, "cell_Mean.ch2", "Mean intensity ch2", "Track intensity over time: GFP")
+p_GFPcyto = plot_metric(spots3, "green_cyto_mean", "Mean intensity ch2", "Track intensity over time: GFP") + ylim(0,100)
+p_BFP = plot_metric(spots3, "nuc_Mean.ch1", "Mean intensity ch1", "Track intensity over time: BFP")
+p_mCherry = plot_metric(spots3, "cell_Mean.ch3", "Mean intensity ch3", "Track intensity over time: mCherry")
+p_area = plot_metric(spots3, "cell_Area",     "Cell size",               "cell size over time")
+p_nuc_area = plot_metric(spots3, "cell_Area", "nuc size", "nuc size over time: BFP")
+p_speed = plot_metric(spots3, "cell_speed",    "Speed",              "Track speed over time")
+
+print(p_GFP)
+print(p_GFPcyto)
+print(p_BFP)
+print(p_mCherry)
+print(p_area)
+print(p_nuc_area)
+print(p_speed)
+
+p_GFP = plot_metric(spots3_early_g2r, "cell_Mean.ch2", "Mean intensity ch2", "Track intensity over time: GFP")
+p_mCherry = plot_metric(spots3_early_g2r, "cell_Mean.ch3", "Mean intensity ch3", "Track intensity over time: mCherry") + ylim(1,5)
+print(p_GFP)
+print(p_mCherry)
+
+
+red_times <- time_summary_plot %>%
+  select(Track.ID, time_to_red_start) 
+
+mcherry_tracks <- spots3_early_g2r %>%
+  filter(!is.na(cell_Mean.ch3)) %>%
+  distinct(Track.ID) %>%
+  arrange(Track.ID) %>%
+  mutate(page = ceiling(row_number() / 10))
+
+spots3_mcherry_pages <- spots3_early_g2r %>%
+  left_join(mcherry_tracks, by = "Track.ID")
+
+spots3_mcherry_pages <- spots3_mcherry_pages %>%
+  left_join(red_times, by = "Track.ID")
+
+for (p in sort(unique(spots3_mcherry_pages$page))) {
+  print(
+    spots3_mcherry_pages %>%
+      filter(page == p) %>%
+      ggplot(aes(x = T..sec.  / 60, y = cell_Mean.ch3)) +
+      geom_line() +
+      geom_point(size = 0.5) +
+      
+      geom_vline(
+        aes(xintercept = time_to_red_start),
+        color = "red",
+        linetype = "dotted",
+        linewidth = 0.7,
+        na.rm = TRUE
+      ) +
+      
+      facet_wrap(~ Track.ID, scales = "free_y", ncol = 2) +
+      labs(
+        x = "Time from track start (min)",
+        y = "mCherry intensity",
+        title = paste("mCherry tracks - page", p)
+      ) + ylim(1.5,5) +
+      theme_bw()
+  )
+}
+
+```
+
+```{r}
+# Population summary per timepoint
+
+
+time_summary_merge <- spots2 %>%
+  rename_with(~ paste0("cell_", .x), -c(`Track.ID`, `T..sec.`)) %>%
+  full_join(
+    nuc_table_filt %>%
+      rename_with(~ paste0("nuc_", .x), -c(`Track.ID`, `T..sec.`)),
+    by = c("Track.ID", "T..sec.")
+  ) %>%
+  arrange(`Track.ID`, `T..sec.`)
+
+time_summary_roll = time_summary_merge
+
+time_summary_roll <- time_summary_roll %>%
+  group_by(T..sec.) %>%
+  summarise(
+    mean_ch1 = mean(nuc_Mean.ch1, na.rm = TRUE),
+    mean_ch2 = mean(cell_Mean.ch2, na.rm = TRUE),
+    mean_ch3 = mean(cell_Mean.ch3, na.rm = TRUE),
+    mean_area = mean(cell_Area, na.rm = TRUE),
+    mean_nuc_area = mean(nuc_Area, na.rm = TRUE),
+    mean_nuc_circ = mean(nuc_Circ., na.rm = TRUE),
+    mean_speed = mean(cell_speed, na.rm = TRUE),
+
+    sem_ch1 = sd(nuc_Mean.ch1, na.rm = TRUE) / sqrt(n()),
+    sem_ch2 = sd(cell_Mean.ch2, na.rm = TRUE) / sqrt(n()),
+    sem_ch3 = sd(cell_Mean.ch3, na.rm = TRUE) / sqrt(n()),
+    sem_nuc_area = sd(nuc_Area, na.rm = TRUE) / sqrt(n()),
+    sem_nuc_circ = sd(nuc_Circ., na.rm = TRUE) / sqrt(n()),
+    sem_area = sd(cell_Area, na.rm = TRUE) / sqrt(n()),
+    sem_speed = sd(cell_speed, na.rm = TRUE) / sqrt(n()),
+
+    n_cells = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(T..sec.)
+
+# Sliding SD window
+
+window_size <- 5
+
+time_summary_roll <- time_summary_roll %>%
+  mutate(
+    roll_sem_ch1 = rollapply(sem_ch1, window_size, mean, fill = NA, align = "center"),
+    roll_sem_ch2 = rollapply(sem_ch2, window_size, mean, fill = NA, align = "center"),
+    roll_sem_ch3 = rollapply(sem_ch3, window_size, mean, fill = NA, align = "center"),
+    roll_sem_area = rollapply(sem_area, window_size, mean, fill = NA, align = "center"),
+    roll_sem_nuc_area = rollapply(sem_nuc_area, window_size, mean, fill = NA, align = "center"),
+    roll_sem_nuc_circ = rollapply(sem_nuc_circ, window_size, mean, fill = NA, align = "center"),
+    roll_sem_speed = rollapply(sem_speed, window_size, mean, fill = NA, align = "center")
+  )
+
+
+p1 <- plot_mean_sd(time_summary_roll, "mean_ch1", "roll_sem_ch1",
+                   "Mean intensity BFP",
+                   "Sliding mean: BFP")
+
+p2 <- plot_mean_sd(time_summary_roll, "mean_ch2", "roll_sem_ch2",
+                   "Mean intensity GFP",
+                   "Sliding mean: GFP")
+
+p3 <- plot_mean_sd(time_summary_roll, "mean_ch3", "roll_sem_ch3",
+                   "Mean intensity mCherry",
+                   "Sliding mean: mCherry")
+
+p4 <- plot_mean_sd(time_summary_roll, "mean_area", "roll_sem_area",
+                   "Cell size",
+                   "Sliding mean: cell area")
+
+p5 <- plot_mean_sd(time_summary_roll, "mean_speed", "roll_sem_speed",
+                   "Cell speed",
+                   "Sliding mean: cell speed")
+
+p6 <- plot_mean_sd(time_summary_roll, "mean_nuc_area", "roll_sem_nuc_area",
+                   "Nuclei size",
+                   "Sliding mean: Nuclei size")
+
+p7 <- plot_mean_sd(time_summary_roll, "mean_nuc_circ", "roll_sem_nuc_circ",
+                   "Nuclei circ",
+                   "Sliding mean: Nuclei circ")
+
+print(p1)
+print(p2)
+print(p3)
+print(p4)
+print(p5)
+print(p6)
+print(p7)
+
+# Inspect how many cells contribute
+
+ggplot(time_summary_roll, aes(x = T..sec., y = n_cells)) +
+  geom_line() +
+  geom_point() +
+  theme_bw() +
+  labs(
+    title = "Cells contributing per timepoint",
+    x = "Time (sec)",
+    y = "Cell count"
+  )
+
+time_summary_roll[is.na(time_summary_roll)] = 0
+
+time_summary_roll <- time_summary_roll %>%
+  arrange(T..sec.) %>%
+  mutate(
+    roll_mean_ch1 = rollapply(
+      mean_ch1, window_size,
+      function(x) if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE),
+      fill = NA, align = "center", partial = TRUE
+    ),
+    roll_mean_ch2 = rollapply(
+      mean_ch2, window_size,
+      function(x) if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE),
+      fill = NA, align = "center", partial = TRUE
+    ),
+    roll_mean_ch3 = rollapply(
+      mean_ch3, window_size,
+      function(x) if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE),
+      fill = NA, align = "center", partial = TRUE
+    ),
+
+    baseline_ch1 = ifelse(any(mean_ch1 > 0, na.rm = TRUE),
+                          first(mean_ch1[mean_ch1 > 0]),
+                          0),
+
+    roll_mean_ch1 = roll_mean_ch1 - baseline_ch1,
+    roll_mean_ch1 = pmax(roll_mean_ch1, 0),
+
+    roll_mean_ch2 = roll_mean_ch2 - first(roll_mean_ch2[!is.na(roll_mean_ch2)]),
+    roll_mean_ch3 = roll_mean_ch3 - first(roll_mean_ch3[!is.na(roll_mean_ch3)]),
+
+    roll_sem_ch1 = rollapply(
+      sem_ch1, window_size,
+      function(x) if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE),
+      fill = NA, align = "center", partial = TRUE
+    ),
+    roll_sem_ch2 = rollapply(
+      sem_ch2, window_size,
+      function(x) if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE),
+      fill = NA, align = "center", partial = TRUE
+    ),
+    roll_sem_ch3 = rollapply(
+      sem_ch3, window_size,
+      function(x) if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE),
+      fill = NA, align = "center", partial = TRUE
+    ),
+
+    time_min = T..sec. / 60
+  ) %>%
+  select(-baseline_ch1)
+
+
+# convert to long format
+
+plot_data <- time_summary_roll %>%
+  select(time_min,
+         roll_mean_ch1, roll_mean_ch2, roll_mean_ch3,
+         roll_sem_ch1, roll_sem_ch2, roll_sem_ch3) %>%
+  pivot_longer(
+    cols = -time_min,
+    names_to = c(".value", "channel"),
+    names_pattern = "roll_(mean|sem)_ch(\\d)"
+  )
+
+ plot_data$channel <- recode(
+  plot_data$channel,
+  norm_ch1 = "Channel 1",
+  norm_ch2 = "Channel 2",
+  norm_ch3 = "Channel 3"
+)
+
+ 
+ggplot(plot_data, aes(x = time_min, y = mean, color = channel, fill = channel)) +
+
+  geom_ribbon(
+    aes(ymin = mean - sem, ymax = mean + sem),
+    alpha = 0.2,
+    color = NA
+  ) +
+
+  geom_line(linewidth = 1.2) +
+
+  scale_color_manual(
+    values = c("1"="blue", "2"="green", "3"="red"),
+    labels = c("Channel 1","Channel 2","Channel 3")
+  ) +
+
+  scale_fill_manual(
+    values = c("1"="blue", "2"="green", "3"="red")
+  ) +
+
+  theme_bw() +
+
+  labs(
+    x = "Time (minutes)",
+    y = "Δ Intensity (relative to start)",
+    title = "Normalized channel dynamics"
+  )
+
+```
+
+#Normalized time-size analysis
+```{r}
+summary_df <- time_summary_merge %>%
+  group_by(Track.ID) %>%
+  mutate(norm_frame = cell_Frame - min(cell_Frame, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(norm_frame) %>%
+  summarise(
+    mean_area = mean(cell_Area, na.rm = TRUE),
+    sem_area = sd(cell_Area, na.rm = TRUE) / sqrt(sum(!is.na(cell_Area))),
+
+    mean_nuc_area = mean(nuc_Area, na.rm = TRUE),
+    sem_nuc_area = sd(nuc_Area, na.rm = TRUE) / sqrt(sum(!is.na(nuc_Area))),
+
+    mean_nuc_circ = mean(nuc_Circ., na.rm = TRUE),
+    sem_nuc_circ = sd(nuc_Circ., na.rm = TRUE) / sqrt(sum(!is.na(nuc_Circ.))),
+
+    mean_mCherry = mean(cell_Mean.ch3, na.rm = TRUE),
+    sem_mCherry = sd(cell_Mean.ch3, na.rm = TRUE) / sqrt(sum(!is.na(cell_Mean.ch3))),
+
+    mean_GFP = mean(cell_Mean.ch2, na.rm = TRUE),
+    sem_GFP = sd(cell_Mean.ch2, na.rm = TRUE) / sqrt(sum(!is.na(cell_Mean.ch2))),
+
+    mean_BFP = mean(nuc_Mean.ch1, na.rm = TRUE),
+    sem_BFP = sd(nuc_Mean.ch1, na.rm = TRUE) / sqrt(sum(!is.na(nuc_Mean.ch1))),
+
+    n_area = sum(!is.na(cell_Area)),
+    n_nuc_area = sum(!is.na(nuc_Area)),
+    n_nuc_circ = sum(!is.na(nuc_Circ.)),
+    n_mCherry = sum(!is.na(cell_Mean.ch3)),
+    n_GFP = sum(!is.na(cell_Mean.ch2)),
+    n_BFP = sum(!is.na(nuc_Mean.ch1)),
+    .groups = "drop"
+  )
+
+ggplot(summary_df, aes(x = norm_frame, y = mean_area)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = mean_area - sem_area,
+                  ymax = mean_area + sem_area),
+              alpha = 0.3) +
+  labs(title = "normalized time - cell size", x = "normalized time", y = "Cell area")
+
+ggplot(summary_df, aes(x = norm_frame, y = mean_nuc_area)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = mean_nuc_area - sem_nuc_area,
+                  ymax = mean_nuc_area + sem_nuc_area),
+              alpha = 0.3) +
+  labs(title = "normalized time - Nucleus size", x = "normalized time", y = "Nuc area")
+
+ggplot(summary_df, aes(x = norm_frame, y = mean_nuc_circ)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = mean_nuc_circ - sem_nuc_circ,
+                  ymax = mean_nuc_circ + sem_nuc_circ),
+              alpha = 0.3) +
+  labs(title = "normalized time - Nucleus circularity", x = "normalized time", y = "Nuc circ")
+
+
+ggplot(summary_df, aes(x = norm_frame, y = mean_mCherry)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = mean_mCherry - sem_mCherry,
+                  ymax = mean_mCherry + sem_mCherry),
+              alpha = 0.3) +
+  labs(title = "normalized time - mCherry signal", x = "normalized time", y = "mCherry")
+
+ggplot(summary_df, aes(x = norm_frame, y = mean_GFP)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = mean_GFP - sem_GFP,
+                  ymax = mean_GFP + sem_GFP),
+              alpha = 0.3) +
+  labs(title = "normalized time - GFP signal", x = "normalized time", y = "GFP")
+
+ggplot(summary_df, aes(x = norm_frame, y = mean_BFP)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = mean_BFP - sem_BFP,
+                  ymax = mean_BFP + sem_BFP),
+              alpha = 0.3) +
+  labs(title = "normalized time - BFP signal", x = "normalized time", y = "BFP")
+
+# combined normalized plot: corrected GFP, BFP, mCherry on the same [0,1] axes
+norm_pop <- time_summary_merge %>%
+  group_by(`Track.ID`) %>%
+  mutate(
+    norm_frame = cell_Frame - min(cell_Frame, na.rm = TRUE),
+    gfp_corr_norm = {
+      r_min <- min(cell_Mean.ch2.corrected, na.rm = TRUE)
+      r_max <- max(cell_Mean.ch2.corrected, na.rm = TRUE)
+      if (r_max - r_min > 1e-9) (cell_Mean.ch2.corrected - r_min) / (r_max - r_min) else rep(NA_real_, n())
+    },
+    bfp_norm = {
+      r_min <- min(nuc_Mean.ch1, na.rm = TRUE)
+      r_max <- max(nuc_Mean.ch1, na.rm = TRUE)
+      if (r_max - r_min > 1e-9) (nuc_Mean.ch1 - r_min) / (r_max - r_min) else rep(NA_real_, n())
+    },
+    red_norm = {
+      r_min <- min(cell_Mean.ch3, na.rm = TRUE)
+      r_max <- max(cell_Mean.ch3, na.rm = TRUE)
+      if (r_max - r_min > 1e-9) (cell_Mean.ch3 - r_min) / (r_max - r_min) else rep(NA_real_, n())
+    }
+  ) %>%
+  ungroup() %>%
+  group_by(norm_frame) %>%
+  summarise(
+    mean_gfp_corr = mean(gfp_corr_norm, na.rm = TRUE),
+    sem_gfp_corr  = sd(gfp_corr_norm,   na.rm = TRUE) / sqrt(sum(!is.na(gfp_corr_norm))),
+    mean_bfp      = mean(bfp_norm,       na.rm = TRUE),
+    sem_bfp       = sd(bfp_norm,         na.rm = TRUE) / sqrt(sum(!is.na(bfp_norm))),
+    mean_red      = mean(red_norm,        na.rm = TRUE),
+    sem_red       = sd(red_norm,          na.rm = TRUE) / sqrt(sum(!is.na(red_norm))),
+    .groups = "drop"
+  ) %>%
+  arrange(norm_frame)
+
+ggplot(norm_pop, aes(x = norm_frame)) +
+  geom_ribbon(aes(ymin = mean_gfp_corr - sem_gfp_corr,
+                  ymax = mean_gfp_corr + sem_gfp_corr),
+              fill = "green3", alpha = 0.2) +
+  geom_line(aes(y = mean_gfp_corr, color = "Corrected GFP"), linewidth = 1) +
+  geom_ribbon(aes(ymin = mean_bfp - sem_bfp,
+                  ymax = mean_bfp + sem_bfp),
+              fill = "dodgerblue", alpha = 0.2) +
+  geom_line(aes(y = mean_bfp, color = "BFP (nuclear)"), linewidth = 1) +
+  geom_ribbon(aes(ymin = mean_red - sem_red,
+                  ymax = mean_red + sem_red),
+              fill = "tomato", alpha = 0.2) +
+  geom_line(aes(y = mean_red, color = "mCherry"), linewidth = 1) +
+  scale_color_manual(values = c(
+    "Corrected GFP" = "green3",
+    "BFP (nuclear)" = "dodgerblue",
+    "mCherry"       = "tomato"
+  )) +
+  labs(
+    title    = "Population mean normalized channel dynamics",
+    subtitle = "Each cell normalized 0-1 per channel to its own min/max; mean +/- SEM",
+    x     = "Normalized frame (from track start)",
+    y     = "Normalized intensity (0-1)",
+    color = NULL
+  ) +
+  theme_bw() +
+  theme(legend.position = "top")
+
+```
+
+#Correlations
+```{r}
+#Crosscorrelations
+
+#Try chunks
+
+plot_avg_ccf(data = time_summary_merge, feature_x = "nuc_Mean.ch1", feature_y = "cell_Mean.ch2", track_col = "Track.ID", time_col = "cell_Frame", lag_max = 20, min_points = 10, zscore = TRUE)
+plot_avg_ccf(data = time_summary_merge, feature_x = "cell_Area", feature_y = "nuc_Area", track_col = "Track.ID", time_col = "cell_Frame", lag_max = 20, min_points = 10, zscore = TRUE)
+plot_avg_ccf(data = time_summary_merge, feature_x = "nuc_Circ.", feature_y = "nuc_Area", track_col = "Track.ID", time_col = "cell_Frame", lag_max = 20, min_points = 10, zscore = TRUE)
+plot_avg_ccf(data = time_summary_merge, feature_x = "cell_speed", feature_y = "cell_Area", track_col = "Track.ID", time_col = "cell_Frame", lag_max = 20, min_points = 10, zscore = TRUE)
+#ccf_res$plot #ccf_res$summary #ccf_res$per_track
+
+#Try crossvalidation (leave 10% out each time)
+#elasticnet - linear model
+#tabiclv2 instead of XGboost
+#zscore normalization for every feature
+#coefficient of variation (delta normalized to mean/to start), variance within the time frame, zscore normalized delta
+#deep learning using the signals themselves and give time to red as labels.
+
+#Static feature correlations 
+draw_it(time_summary_plot, "time_to_green_start", "delay_green_to_red_min")
+draw_it(time_summary_plot, "time_to_green_start", "delay_green_to_red_min")
+draw_it(time_summary_plot, "delay_green_to_blue_min", "delay_green_to_red_min")
+
+
+```
+#Features table
+```{r}
+
+early_df <- spots3 %>%
+  arrange(`Track.ID`, Frame) %>%
+  group_by(`Track.ID`) %>%
+  mutate(norm_frame = Frame - min(Frame, na.rm = TRUE)) %>%
+  filter(norm_frame < 16) %>%
+  ungroup() %>%
+  mutate(
+    nuc_cell_area_ratio = ifelse(
+      is.na(cell_Area) | cell_Area == 0,
+      NA_real_,
+      nuc_Area / cell_Area
+    )
+  )
+
+early_df <- early_df %>%
+  mutate(
+    across(
+      where(~ is.character(.) | is.factor(.)),
+      ~ suppressWarnings(as.numeric(as.character(.)))
+    )
+  )
+
+feature_table <- early_df %>%
+  group_by(`Track.ID`) %>%
+  summarise(
+    # --------------------------------
+    # cell size
+    # --------------------------------
+    cell_area_start = safe_first(cell_Area),
+    cell_area_mean  = mean(cell_Area, na.rm = TRUE),
+    cell_area_sd    = safe_sd(cell_Area),
+    cell_area_slope = safe_slope(cell_Area, norm_frame),
+
+    # --------------------------------
+    # nucleus size / shape
+    # --------------------------------
+    nuc_area_start = safe_first(nuc_Area),
+    nuc_area_mean  = mean(nuc_Area, na.rm = TRUE),
+    nuc_area_slope = safe_slope(nuc_Area, norm_frame),
+
+    nuc_circ_mean  = mean(nuc_Circ., na.rm = TRUE),
+    nuc_circ_sd    = safe_sd(nuc_Circ.),
+
+    # --------------------------------
+    # nucleus / cell size ratio
+    # --------------------------------
+    nuc_cell_area_ratio_start = safe_first(nuc_cell_area_ratio),
+    nuc_cell_area_ratio_mean  = mean(nuc_cell_area_ratio, na.rm = TRUE),
+    nuc_cell_area_ratio_slope = safe_slope(nuc_cell_area_ratio, norm_frame),
+
+    # --------------------------------
+    # motion
+    # --------------------------------
+    speed_mean  = mean(cell_speed, na.rm = TRUE),
+    speed_sd    = safe_sd(cell_speed),
+    speed_slope = safe_slope(cell_speed, norm_frame),
+
+    # --------------------------------
+    # GFP / reporter features (channel 2, bleedthrough-corrected)
+    # --------------------------------
+    gfp_start = safe_first(cell_Mean.ch2.corrected),
+    gfp_mean  = mean(cell_Mean.ch2.corrected, na.rm = TRUE),
+    gfp_sd    = safe_sd(cell_Mean.ch2.corrected),
+    gfp_slope = safe_slope(cell_Mean.ch2.corrected, norm_frame),
+
+    gfp_snr_mean = mean(cell_SNR.ch2, na.rm = TRUE),
+    gfp_snr_sd   = safe_sd(cell_SNR.ch2),
+
+    # --------------------------------
+    # brightfield features (channel 4)
+    # --------------------------------
+    bf_snr_mean   = mean(cell_SNR.ch4, na.rm = TRUE),
+    bf_ctrst_mean = mean(cell_Ctrst.ch4, na.rm = TRUE),
+    bf_ctrst_sd   = safe_sd(cell_Ctrst.ch4),
+
+    # --------------------------------
+    # morphology descriptors
+    # --------------------------------
+    solidity_mean    = mean(cell_Solidity, na.rm = TRUE),
+    solidity_sd      = safe_sd(cell_Solidity),
+
+    shape_index_mean = mean(cell_Shape.index, na.rm = TRUE),
+
+    long_axis_mean   = mean(cell_El..long.axis, na.rm = TRUE),
+    long_axis_sd     = safe_sd(cell_El..long.axis),
+    long_axis_slope  = safe_slope(cell_El..long.axis, norm_frame),
+
+    .groups = "drop"
+  ) %>%
+  mutate(
+    across(
+      where(is.numeric),
+      ~ replace(., is.infinite(.), NA)
+    )
+  )
+
+feature_table_raw <- feature_table
+
+feature_table_z <- feature_table %>%
+  mutate(
+    across(
+      .cols = where(is.numeric) & !matches("^Track\\.ID$"),
+      .fns = zscore_feature,
+      .names = "{.col}_z"
+    )
+  ) %>%
+  select(`Track.ID`, ends_with("_z"))
+
+
+cor_mat <- cor(
+  feature_table_z[, -which(names(feature_table_z) == "Track.ID")],
+  use = "pairwise.complete.obs",
+  method = "pearson"
+)
+
+corrplot(cor_mat, method = "color", tl.cex = 0.6)
+
+feat_tmp = merge(feature_table_z, time_summary, by = "Track.ID")
+
+cors <- sapply(feat_tmp[, 2:31], function(col) {
+  x <- suppressWarnings(as.numeric(as.character(col)))
+  y <- suppressWarnings(as.numeric(as.character(feat_tmp$delay_green_to_red)))
+  
+  keep <- is.finite(x) & is.finite(y)
+  
+  if (sum(keep) < 3) return(NA_real_)
+  if (sd(x[keep]) == 0 || sd(y[keep]) == 0) return(NA_real_)
+  
+  cor(x[keep], y[keep])
+})
+
+cor_df <- data.frame(
+  feature = names(cors),
+  correlation = as.numeric(cors)
+) %>%
+  filter(!is.na(correlation))
+
+ggplot(data=cor_df, aes(x=feature, y=correlation, fill = feature)) + geom_bar(stat="identity") + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+
+draw_it(feat_tmp, "gfp_mean_z", "delay_green_to_red_min")
+
+cor(feat_tmp[, c("gfp_mean_z", "gfp_slope_z", "gfp_sd_z")], use = "pairwise.complete.obs")
+
+ggplot(feat_tmp, aes(x = delay_green_to_red_min)) + geom_density(fill = "red") + labs(title = "green to red delay (minutes)")
+
+df_surv <- feat_tmp %>%
+  mutate(
+    event = ifelse(is.finite(delay_green_to_red_min), 1, 0),
+    time = ifelse(is.finite(delay_green_to_red_min),
+                  delay_green_to_red_min,
+                  max(delay_green_to_red_min))
+  )
+
+
+fit <- survival::coxph(
+  survival::Surv(time, event) ~ gfp_mean_z + cell_area_sd_z,
+  data = df_surv
+)
+summary(fit)
+
+```
+Linear model
+```{r}
+
+df_lm = feat_tmp[,c(2:31,49)]
+
+df_lm[is.na(df_lm$delay_green_to_red_min),"delay_green_to_red_min"] = 4500
+
+df_lm_imp <- df_lm %>%
+  mutate(
+    across(
+      where(is.numeric) & !matches("delay_green_to_red_min"),
+      ~ ifelse(is.na(.), median(., na.rm = TRUE), .)
+    )
+  )
+
+lm_model <- lm(delay_green_to_red_min ~ ., data = df_lm_imp)
+summary(lm_model)
+
+#regularized regression
+
+# LASSO
+x <- model.matrix(delay_green_to_red_min ~ ., df_lm_imp)[, -1]
+y <- na.omit(df_lm_imp$delay_green_to_red_min)
+
+cv_model <- cv.glmnet(x, y, alpha = 1)
+
+best_lambda <- cv_model$lambda.min
+
+lasso_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+
+coef(lasso_model)
+
+# ElasticNet
+cv_model_en <- cv.glmnet(x, y, alpha = 0.5)
+
+best_lambda_en <- cv_model_en$lambda.min
+
+enet_model <- glmnet(x, y, alpha = 0.5, lambda = best_lambda_en)
+
+coef(enet_model)
+plot(cv_model_en)
+
+selected_features <- replicate(50, {
+  idx <- sample(1:nrow(x), replace = TRUE)
+  cv <- cv.glmnet(x[idx,], y[idx], alpha = 1)
+  model <- glmnet(x[idx,], y[idx], alpha = 1, lambda = cv$lambda.min)
+  rownames(coef(model))[which(coef(model) != 0)]
+})
+
+bootstrap_feats = as.data.frame(table(unlist(selected_features)))
+
+
+bootstrap_feats = bootstrap_feats[-1,]
+bootstrap_feats <- bootstrap_feats %>%
+  arrange(desc(Freq))
+
+ggplot(bootstrap_feats, aes(x = reorder(Var1, Freq), y = Freq, fill = Var1)) +
+  geom_bar(stat = "identity") +
+  coord_flip() + theme(legend.position = "none") + labs(title = "informative features in bootstrap (n = 50)")
+
+
+#Turn red or not
+df_cls <- feat_tmp[,c(2:31,49)] %>%
+  mutate(
+    turns_red = ifelse(is.finite(delay_green_to_red_min), 1, 0)
+  )
+
+df_cls <- df_cls %>%
+  mutate(
+    across(where(is.numeric), ~ ifelse(is.infinite(.), NA, .))
+  ) %>%
+  select(-delay_green_to_red_min)
+
+df_cls_imp <- df_cls %>%
+  mutate(
+    across(
+      where(is.numeric) & !matches("turns_red"),
+      ~ ifelse(is.na(.), median(., na.rm = TRUE), .)
+    )
+  )
+
+lm_model <- lm(turns_red ~ ., data = df_cls_imp)
+summary(lm_model)
+
+glm_model <- glm(turns_red ~ ., data = df_cls_imp, family = binomial)
+summary(glm_model)
+
+
+x <- model.matrix(turns_red ~ ., df_cls_imp)[, -1]
+y <- df_cls_imp$turns_red
+
+cv <- cv.glmnet(x, y, alpha = 1, family = "binomial")
+
+lasso_model <- glmnet(x, y, alpha = 1, lambda = cv$lambda.min, family = "binomial")
+
+coef(lasso_model)
+
+```
+
+#Cox ElasticNet + KM risk stratification
+```{r}
+
+# ── proper survival outcome ────────────────────────────────────────────────────
+# For censored cells use actual track duration from green onset, not imputed max.
+track_duration_min <- spots3 %>%
+  group_by(`Track.ID`) %>%
+  summarise(
+    track_dur_min = (max(`T..sec.`, na.rm = TRUE) - min(`T..sec.`, na.rm = TRUE)) / 60,
+    .groups = "drop"
+  )
+
+df_cox <- feat_tmp %>%
+  left_join(track_duration_min, by = "Track.ID") %>%
+  mutate(
+    event     = as.integer(is.finite(delay_green_to_red_min)),
+    surv_time = ifelse(event == 1, delay_green_to_red_min, track_dur_min)
+  ) %>%
+  filter(is.finite(surv_time), surv_time > 0)
+
+cat(sprintf("Cox: %d cells | %d events | %d censored\n",
+            nrow(df_cox), sum(df_cox$event), sum(df_cox$event == 0)))
+
+# ── feature matrix (z-scored, same columns as linear model) ───────────────────
+feat_cols_cox <- names(df_cox)[grepl("_z$", names(df_cox))]
+
+X_cox <- df_cox %>%
+  select(all_of(feat_cols_cox)) %>%
+  mutate(across(everything(), ~ ifelse(is.na(.), median(., na.rm = TRUE), .))) %>%
+  as.matrix()
+
+surv_y <- survival::Surv(df_cox$surv_time, df_cox$event)
+
+# ── Cox ElasticNet (alpha = 0.5) ───────────────────────────────────────────────
+set.seed(42)
+cv_cox   <- cv.glmnet(X_cox, surv_y, family = "cox", alpha = 0.5, nfolds = 10)
+cox_en   <- glmnet(X_cox, surv_y, family = "cox", alpha = 0.5, lambda = cv_cox$lambda.min)
+
+plot(cv_cox, main = "Cox ElasticNet CV (alpha=0.5, 10-fold)")
+
+# coefficients
+cox_coefs <- as.data.frame(as.matrix(coef(cox_en))) %>%
+  rename(log_HR = s0) %>%
+  filter(log_HR != 0) %>%
+  arrange(desc(abs(log_HR)))
+
+print(cox_coefs)
+
+# concordance
+risk_score <- as.numeric(predict(cox_en, newx = X_cox, s = cv_cox$lambda.min, type = "link"))
+conc       <- survival::concordance(surv_y ~ risk_score)
+# glmnet Cox: higher score = higher hazard; concordance < 0.5 means sign is flipped
+c_stat <- max(conc$concordance, 1 - conc$concordance)
+cat(sprintf("C-statistic: %.3f\n", c_stat))
+
+# ── bootstrap feature stability ────────────────────────────────────────────────
+set.seed(99)
+boot_cox <- replicate(50, {
+  idx <- sample(nrow(X_cox), replace = TRUE)
+  cv  <- cv.glmnet(X_cox[idx, ], surv_y[idx], family = "cox", alpha = 0.5, nfolds = 5)
+  m   <- glmnet(X_cox[idx, ], surv_y[idx], family = "cox", alpha = 0.5, lambda = cv$lambda.min)
+  cc  <- as.matrix(coef(m))
+  rownames(cc)[which(cc != 0)]
+}, simplify = FALSE)
+
+cox_boot_df <- as.data.frame(table(unlist(boot_cox))) %>%
+  rename(feature = Var1, freq = Freq) %>%
+  arrange(desc(freq)) %>%
+  head(20)
+
+ggplot(cox_boot_df, aes(x = reorder(feature, freq), y = freq, fill = feature)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  theme_bw() + theme(legend.position = "none") +
+  labs(title = sprintf("Cox bootstrap feature stability (n=50)  |  C=%.3f", c_stat),
+       x = NULL, y = "Times selected out of 50") +
+  geom_hline(yintercept = 25, linetype = "dashed", color = "red")
+
+# ── coefficient plot ───────────────────────────────────────────────────────────
+ggplot(cox_coefs %>% tibble::rownames_to_column("feature"),
+       aes(x = reorder(feature, log_HR), y = log_HR,
+           fill = ifelse(log_HR > 0, "faster to red", "slower to red"))) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  scale_fill_manual(values = c("faster to red" = "tomato", "slower to red" = "steelblue")) +
+  theme_bw() +
+  labs(title = sprintf("Cox ElasticNet coefficients  (C=%.3f)", c_stat),
+       x = NULL, y = "log Hazard Ratio (per SD)",
+       fill = NULL)
+
+# ── KM curves: cross-validated risk groups (out-of-sample) ────────────────────
+# Train Cox ElasticNet on k-1 folds, predict on held-out fold → repeat.
+# Risk groups are assigned only from held-out predictions, so KM separation
+# is truly out-of-sample and not inflated by in-sample fitting.
+
+k_folds  <- 5
+set.seed(42)
+fold_ids <- sample(rep(1:k_folds, length.out = nrow(df_cox)))
+
+cv_risk_scores <- numeric(nrow(df_cox))
+
+for (fold in seq_len(k_folds)) {
+  test_idx  <- which(fold_ids == fold)
+  train_idx <- which(fold_ids != fold)
+
+  X_train <- X_cox[train_idx, , drop = FALSE]
+  X_test  <- X_cox[test_idx,  , drop = FALSE]
+  y_train <- surv_y[train_idx]
+
+  # select lambda by inner CV on training fold
+  inner_cv <- cv.glmnet(X_train, y_train, family = "cox",
+                         alpha = 0.5, nfolds = 5)
+  fold_model <- glmnet(X_train, y_train, family = "cox",
+                        alpha = 0.5, lambda = inner_cv$lambda.min)
+
+  cv_risk_scores[test_idx] <- as.numeric(
+    predict(fold_model, newx = X_test, type = "link")
+  )
+}
+
+# concordance on out-of-sample scores
+conc_cv   <- survival::concordance(surv_y ~ cv_risk_scores)
+c_stat_cv <- max(conc_cv$concordance, 1 - conc_cv$concordance)
+cat(sprintf("Cross-validated C-statistic: %.3f\n", c_stat_cv))
+
+# median split on out-of-sample scores
+df_cox <- df_cox %>%
+  mutate(
+    risk_score_cv = cv_risk_scores,
+    risk_group_cv = ifelse(cv_risk_scores > median(cv_risk_scores),
+                           "High risk", "Low risk")
+  )
+
+km_fit_cv <- survival::survfit(surv_y ~ df_cox$risk_group_cv)
+
+plot(km_fit_cv,
+     col = c("tomato", "steelblue"), lwd = 2,
+     xlab = "Time from green onset (min)", ylab = "P(not yet red)",
+     main = sprintf("KM curves — cross-validated risk groups (%d-fold)  |  C=%.3f",
+                    k_folds, c_stat_cv))
+legend("topright", bty = "n",
+       legend = c(sprintf("High risk  (n=%d)", sum(df_cox$risk_group_cv == "High risk")),
+                  sprintf("Low risk   (n=%d)", sum(df_cox$risk_group_cv == "Low risk"))),
+       col = c("tomato", "steelblue"), lwd = 2)
+
+# log-rank test p-value
+logrank <- survival::survdiff(surv_y ~ df_cox$risk_group_cv)
+p_val   <- 1 - pchisq(logrank$chisq, df = 1)
+cat(sprintf("Log-rank p-value: %.4f\n", p_val))
+
+```
+
+#PCA
+```{r}
+
+feature_mat <- feature_table_z %>%
+  select(where(is.numeric))
+
+
+#impute
+feature_mat <- feature_mat %>%
+  mutate(
+    across(
+      where(is.numeric),
+      ~ ifelse(is.na(.), median(., na.rm = TRUE), .)
+    )
+  )
+
+feature_mat <- feature_mat %>%
+  mutate(across(everything(), ~ ifelse(is.finite(.), ., NA_real_)))
+
+# drop all-NA columns
+keep_not_all_na <- sapply(feature_mat, function(x) !all(is.na(x)))
+feature_mat <- feature_mat[, keep_not_all_na, drop = FALSE]
+
+feature_mat_complete <- feature_mat %>%
+  filter(if_all(everything(), ~ is.finite(.)))
+
+feature_mat_complete = feature_mat_complete[, -which(names(feature_mat_complete) == "Track.ID")]
+
+pca_res <- prcomp(
+  feature_mat_complete,
+  center = TRUE,
+  scale. = TRUE
+)
+
+var_explained <- pca_res$sdev^2 / sum(pca_res$sdev^2)
+
+plot(var_explained, type = "b",
+     xlab = "PC",
+     ylab = "Variance explained")
+
+pc_scores <- as.data.frame(pca_res$x)
+
+pc_scores$Track.ID <- feature_table$Track.ID[
+  as.numeric(rownames(pc_scores))
+]
+
+pc_scores <- pc_scores %>%
+  left_join(time_summary %>%
+              mutate(turned_red = is.finite(time_to_red_start)),
+            by = "Track.ID")
+
+
+ggplot(pc_scores, aes(x = PC1, y = PC2, color = pc_scores$time_to_green_start_min)) +
+  geom_point(alpha = 0.7) + labs(x = paste0("PC1 (", round(var_explained[1], 2), ")"), y = paste0("PC2 (", round(var_explained[2], 2), ")")) + theme_bw()
+
+loadings <- as.data.frame(pca_res$rotation)
+
+loadings$PC1 %>% sort(decreasing = TRUE) %>% head(10)
+loadings$PC1 %>% sort() %>% head(10)
+
+X <- pc_scores %>%
+  select(starts_with("PC")) %>%
+  as.matrix()
+
+X <- pc_scores %>%
+  select(PC1:PC10) %>%
+  as.matrix()
+```
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+#!/bin/bash
+#BSUB -J xgboost_cv
+#BSUB -q short
+#BSUB -n 4
+#BSUB -R "rusage[mem=8000]"
+#BSUB -W 8:00
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/logs/xgboost_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/logs/xgboost_%J.err
+
+cd /home/labs/ginossar/talfis/LiveImaging
+source /apps/easybd/programs/miniconda/26.1.1_environmentally/etc/profile.d/conda.sh 2>/dev/null || true
+python3 scripts/11_xgboost.py

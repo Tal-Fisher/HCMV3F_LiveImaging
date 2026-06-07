@@ -1,0 +1,3 @@
+method,target,n_cells,n_features,R2,pearson_r,spearman_r
+ElasticNet,green_to_red,497,33,0.0658,0.2568,0.2696
+XGBoost,green_to_red,497,33,0.0063,0.2927,0.2853

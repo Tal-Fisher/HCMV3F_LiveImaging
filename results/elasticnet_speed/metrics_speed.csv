@@ -1,0 +1,8 @@
+"metric","baseline","with_speed"
+"CV R² (all cells)",-217.592448578311,-219.004441211772
+"CV r (all cells)",0.00562022958563423,0.00561353679179469
+"CV R² (productive only)",-818.190650025991,-823.492515022143
+"CV r (productive only)",-0.0420602902306561,-0.0420744252400815
+"In-sample R²",0.0818451445012847,0.0818451445012847
+"Non-zero coefs",5,5
+"Features used",53,57

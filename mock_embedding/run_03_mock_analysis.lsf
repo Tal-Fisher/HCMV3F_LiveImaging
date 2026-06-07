@@ -1,0 +1,11 @@
+#!/bin/bash
+#BSUB -J mock_analysis
+#BSUB -q short
+#BSUB -n 4
+#BSUB -R "rusage[mem=8000]"
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/mock_embedding/logs/mock_analysis_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/mock_embedding/logs/mock_analysis_%J.err
+
+source /home/labs/ginossar/talfis/envs/cellpose_embed/bin/activate
+
+python /home/labs/ginossar/talfis/LiveImaging/mock_embedding/03_mock_analysis.py

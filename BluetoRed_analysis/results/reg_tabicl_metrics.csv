@@ -1,0 +1,2 @@
+method,R2,pearson_r,spearman_rho,perm_p,n,n_feat
+TabICL,0.11,0.3343,0.3199,0.0,451,45

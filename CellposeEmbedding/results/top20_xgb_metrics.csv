@@ -1,0 +1,3 @@
+task,model,n_dims,n,cv_r2,cv_r,cv_mae,ref_elasticnet_r,ref_tabular_r,n_early,auc,sens,spec,bal_acc,ref_elasticnet_auc,ref_tabular_auc
+regression_blue_to_red,XGBoost,20,291,0.0559,0.2379,688.7,0.297,0.359,,,,,,,
+classify_early_vs_rest,XGBoost,20,274,,,,,,42.0,0.582,0.452,0.716,0.584,0.742,0.674

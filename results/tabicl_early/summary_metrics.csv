@@ -1,0 +1,9 @@
+metric,value
+AUC-ROC,0.717
+Sensitivity,0.684
+Specificity,0.669
+Balanced acc,0.676
+TP (early correct),54.0
+FN (early missed),25.0
+TN (rest correct),249.0
+FP (rest as early),123.0

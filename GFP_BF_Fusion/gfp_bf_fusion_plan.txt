@@ -1,0 +1,113 @@
+GFP + BF Dual-Embedding FC Network: Plan and Design Options
+============================================================
+Goal: predict fast vs slow (b2r classification) by combining GFP and BF
+Cellpose embeddings at GFP onset frame in a small FC network.
+
+  fast = early       -> delay_blue_to_red <= 1094 min
+  slow = medium+late -> delay_blue_to_red > 1094 min
+
+Current baselines to beat:
+  BF top-20 alone (onset-10):  AUC = 0.876
+  GFP top-20 alone (onset):    AUC = 0.742
+  Tabular EN features:         AUC ~ 0.685
+
+
+STEP 1: Extract BF embeddings at GFP onset frame
+-------------------------------------------------
+Use SAME crop coordinates as GFP embedding extraction, but read from
+BF channel instead of GFP channel. No BF<->GFP matching required.
+
+  Base script:    CellposeEmbedding/01_extract_embeddings.py
+  Coords source:  CompleteImage/A2_gfp_onset.csv
+                  (same x_at_onset, y_at_onset, gfp_onset_frame)
+  Change:         swap channel read from GFP -> BF
+  New script:     BrightFieldEmbedding/03_extract_bf_at_gfp_coords.py
+  Output:         BrightFieldEmbedding/embeddings/A2_bf_at_gfp_onset.npz/csv
+
+Advantage: guaranteed 100% overlap with GFP embeddings (same 291 cells,
+same IDs, no lossy merge from BF-track matching).
+
+
+STEP 2: Dataset merge and labels
+---------------------------------
+Source files:
+  GFP embeddings:    CellposeEmbedding/embeddings/A2_cell_embeddings.npz (291 cells)
+  BF-at-GFP-coords:  BrightFieldEmbedding/embeddings/A2_bf_at_gfp_onset.npz (291 cells)
+  Labels:            cache/python_export/model_df.csv
+                     delay_blue_to_red = delay_green_to_red - delay_green_to_blue
+
+Filters:
+  - productive: finite(delay_green_to_red) AND finite(delay_green_to_blue)
+  - half-movie: abs_gfp_onset_min <= movie_half_min
+  - b2r cutoff: fast = delay_blue_to_red <= 1094, slow = above
+
+Expected N after all filters: ~150-200 cells.
+
+
+STEP 3: OPTION B — Dual-Stream with Late Fusion  [PRIMARY IMPLEMENTATION]
+--------------------------------------------------------------------------
+
+Architecture:
+
+  GFP emb (256) -> Linear(256->64) + ReLU + Dropout(0.4)  -|
+                                                             +-> concat(128) -> Linear(128->32) + ReLU + Dropout(0.3) -> Linear(32->1) -> Sigmoid
+  BF  emb (256) -> Linear(256->64) + ReLU + Dropout(0.4)  -|
+
+  Total parameters: ~21k  (reasonable for N~200)
+
+Why dual-stream over flat 512 concat:
+  - GFP and BF are heterogeneous channels; separate first layers allow
+    each modality to project into a shared space before fusion
+  - Easier to ablate each branch independently for diagnostics
+  - Prevents one embedding from numerically dominating the other at init
+
+Training:
+  - Normalize each embedding independently (StandardScaler, fit on train fold only)
+  - 5-fold stratified CV; report OOF AUC (primary metric)
+  - BCEWithLogitsLoss with pos_weight = n_slow / n_fast (~5-9x) for class imbalance
+  - Adam, lr=1e-3, weight_decay=1e-3
+  - Early stopping: patience=20 on val AUC, max 200 epochs
+
+New script:  BrightFieldEmbedding/09_gfp_bf_fusion_network.py
+Results:     BrightFieldEmbedding/results/fusion_network_results.csv
+
+
+OTHER OPTIONS (alternatives if B overfits or for comparison)
+-------------------------------------------------------------
+
+OPTION A — Dim-reduction first  [safest baseline, run first]
+  Use top-20 dims from each embedding -> 40-dim input -> LogReg or tiny MLP
+  Source: BrightFieldEmbedding/results/b2r_top20_dims.csv
+  Network: 40 -> 20 -> 1  (near-zero overfitting risk)
+  Use as sanity check before committing to 512-dim inputs.
+
+OPTION C — Single-stream flat concat  [simpler, more overfitting risk]
+  concat([gfp_emb, bf_emb]) = 512-dim
+  512 -> 128 (BN + Dropout 0.5) -> 32 (Dropout 0.3) -> 1 -> Sigmoid
+  Simpler code; requires more aggressive regularization.
+
+OPTION D — Multi-task head  [if N is too small for binary signal alone]
+  Add regression head predicting delay_blue_to_red alongside binary head.
+  Shared backbone learns richer representation.
+  Loss = BCE(binary) + lambda * MSE(regression),  lambda ~ 0.1
+  Use if OOF AUC stays below 0.75 with Options A/B/C.
+
+
+VERIFICATION
+------------
+1. Check N after merge (flag if below 100 cells)
+2. Run Option A (LogReg on top-20+top-20) first -> should approach 0.85+ if signals are complementary
+3. Run Option B (dual-stream) -> should >= Option A if full 256 dims add information
+4. Compare OOF AUC vs individual BF baseline (0.876) and GFP baseline (0.742)
+5. Compare BF-at-GFP-coords alone vs BF m10 (onset-10) AUC=0.876:
+   if worse, the pre-infection window carries predictive info beyond morphology at onset
+
+
+FILE MAP
+--------
+  CellposeEmbedding/embeddings/A2_cell_embeddings.npz       GFP embeddings (291 cells, 256-dim)
+  BrightFieldEmbedding/embeddings/A2_bf_at_gfp_onset.npz    New BF embeddings (same coords, BF channel)
+  CellposeEmbedding/01_extract_embeddings.py                 Base for new BF extraction script
+  BrightFieldEmbedding/07_bf_b2r_analysis.py                 Reference for b2r label pipeline
+  cache/python_export/model_df.csv                           delay_green_to_red, delay_green_to_blue
+  BrightFieldEmbedding/results/b2r_top20_dims.csv            Top-20 dims for Option A baseline

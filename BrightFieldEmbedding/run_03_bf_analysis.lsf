@@ -1,0 +1,15 @@
+#!/bin/bash
+#BSUB -J bf_analysis
+#BSUB -q short
+#BSUB -n 4
+#BSUB -R "rusage[mem=8192]"
+#BSUB -W 1:00
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/logs/bf_analysis_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/logs/bf_analysis_%J.err
+
+echo "Job started : $(date)"
+echo "Host        : $(hostname)"
+
+python3 /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/03_bf_analysis.py
+
+echo "Job finished: $(date)"

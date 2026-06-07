@@ -1,0 +1,128 @@
+Binary Infection Prediction from Early BF Embeddings
+=====================================================
+
+Goal
+----
+Predict from an early brightfield snapshot whether a cell will become infected
+(turn GFP+) or not. A2 dataset only (A3 has no BrightField_raw.tif).
+
+Two scripts:
+  01_extract_embeddings.py  -- cell selection, backward/forward NN tracking,
+                               Cellpose SAM embedding extraction
+  02_classify.py            -- logistic regression (elastic net), pass A (256
+                               features) + pass B (top-20 features by |beta|)
+
+Core design decisions
+---------------------
+1. Self-computed tracking (no reliance on TrackMate BF track IDs).
+   For infected cells: snap to BF allspot at GFP onset frame, then track
+   BACKWARD frame-by-frame using strict nearest-neighbour (NN) linking.
+   For uninfected cells: track FORWARD from a fixed early frame T_REF.
+
+2. Identity kept only when the full tracking chain is unbroken.
+   Any ambiguous or out-of-range link discards the cell.
+
+3. Detailed filter statistics printed and saved at every step.
+
+4. No PCA. Two analysis passes:
+   Pass A: all 256 embedding dimensions
+   Pass B: top 20 by mean |beta| from pass A
+
+5. Logistic regression with elastic net (LogisticRegressionCV) only for now.
+
+Parameters
+----------
+PIXEL_SCALE     = 0.2871   # µm / px
+MAX_RADIUS_UM   = 15.0     # max single-frame displacement for NN linking
+AMBIGUITY_RATIO = 2.0      # 2nd-nearest must be >= 2x nearest to keep link
+LOOKBACK        = 10       # frames to track backward from GFP onset (infected)
+MIN_NEG_FWRD    = 15       # min consecutive forward frames (uninfected check)
+MIN_DIST_UM     = 50.0     # spatial exclusion radius around infected cells
+T_REF           = 20       # fixed early frame for uninfected extraction
+CROP_SIZE       = 256      # px
+DIAMETER        = 40       # px (Cellpose parameter)
+
+Infected cell selection (label = 1)
+------------------------------------
+Start: A2_gfp_onset.csv (1,324 GFP-expressing cells with onset frame + position)
+
+Step 1 - Snap to BF allspot at onset frame
+  Nearest BF detection within MAX_RADIUS_UM at onset_frame.
+  Discard if none found.
+
+Step 2 - Backward NN tracking for LOOKBACK frames
+  From the snapped position, link backward one frame at a time.
+  Link rules: nearest BF detection within MAX_RADIUS_UM; 2nd-nearest must be
+  >= AMBIGUITY_RATIO x nearest (else ambiguous -> stop).
+  Discard cell if chain breaks before LOOKBACK consecutive frames are reached.
+
+Step 3 - Confident BF<->GFP match check
+  Cross-reference the snapped BF position at onset_frame with
+  bf_gfp_matches.csv. Keep only cells whose snapped BF track_id appears in
+  matches with match_tier='confident', is_ambiguous=False,
+  temporally_consistent=True. This anchors identity to cells already verified
+  by spatial BF<->GFP overlap analysis.
+
+Extraction frame: onset_frame - LOOKBACK (variable per cell).
+
+Uninfected cell selection (label = 0)
+--------------------------------------
+Start: all unique BF track IDs in A2_BrightField_allspots.csv
+
+Step 1 - Exclude any BF track ID appearing in bf_gfp_matches.csv at any tier.
+  Removes any cell that is a GFP match candidate, regardless of confidence.
+
+Step 2 - Require detection at T_REF (frame 20).
+
+Step 3 - Forward NN tracking from T_REF for MIN_NEG_FWRD frames.
+  Same linking rules as backward tracking but forward.
+  Discard if chain breaks before MIN_NEG_FWRD consecutive frames.
+
+Step 4 - Spatial exclusion.
+  At T_REF, exclude any uninfected cell centroid within MIN_DIST_UM of any
+  infected cell's BF centroid (using allspots positions at T_REF where
+  available, else at target_frame).
+
+Extraction frame: T_REF for all uninfected cells.
+
+Outputs of 01_extract_embeddings.py
+-------------------------------------
+  embeddings/A2_infected_vs_uninfected.npz   -- track_ids, labels,
+                                                 embeddings (N,256),
+                                                 extraction_frames
+  embeddings/A2_infected_vs_uninfected.csv   -- label, track_id,
+                                                 extraction_frame, x_um, y_um,
+                                                 emb_0..255
+  figures/sample_crops.png                   -- 10 crops per class side by side
+  results/filter_stats.txt                   -- kept/discarded at every step
+
+Classification (02_classify.py)
+---------------------------------
+Pass A: LogisticRegressionCV on all 256 features
+  Standardize per fold (StandardScaler fit on train only)
+  penalty='elasticnet', l1_ratios=[0.1,0.5,0.9], solver='saga',
+  class_weight='balanced', stratified 5-fold CV
+  Metrics: ROC-AUC, PR-AUC, confusion matrix at Youden threshold
+  Save mean |beta| per feature -> top20_features.csv
+
+Pass B: same CV on top-20 features by |beta| from pass A
+
+Null control: shuffled labels -> expect AUC ~0.50
+
+Outputs of 02_classify.py
+---------------------------
+  results/pass_A_metrics.csv
+  results/pass_B_metrics.csv
+  results/top20_features.csv
+  figures/roc_pass_A.png
+  figures/roc_pass_B.png
+  figures/beta_barplot.png
+
+Key source files (read-only)
+------------------------------
+  BrightFieldEmbedding/02_extract_bf_embeddings.py  -- Cellpose model + hook
+  Brightfield_analysis/02_bf_retrack.py              -- NN tracking pattern
+  BrightFieldEmbedding/bf_gfp_matches.csv            -- match table
+  CompleteImage/A2_gfp_onset.csv                     -- GFP onset positions
+  CompleteImage/A2_BrightField_allspots.csv           -- all BF detections
+  CompleteImage/A2_BrightField_raw.tif                -- raw image stack

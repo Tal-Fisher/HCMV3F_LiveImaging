@@ -1,0 +1,2 @@
+method,AUC,sensitivity,specificity,bal_acc,spearman_rho,perm_p,threshold,n,n_early,gmm_cutoff_min
+XGBoost,0.6678,0.5789,0.7202,0.6496,-0.2739,0.0,0.4943,525,114,1094.0

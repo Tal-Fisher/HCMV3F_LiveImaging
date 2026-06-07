@@ -1,0 +1,2 @@
+task,n_dims,n,cv_r2,cv_r,cv_mae,n_nonzero
+regression_g2r,256,175,-0.0408,0.0322,724.0,0

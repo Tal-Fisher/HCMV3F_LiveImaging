@@ -1,0 +1,12 @@
+#!/bin/bash
+#BSUB -J bf_gfp_overlap
+#BSUB -q short
+#BSUB -n 2
+#BSUB -R "rusage[mem=16000]"
+#BSUB -W 2:00
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/logs/bf_gfp_overlap_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/logs/bf_gfp_overlap_%J.err
+
+cd /home/labs/ginossar/talfis/LiveImaging
+source /apps/easybd/programs/miniconda/26.1.1_environmentally/etc/profile.d/conda.sh 2>/dev/null || true
+python3 BrightFieldEmbedding/01_bf_gfp_overlap.py

@@ -1,0 +1,2 @@
+task,n,cv_r2,cv_r,cv_mae,n_nonzero,n_input_dims,best_alpha,best_l1
+regression_blue_to_red,291,0.0707,0.2715,698.1,116,116,0.20691,0.5

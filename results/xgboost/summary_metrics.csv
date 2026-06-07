@@ -1,0 +1,4 @@
+task,metric,value
+Regression (productive only),R²,0.041
+Regression (productive only),Spearman rho,0.285
+Binary (productive vs not),AUC-ROC,0.618

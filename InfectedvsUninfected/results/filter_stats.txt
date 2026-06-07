@@ -1,0 +1,22 @@
+Loading BF allspot detections...
+  Total allspot rows: 1,619,841  |  frames: 289
+Building per-frame KD-trees...
+  KD-trees built for 289 frames
+
+=== INFECTED CLASS (label=1) ===
+Start: 1324 GFP-expressing cells in A2_gfp_onset.csv
+  Step 1 (snap at onset): 317 discarded (no BF nearby), 1 discarded (onset < LOOKBACK frames from start)
+  Step 2 (backward tracking): 0 no_tree, 0 snap_miss, 505 range, 274 ambiguous
+  => Infected cells kept: 227
+
+=== UNINFECTED CLASS (label=0) ===
+Extraction frame: randomly sampled from the infected cells' extraction frames (temporal matching)
+Start: 42,630 unique BF track IDs
+  Step 1 (exclude matched at any tier): 1198 discarded, 41432 remain
+  Step 2 (present at ≥1 infected extraction frame): 18723 discarded, 22709 remain
+  Step 3 (forward tracking 15 frames): 0 no_tree, 0 snap_miss, 12714 range, 7490 ambiguous
+  After forward tracking: 2505 remain
+  Step 4 (per-frame spatial exclusion >50.0 µm): 7 discarded, 2498 remain
+  => Uninfected cells kept: 2498
+
+Class summary: 227 infected | 2498 uninfected (total 2725)

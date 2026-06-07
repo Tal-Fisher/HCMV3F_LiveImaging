@@ -1,0 +1,4 @@
+method,AUC,Sensitivity,Specificity,Balanced acc
+ElasticNet,0.6728,0.5949,0.7043,0.6496
+TabICL,0.7173,0.6835,0.6694,0.6764
+XGBoost,0.6451,0.7595,0.4194,0.5894

@@ -1,0 +1,50 @@
+feature_name,group,channel,description,summary_stat,feature_set
+gfp_corr_start,GFP intensity,GFP,Corrected GFP intensity at track start (GFP onset frame),start value,basic
+gfp_corr_mean,GFP intensity,GFP,Mean corrected GFP intensity across 16 frames,mean,basic
+gfp_corr_sd,GFP intensity,GFP,Variability of corrected GFP intensity over time,SD,basic
+gfp_corr_slope,GFP intensity,GFP,Overall linear trend of GFP intensity over 16 frames,slope,basic
+gfp_corr_end,GFP intensity,GFP,Corrected GFP intensity at last frame,end value,extended
+gfp_corr_slope_early,GFP intensity,GFP,GFP intensity slope in first half of window,slope (early),extended
+gfp_corr_slope_late,GFP intensity,GFP,GFP intensity slope in second half of window,slope (late),extended
+gfp_snr_mean,GFP intensity,GFP,Mean GFP signal-to-noise ratio (excluded from models),mean,excluded
+gfp_snr_sd,GFP intensity,GFP,SD of GFP signal-to-noise ratio,SD,basic
+nuc_bfp_start,BFP (nuclear) intensity,BFP,Nuclear BFP intensity at track start,start value,basic
+nuc_bfp_mean,BFP (nuclear) intensity,BFP,Mean nuclear BFP intensity across 16 frames,mean,basic
+nuc_bfp_sd,BFP (nuclear) intensity,BFP,Variability of nuclear BFP intensity over time,SD,basic
+nuc_bfp_slope,BFP (nuclear) intensity,BFP,Overall linear trend of nuclear BFP over 16 frames,slope,basic
+nuc_bfp_end,BFP (nuclear) intensity,BFP,Nuclear BFP intensity at last frame,end value,extended
+nuc_bfp_slope_early,BFP (nuclear) intensity,BFP,Nuclear BFP slope in first half of window,slope (early),extended
+nuc_bfp_slope_late,BFP (nuclear) intensity,BFP,Nuclear BFP slope in second half of window,slope (late),extended
+gfp_ratio_start,GFP/BFP ratio,GFP+BFP,GFP-to-nuclear-BFP ratio at track start,start value,basic
+gfp_ratio_mean,GFP/BFP ratio,GFP+BFP,Mean GFP-to-nuclear-BFP ratio across 16 frames,mean,basic
+gfp_ratio_sd,GFP/BFP ratio,GFP+BFP,Variability of GFP/BFP ratio over time,SD,basic
+gfp_ratio_slope,GFP/BFP ratio,GFP+BFP,Linear trend of GFP/BFP ratio over 16 frames,slope,basic
+gfp_ratio_max,GFP/BFP ratio,GFP+BFP,Maximum GFP/BFP ratio across 16 frames,max,basic
+area_start,Cell area,mask,Cell area (px²) at track start,start value,basic
+area_mean,Cell area,mask,Mean cell area across 16 frames,mean,basic
+area_sd,Cell area,mask,Variability of cell area over time,SD,basic
+area_slope,Cell area,mask,Overall linear trend of cell area over 16 frames,slope,basic
+area_slope_early,Cell area,mask,Cell area slope in first half of window,slope (early),extended
+area_slope_late,Cell area,mask,Cell area slope in second half of window,slope (late),extended
+nuc_area_mean,Nuclear area,mask,Mean nucleus area across 16 frames,mean,basic
+nuc_area_slope,Nuclear area,mask,Linear trend of nucleus area over 16 frames,slope,basic
+nuc_ratio_mean,Nucleus-to-cell ratio,mask,Mean ratio of nucleus area to cell area,mean,basic
+nuc_ratio_slope,Nucleus-to-cell ratio,mask,Linear trend of nucleus/cell area ratio,slope,basic
+nuc_circ_mean,Nuclear shape,mask,Mean nucleus circularity across 16 frames,mean,basic
+nuc_circ_sd,Nuclear shape,mask,Variability of nucleus circularity over time,SD,basic
+solidity_mean,Cell shape,mask,Mean cell solidity (area/convex-hull area) — outline concavity,mean,basic
+solidity_sd,Cell shape,mask,Variability of cell solidity over time,SD,basic
+shape_idx_mean,Cell shape,mask,Mean shape index (4π·Area/Perimeter²) — circularity/elongation,mean,basic
+circ_start,Cell shape,mask,Cell circularity at track start,start value,extended
+circ_end,Cell shape,mask,Cell circularity at last frame,end value,extended
+circ_slope,Cell shape,mask,Linear trend of cell circularity over 16 frames,slope,extended
+circ_sd,Cell shape,mask,Variability of cell circularity over time,SD,extended
+perim_start,Cell perimeter,mask,Cell perimeter at track start,start value,extended
+perim_end,Cell perimeter,mask,Cell perimeter at last frame,end value,extended
+perim_slope,Cell perimeter,mask,Linear trend of cell perimeter over 16 frames,slope,extended
+perim_sd,Cell perimeter,mask,Variability of cell perimeter over time,SD,extended
+bf_ctrst_mean,Brightfield intensity,BF,Mean BF contrast of the cell spot vs local background,mean,basic
+bf_ctrst_sd,Brightfield intensity,BF,Variability of BF contrast over time,SD,basic
+bf_snr_mean,Brightfield intensity,BF,Mean BF signal-to-noise ratio (excluded from models),mean,excluded
+delay_green_to_blue,Outcome / excluded,GFP+BFP,Frames from GFP onset to BFP onset — excluded to prevent leakage,event delta,excluded
+delay_green_to_red,Outcome / excluded,GFP+mCherry,Frames from GFP onset to mCherry onset — the prediction target,event delta,target

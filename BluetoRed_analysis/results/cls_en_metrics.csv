@@ -1,0 +1,2 @@
+method,AUC,sensitivity,specificity,bal_acc,spearman_rho,perm_p,threshold,n,n_early,gmm_cutoff_min
+ElasticNet,0.6405,0.6491,0.5766,0.6129,-0.2614,0.0,0.1968,525,114,1094.0

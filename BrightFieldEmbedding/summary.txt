@@ -1,0 +1,14 @@
+GFP cells total:                  1324
+Confident matches (onset):        726 (54.8%)
+  of which unambiguous (strict):  665 (50.2%)
+    with BF track_id:             661 (temporal checks possible)
+    untracked allspot only:       4 (no temporal check)
+  of which temporally consistent: 60 (9.1% of trackable strict)
+Plausible matches:                360 (27.2%)
+Marginal matches:                 129 (9.7%)
+Unmatched:                        109 (8.2%)
+Ambiguous (confident tier):       65
+
+Of 60 strict+consistent matches:
+  BF track starts at frame 0:     18 (30.0%)
+  BF track starts at frame ≤5:    19 (31.7%)

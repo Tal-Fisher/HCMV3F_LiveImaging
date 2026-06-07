@@ -1,0 +1,8 @@
+"metric","original","extended","delta"
+"CV R² (all cells)",0.072,0.078,0.00600000000000001
+"CV r (all cells)",0.27,0.281,0.011
+"CV R² (productive only)",-0.945,-0.929,0.0159999999999999
+"CV r (productive only)",0.227,0.238,0.011
+"In-sample R²",0.112,0.101,-0.011
+"Non-zero coefs",15,9,-6
+"Features used",29,45,16

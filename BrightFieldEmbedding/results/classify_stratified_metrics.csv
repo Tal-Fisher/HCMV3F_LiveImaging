@@ -1,0 +1,4 @@
+strategy,threshold,auc,ap,precision,recall,specificity,f1,accuracy,mcc,bal_acc,tp,fp,tn,fn
+A: balanced_weights thresh=0.5,0.5,0.789,0.35,0.341,0.636,0.814,0.444,0.79,0.354,0.725,14,27,118,8
+B: balanced_weights opt_thresh,0.488,0.789,0.35,0.364,0.727,0.807,0.485,0.796,0.41,0.767,16,28,117,6
+C: undersampling thresh=0.5,0.5,0.73,0.293,0.217,0.591,0.676,0.317,0.665,0.188,0.633,13,47,98,9

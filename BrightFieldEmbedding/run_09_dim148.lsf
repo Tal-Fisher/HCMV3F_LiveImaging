@@ -1,0 +1,11 @@
+#!/bin/bash
+#BSUB -J bf_dim148
+#BSUB -q short
+#BSUB -n 2
+#BSUB -R "rusage[mem=4000]"
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs/bf_dim148_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs/bf_dim148_%J.err
+
+source /home/labs/ginossar/talfis/envs/cellpose_embed/bin/activate
+
+python /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/09_dim148_only.py

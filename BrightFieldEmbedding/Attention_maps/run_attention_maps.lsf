@@ -1,0 +1,22 @@
+#!/bin/bash
+#BSUB -J bf_attention_maps
+#BSUB -q short-gpu
+#BSUB -gpu num=1:gmem=8G
+#BSUB -n 4
+#BSUB -R "rusage[mem=24576]"
+#BSUB -W 0:30
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs/attention_maps_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs/attention_maps_%J.err
+
+mkdir -p /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs
+
+PYTHON=/home/labs/ginossar/talfis/envs/cellpose_embed/bin/python
+SCRIPT=/home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/Attention_maps/01_attention_maps.py
+
+echo "Job started : $(date)"
+echo "Host        : $(hostname)"
+nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo "GPU info unavailable"
+
+$PYTHON $SCRIPT
+
+echo "Job finished: $(date)"

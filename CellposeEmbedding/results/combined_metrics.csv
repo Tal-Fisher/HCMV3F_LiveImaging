@@ -1,0 +1,4 @@
+model,n_train,n_test,n_features,best_alpha,best_l1_ratio,n_nonzero,train_r2,test_r2,train_r,test_r,test_mae
+Tabular only,218,73,29,7.6095,0.9,26,0.2012,0.2035,0.4755,0.5014,714.5
+Embedding only,218,73,50,79.12343,1.0,7,0.1361,0.0527,0.4099,0.2302,803.0
+Combined,218,73,79,15.36175,0.9,65,0.2611,0.1608,0.5887,0.4451,749.4

@@ -1,0 +1,3 @@
+task,n_dims,n,cv_r2,cv_r,cv_rho,cv_mae,n_nonzero,ref_tabular_r
+BF_raw256_g2r,256,175,-0.0263,0.0363,-0.0295,719.5,0,0.323
+BF_top20_g2r,20,175,-0.0255,-0.1143,-0.1228,720.8,0,0.323

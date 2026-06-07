@@ -1,0 +1,5 @@
+method,target,R2,pearson_r,spearman_r
+ElasticNet,green_to_red,0.09,0.3003,0.2939
+ElasticNet,blue_to_red,0.0812,0.2851,0.2798
+XGBoost,green_to_red,0.0611,0.3472,0.3489
+XGBoost,blue_to_red,0.0424,0.3234,0.3219

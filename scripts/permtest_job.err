@@ -1,0 +1,18 @@
+Loading required package: Matrix
+Error: This is R 4.3.1, package ‘Matrix’ needs >= 4.4
+In addition: Warning message:
+package ‘glmnet’ was built under R version 4.4.2 
+Execution halted
+Lmod has detected the following error: The following module(s) are unknown:
+"R/4.4.2-gfbf-2024a"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore_cache load "R/4.4.2-gfbf-2024a"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+
+/scratch/1778414255.569583.shell: line 14: Rscript: command not found

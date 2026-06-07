@@ -1,0 +1,6 @@
+feature,N,spearman_rho,p_value,partial_rho_ctrl_onset,partial_p,N_partial
+dist_nearest,525,0.181,0.0,0.057,0.1894,525
+n_within_50,525,-0.148,0.0007,-0.05,0.2573,525
+n_within_100,525,-0.244,0.0,-0.073,0.0967,525
+n_within_200,525,-0.235,0.0,0.011,0.8065,525
+n_infected_at_onset,525,-0.317,0.0,-0.032,0.4584,525

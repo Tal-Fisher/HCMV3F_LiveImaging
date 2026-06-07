@@ -1,0 +1,13 @@
+key,feature,label,direction,threshold,n_prod_eligible,pct_prod_cross,pct_nonprod_reach,gap
+Mean.ch1_nuc__max,Mean.ch1_nuc,BFP nucleus ↑,max,1.397280967,497,100.0,98.71794871794873,1.2820512820512704
+nuc_ratio__min,nuc_ratio,Nucleus/cell area ↓,min,0.307367365863175,497,100.0,99.03846153846155,0.9615384615384528
+Area_cell__max,Area_cell,Cell area ↑,max,521.1510959,497,100.0,99.03846153846155,0.9615384615384528
+ch2_corrected__max,ch2_corrected,GFP corrected ↑,max,1.90452038445,497,100.0,99.35897435897436,0.6410256410256352
+Solidity__min,Solidity,Cell solidity ↓,min,0.967119262,497,100.0,99.67948717948718,0.3205128205128176
+Area_nuc__min,Area_nuc,Nucleus area ↓,min,313.5585539,497,100.0,99.67948717948718,0.3205128205128176
+Circ_nuc__min,Circ_nuc,Nucleus circularity ↓,min,0.882025446,497,100.0,99.67948717948718,0.3205128205128176
+Mean.ch1__max,Mean.ch1,BFP cytoplasm ↑,max,0.652365819,497,100.0,100.0,0.0
+Ctrst.ch4__min,Ctrst.ch4,BF contrast ↓,min,0.99555312,497,100.0,100.0,0.0
+Shape_index__min,Shape_index,Shape index ↓,min,4.640619733,497,100.0,100.0,0.0
+gfp_bfp_ratio__max,gfp_bfp_ratio,GFP/BFP ratio ↑,max,0.5057896103468923,497,100.0,100.0,0.0
+P.stuck__max,P.stuck,P(stuck) ↑,max,,0,,,

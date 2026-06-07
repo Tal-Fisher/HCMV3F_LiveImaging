@@ -1,0 +1,2 @@
+task,n_dims,n,cv_r2,cv_r,cv_mae,n_nonzero,ref_116dim_r
+regression_blue_to_red,20,291,0.0847,0.2966,692.9,20,0.271

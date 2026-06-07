@@ -1,0 +1,2 @@
+task,n_dims,n,n_early,cut,auc,sens,spec,bal_acc,n_nonzero,ref_tabular_auc
+classify_b2r_early_vs_rest,20,291,60,1094,0.708,0.633,0.706,0.669,20,0.678

@@ -1,0 +1,64 @@
+============================================================
+02_build_3d_table.py  — HCMV Forecast tensor
+============================================================
+
+Loading timeseries_data.csv ...
+  148,755 rows, 809 unique cells
+Loading model_df.csv ...
+Loading extra_features.csv ...
+  424,140 rows, 2459 unique cells
+
+Speed NaN after merge: 0 (0.00%) — tracks in timeseries not found in raw spots
+
+Filtering cells ...
+  Productive, first-half cells: 497
+  Rows: 97,848
+
+--- NaN audit (before zero-fill) ---
+  ch2_corrected                      0  (0.00%)
+  Mean.ch1_nuc                   7,823  (8.00%)
+  Mean_ch4                           0  (0.00%)
+  Ctrst.ch4                          1  (0.00%)
+  Area_cell                          0  (0.00%)
+  Area_nuc                       7,823  (8.00%)
+  speed_px_per_frame                 0  (0.00%)
+  Circ_cell                          0  (0.00%)
+  Circ_nuc                       7,823  (8.00%)
+  Mean.ch3                           0  (0.00%)
+
+--- Feature flags ---
+  ✓ BF mean intensity (Mean_ch4) extracted from raw spots — available.
+  ✓ Cell circularity (Circ_cell) extracted from raw spots — available.
+  ⚠ Nucleus NaN frames (segmentation gaps) zero-padded: 7,823 rows (8.00%)
+  Zero-filled Mean.ch1_nuc: 7823 NaN
+  Zero-filled Ctrst.ch4: 1 NaN
+  Zero-filled Area_nuc: 7823 NaN
+  Zero-filled Circ_nuc: 7823 NaN
+  ✓ No remaining NaN in feature/target columns after zero-fill.
+
+Building per-cell sorted arrays ...
+  Cells:      497
+  max_frames: 275  (min=99, median=201)
+
+Tensor X shape: (497, 275, 9)  (cells × frames × features)
+Tensor Y shape: (497, 275)  (cells × frames, mCherry target)
+
+--- Feature value ranges (over non-padded entries) ---
+  GFP              min=-0.15  max=54.8  mean=3.888  std=3.596
+  Nuc_BFP          min=0  max=39.84  mean=3.356  std=2.469
+  BF_mean          min=0  max=1754  mean=516.2  std=474.2
+  BF_contrast      min=-1  max=2.036  mean=0.4099  std=0.4057
+  Cell_area        min=0.08266  max=2959  mean=932.9  std=429.6
+  Nuc_area         min=0  max=1436  mean=216.4  std=106.7
+  Speed            min=0  max=75.4  mean=2.952  std=4.564
+  Circ_cell        min=0.02843  max=0.9726  mean=0.631  std=0.1449
+  Circ_nuc         min=0  max=0.9696  mean=0.7499  std=0.2336
+
+--- Group counts (productive, first-half) ---
+  medium    : 241
+  late      : 179
+  early     : 77
+
+Saved → /home/labs/ginossar/talfis/LiveImaging/Forecast/cell_metadata.csv
+Saved → /home/labs/ginossar/talfis/LiveImaging/Forecast/tensor_X.npz
+Saved → /home/labs/ginossar/talfis/LiveImaging/Forecast/tensor_y_mcherry.npz

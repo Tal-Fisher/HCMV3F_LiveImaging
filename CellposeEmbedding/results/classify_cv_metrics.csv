@@ -1,0 +1,4 @@
+model,n,n_early,auc,sens,spec,bal_acc,ref_auc_A2plusA3
+Tabular only,274,42,0.674,0.524,0.75,0.637,0.684
+Embedding only,274,42,0.618,0.452,0.759,0.606,0.684
+Combined,274,42,0.612,0.357,0.759,0.558,0.684

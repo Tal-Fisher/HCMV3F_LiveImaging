@@ -1,0 +1,7 @@
+task,method,R2,pearson_r,spearman_rho,perm_p,AUC,bal_acc
+regression,ElasticNet,0.0812,0.2851,0.2798,0.0,,
+regression,XGBoost,0.1246,0.3538,0.3465,0.0,,
+regression,TabICL,0.11,0.3343,0.3199,0.0,,
+classification,ElasticNet,,,-0.2614,0.0,0.6405,0.6129
+classification,XGBoost,,,-0.2739,0.0,0.6678,0.6496
+classification,TabICL,,,-0.3158,0.0,0.6777,0.6434

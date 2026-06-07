@@ -1,0 +1,2 @@
+task,n_dims,n,cv_r2,cv_r,cv_mae,n_nonzero,cut
+regression_b2r,20,291,0.0847,0.2966,692.9,20,1094

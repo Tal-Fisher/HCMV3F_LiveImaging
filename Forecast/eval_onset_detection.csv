@@ -1,0 +1,9 @@
+model,group,n_crossing,n_noncrossing,sens_model,sens_random,sens_ctx,spec_model,spec_random,spec_ctx
+H=10 all-windows,early,696,48,0.838,0.468,0.769,1.0,0.458,1.0
+H=10 all-windows,medium,1736,1296,0.786,0.484,0.747,0.984,0.498,0.993
+H=10 all-windows,late,799,2129,0.691,0.516,0.638,0.993,0.508,0.997
+H=10 all-windows,all,3231,3473,0.774,0.489,0.725,0.99,0.504,0.996
+H=5  all-windows,early,669,77,0.873,0.466,0.831,0.974,0.532,1.0
+H=5  all-windows,medium,1672,1439,0.858,0.448,0.828,0.984,0.542,0.991
+H=5  all-windows,late,752,2242,0.807,0.451,0.757,0.992,0.528,0.996
+H=5  all-windows,all,3093,3758,0.849,0.453,0.811,0.989,0.533,0.994

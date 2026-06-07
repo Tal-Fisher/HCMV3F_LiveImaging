@@ -1,6 +1,16 @@
 # Raw image data
 CompleteImage/
 
+# Large data files inside analysis folders
+*.tif
+*.tiff
+*.npy
+*.npz
+CellposeEmbedding/Cellpose_Cells_Model/
+BrightFieldEmbedding/models/
+CellposeEmbedding/embeddings/
+BrightFieldEmbedding/embeddings/
+
 # Caches and temp
 cache/
 __pycache__/

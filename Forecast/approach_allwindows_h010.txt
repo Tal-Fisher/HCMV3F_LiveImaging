@@ -1,0 +1,72 @@
+============================================================
+Analysis: TabICLForecaster — All-windows mCherry trajectory prediction (H=10)
+Script:   04_run_forecaster_allwindows_h010.py
+Date:     2026-05-14
+============================================================
+
+OBJECTIVE
+---------
+Predict the raw mCherry (ch3) intensity trajectory H=10 frames (150 min = 2.5 h)
+ahead, using the previous 16 frames as context. The task is purely a trajectory
+forecast — no threshold crossing or onset detection is involved.
+
+DIFFERENCES FROM PREVIOUS APPROACH (03_run_forecaster.py)
+----------------------------------------------------------
+1. No remaining-time filter. Previous scripts excluded windows where red onset
+   had already passed (remaining_min <= 0). Here ALL windows are included:
+   pre-onset, peri-onset (context spans the crossing), and post-onset.
+   The only requirement is that the cell has >= H frames after the context end
+   (n_future >= H), so the ground-truth future trajectory exists.
+
+2. Direct trajectory evaluation. Instead of converting predictions to a
+   threshold-crossing time, the predicted mCherry trajectory (10 values) is
+   compared directly to the actual mCherry trajectory using MAE and RMSE,
+   frame by frame and overall. A naive persistence baseline (repeat last
+   context value for H frames) is also computed.
+
+3. No per-cell normalization. mCherry values are used on their original scale
+   as stored in tensor_y_mcherry.npz.
+
+WHY THIS MATTERS
+----------------
+The previous approach only saw pre-onset windows, where mCherry varied in a
+narrow range (~1.2–2.3). The threshold detection was therefore sensitive to
+small noise-level fluctuations. By including all window types the model now
+sees the full dynamic range of mCherry, including the rising phase and the
+plateau after onset. This gives TabICLForecaster more informative in-context
+patterns to match, and decouples model quality from an arbitrary threshold.
+
+DATA
+----
+Tensor X:  (497, 275, 9)  — 9 covariates per frame:
+           GFP, Nuc_BFP, BF_mean, BF_contrast, Cell_area,
+           Nuc_area, Speed, Circ_cell, Circ_nuc
+Tensor Y:  (497, 275)     — mCherry intensity per frame (target)
+Cells:     497 productive first-half cells (A2 + A3)
+Split:     75/25 stratified by group (early/medium/late), seed=42
+           Train: 372 cells (used for nothing here — no threshold calibration)
+           Test:  125 cells (evaluation only)
+
+WINDOW PARAMETERS
+-----------------
+context_length  = 16 frames (240 min = 4 h)
+horizon         = 10 frames (150 min = 2.5 h)
+stride          = 3 frames  (45 min between window starts)
+filter          = n_future >= 10 only (ensures ground truth exists)
+
+OUTPUTS
+-------
+predictions_allwindows_h010.csv   — per-window: actual + predicted trajectory
+                                    (stored as JSON arrays in columns)
+trajectories_allwindows_h010.npz  — predicted trajectory per window key
+eval_allwindows_h010.csv          — MAE / RMSE vs naive baseline, per group
+tabicl_forecaster_allwindows.pkl  — saved forecaster object
+windows_allwindows_h010_100examples.pdf — 100 random window trajectory plots
+
+EVALUATION METRICS
+------------------
+MAE  = mean absolute error between predicted and actual mCherry over H frames
+RMSE = root mean squared error over H frames
+Naive baseline: last context frame repeated H times (persistence forecast)
+Skill score: 1 - MAE_model / MAE_naive  (positive = better than persistence)
+============================================================

@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/home/labs/ginossar/talfis/LiveImaging/Forecast/07_run_forecaster_allwindows_h010_quantiles.py", line 10, in <module>
+    import pandas as pd
+  File "/home/labs/ginossar/talfis/envs/tabicl_forecast/lib/python3.12/site-packages/pandas/__init__.py", line 37, in <module>
+    from pandas._config import (
+  File "/home/labs/ginossar/talfis/envs/tabicl_forecast/lib/python3.12/site-packages/pandas/_config/__init__.py", line 20, in <module>
+    from pandas._config import config
+  File "/home/labs/ginossar/talfis/envs/tabicl_forecast/lib/python3.12/site-packages/pandas/_config/config.py", line 68, in <module>
+    from pandas._typing import (
+  File "/home/labs/ginossar/talfis/envs/tabicl_forecast/lib/python3.12/site-packages/pandas/_typing.py", line 198, in <module>
+    np.random.Generator,
+    ^^^^^^^^^
+  File "/home/labs/ginossar/talfis/envs/tabicl_forecast/lib/python3.12/site-packages/numpy/__init__.py", line 340, in __getattr__
+    import numpy.random as random
+  File "/home/labs/ginossar/talfis/envs/tabicl_forecast/lib/python3.12/site-packages/numpy/random/__init__.py", line 180, in <module>
+    from . import _pickle
+  File "/home/labs/ginossar/talfis/envs/tabicl_forecast/lib/python3.12/site-packages/numpy/random/_pickle.py", line 7, in <module>
+    from ._generator import Generator
+  File "<frozen importlib._bootstrap>", line 645, in parent
+KeyboardInterrupt

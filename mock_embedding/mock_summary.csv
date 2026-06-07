@@ -1,0 +1,13 @@
+model,type,kind,value
+GFP top-20,reg,mock,0.13290130937703287
+GFP top-20,reg,real,0.297
+GFP top-20,cls,mock,0.5965094339622642
+GFP top-20,cls,real,0.708
+BF raw-256,reg,mock,0.0953070788343614
+BF raw-256,reg,real,-0.01
+BF raw-256,cls,mock,0.5451015531660692
+BF raw-256,cls,real,0.715
+BF top-20,reg,mock,0.1248279669627417
+BF top-20,reg,real,0.243
+BF top-20,cls,mock,0.5170250896057348
+BF top-20,cls,real,0.876

@@ -1,0 +1,2 @@
+task,n,n_early,auc,sens,spec,bal_acc,n_nonzero,n_input_dims,best_C,best_l1,ref_auc_raw256
+classify_early_vs_rest,274,42,0.668,0.476,0.741,0.609,116,116,0.20691,0.0,0.637

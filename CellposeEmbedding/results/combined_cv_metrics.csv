@@ -1,0 +1,4 @@
+model,n,n_features,cv_r2,cv_r,cv_mae,ref_r2,ref_r
+Tabular only,291,29,0.1261,0.3591,689.9,0.104,0.323
+Embedding only,291,50,-0.0303,0.128,738.1,0.104,0.323
+Combined,291,79,0.0835,0.3034,702.7,0.104,0.323

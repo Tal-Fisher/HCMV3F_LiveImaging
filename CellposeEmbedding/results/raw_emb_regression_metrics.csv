@@ -1,0 +1,2 @@
+task,n,cv_r2,cv_r,cv_mae,n_nonzero,best_alpha,best_l1,ref_r2,ref_r
+regression,291,0.0732,0.2774,708.2,116,2.33572,0.9,0.104,0.323

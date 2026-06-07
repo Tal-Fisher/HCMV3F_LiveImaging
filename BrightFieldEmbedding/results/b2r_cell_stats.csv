@@ -1,0 +1,2 @@
+n_total,n_early,pct_early,n_medlate,b2r_mean,b2r_median,b2r_std,n_confident,n_plausible,n_temporally_consistent,n_not_consistent,pct_temporally_consistent,cut_b2r
+151,27,17.9,124,1840.0,1755.1,849.6,102,49,12,139,7.9,1094

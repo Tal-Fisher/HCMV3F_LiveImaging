@@ -1,0 +1,12 @@
+#!/bin/bash
+#BSUB -J bf_b2r
+#BSUB -q short
+#BSUB -n 4
+#BSUB -R "rusage[mem=8000]"
+#BSUB -o /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs/bf_b2r_%J.out
+#BSUB -e /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs/bf_b2r_%J.err
+
+mkdir -p /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/logs
+source /home/labs/ginossar/talfis/envs/cellpose_embed/bin/activate
+
+python /home/labs/ginossar/talfis/LiveImaging/BrightFieldEmbedding/07_bf_b2r_analysis.py

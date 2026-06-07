@@ -1,0 +1,2 @@
+n_train,n_test,pca_components,pca_cumvar,best_alpha,best_l1_ratio,n_nonzero_coefs,train_r2,test_r2,train_r,test_r,test_mae_min,baseline_tabular_r2,baseline_tabular_r
+218,73,50,0.9999,79.123426,1.0,10,0.1527,0.0423,0.4543,0.231,686.3,0.104,0.323

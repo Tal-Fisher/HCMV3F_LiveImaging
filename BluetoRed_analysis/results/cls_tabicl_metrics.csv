@@ -1,0 +1,2 @@
+method,AUC,sensitivity,specificity,bal_acc,spearman_rho,perm_p,threshold,n,n_early,gmm_cutoff_min
+TabICL,0.6777,0.7807,0.5061,0.6434,-0.3158,0.0,0.1505,525,114,1094.0

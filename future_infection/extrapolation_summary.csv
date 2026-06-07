@@ -1,0 +1,8 @@
+extra_time_h,expected_additional_empirical,expected_additional_lognorm,expected_additional_km,pct_nonprod_empirical,pct_nonprod_lognorm,expected_total_prod,expected_pct_all_prod
+0,0.0,0.0,0.0,0.0,0.0,497.0,61.4
+6,217.6,87.5,33.9,69.7,28.0,714.6,88.3
+12,265.7,149.6,52.5,85.2,47.9,762.7,94.3
+24,286.7,225.2,67.0,91.9,72.2,783.7,96.9
+48,287.0,285.0,67.6,92.0,91.3,784.0,96.9
+72,287.0,302.6,67.6,92.0,97.0,784.0,96.9
+120,287.0,310.5,67.6,92.0,99.5,784.0,96.9
