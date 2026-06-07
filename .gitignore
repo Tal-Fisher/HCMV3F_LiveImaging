@@ -1,0 +1,28 @@
+# Raw image data
+CompleteImage/
+
+# Caches and temp
+cache/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# R libraries and output
+Rlibs/
+Rplots.pdf
+
+# Logs
+logs/
+
+# Presentations
+*.pptx
+
+# Large result files
+*.h5
+*.hdf5
+*.pkl
+*.RData
+*.rds
+
+# OS files
+.DS_Store
