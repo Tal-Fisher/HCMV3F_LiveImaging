@@ -1,6 +1,6 @@
 """
 Figure 5 HMF: Classification AUC comparison — half-movie filter applied (n=497).
-Group 1 — 16-frame tabular features: GLM, XGBoost, TabICL (HMF-filtered OOF predictions).
+Group 1 — 16-frame tabular features: Baseline previous best (TabICL, HMF-filtered OOF).
 Group 2 — Onset-frame embeddings (GLM): GFP top-20, BF top-20, GFP+BF top-40 (HMF run).
 A2+A3 dataset.
 """
@@ -12,10 +12,10 @@ import matplotlib.pyplot as plt
 import os
 
 # ── data ──────────────────────────────────────────────────────────────────────
-# Group 1: 16-frame tabular — HMF-filtered OOF predictions (n=497)
-TAB_LABELS = ["GLM", "XGBoost", "TabICL"]
-TAB_AUC    = [0.6330, 0.6525, 0.6685]
-TAB_COLORS = ["#1f77b4", "#ff7f0e", "#2ca02c"]
+# Group 1: 16-frame tabular — only best model retained
+TAB_LABELS = ["Baseline\nprevious best"]
+TAB_AUC    = [0.6685]
+TAB_COLORS = ["#2ca02c"]
 
 # Group 2: onset-frame embeddings, GLM — HMF run (a2a3_combined_hmf_metrics.csv, n=497)
 EMB_LABELS = ["GFP", "BF", "GFP+BF"]
@@ -23,8 +23,8 @@ EMB_AUC    = [0.635,  0.675, 0.710]
 EMB_COLORS = ["#d62728", "#7f7f7f", "#9467bd"]
 
 # ── layout ────────────────────────────────────────────────────────────────────
-FONTSIZE = 44
-GAP      = 0.6    # extra gap between groups (in bar-width units)
+FONTSIZE = 46
+GAP      = 0.4    # small gap between groups so bars sit next to each other
 BAR_W    = 0.6
 
 n1, n2 = len(TAB_LABELS), len(EMB_LABELS)
