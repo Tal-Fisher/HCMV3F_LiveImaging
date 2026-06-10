@@ -1,0 +1,90 @@
+GFP + BF Embedding Extraction — A3 Extension Plan
+===================================================
+Date: 2026-06-07
+
+Goal
+----
+Extend the A2 GFP+BF embedding pipeline to A3. Extract Cellpose SAM neck
+embeddings from both the GFP and BF channels at the GFP onset frame for
+each productive A3 cell, then run the fusion classification on A2+A3 combined.
+
+Productive cell filter (applied throughout)
+-------------------------------------------
+  finite(delay_green_to_red) AND finite(delay_green_to_blue)
+  i.e. finite delay_blue_to_red = cells that turned both green AND red.
+  NOTE: A2 embeddings in CellposeEmbedding/ were extracted with the weaker
+  filter (finite g2r only). A3 and all future datasets use the b2r filter.
+
+Step 0 — Build A3_gfp_onset.csv  [head node, ~1 min]
+------------------------------------------------------
+Script:  GFP_BF_Fusion/00_build_gfp_onset.py
+Input:   cache/python_export/model_df.csv
+         CompleteImage/A3_Merged_spots.csv
+Output:  CompleteImage/A3_gfp_onset.csv
+         Columns: track_id | gfp_onset_frame | x_at_onset | y_at_onset
+
+Logic: for each productive A3 track, find the spot in A3_Merged_spots.csv
+whose T (sec) is closest to abs_gfp_onset_min * 60. The onset time was
+precomputed by the R pipeline (03_onset.R) and is stored in model_df.csv.
+Time residuals should be ~half a frame interval (~150 s for 5-min frames).
+
+Run:  python GFP_BF_Fusion/00_build_gfp_onset.py
+
+Step 1 — Extract GFP Cellpose embeddings for A3  [GPU job, ~10–20 min]
+-----------------------------------------------------------------------
+Script:  CellposeEmbedding/01_extract_embeddings.py --dataset A3
+Model:   CellposeEmbedding/Cellpose_Cells_Model/cpsam_20260328_104454
+Input:   CompleteImage/A3_GFP.tif  (23 GB)
+         CompleteImage/A3_gfp_onset.csv
+Output:  CellposeEmbedding/embeddings/A3_cell_embeddings.npz  (N × 256)
+         CellposeEmbedding/embeddings/A3_cell_embeddings.csv
+         CellposeEmbedding/figures/sample_crops_gfp_A3.png
+
+Submit:  bsub < GFP_BF_Fusion/submit_02_extract_gfp_a3.sh
+
+Step 2 — Extract BF Cellpose embeddings for A3 at GFP onset  [GPU job, ~10–20 min]
+-----------------------------------------------------------------------------------
+Script:  GFP_BF_Fusion/01_extract_bf_at_gfp_coords.py --dataset A3
+Model:   BrightFieldEmbedding/models/cpsam_BrightField
+Input:   CompleteImage/A3_BrightField.tif  (23 GB)
+         CompleteImage/A3_gfp_onset.csv
+Output:  GFP_BF_Fusion/embeddings/A3_bf_at_gfp_onset.npz  (N × 256)
+         GFP_BF_Fusion/embeddings/A3_bf_at_gfp_onset.csv
+         GFP_BF_Fusion/figures/sample_crops_bf_at_gfp_onset_A3.png
+
+Submit:  bsub < GFP_BF_Fusion/submit_03_extract_bf_a3.sh
+
+Steps 1 and 2 can run in parallel (independent GPU jobs).
+
+Execution order
+---------------
+  python GFP_BF_Fusion/00_build_gfp_onset.py           # must run first
+  bsub < GFP_BF_Fusion/submit_02_extract_gfp_a3.sh    # parallel
+  bsub < GFP_BF_Fusion/submit_03_extract_bf_a3.sh     # parallel
+
+Verification
+------------
+After Step 0:
+  - Row count should match productive A3 cells in model_df (finite b2r)
+  - gfp_onset_frame values should span a reasonable range (0 to ~800)
+  - Time residuals printed by script should be ~150 s (half frame interval)
+
+After Steps 1 & 2:
+  - NPZ shapes: (N, 256) for both GFP and BF embeddings
+  - track_ids should be identical between A3_cell_embeddings.npz and
+    A3_bf_at_gfp_onset.npz (guaranteed — same onset CSV used for both)
+  - Embedding std should be non-trivial (>0.1)
+
+Next step
+---------
+Run the fusion classification (02_gfp_bf_fusion_network.py) updated to
+support combined A2+A3 analysis. See plan for details.
+
+File map
+--------
+  CompleteImage/A3_GFP.tif                              raw GFP movie (23 GB)
+  CompleteImage/A3_BrightField.tif                      raw BF movie (23 GB)
+  CompleteImage/A3_gfp_onset.csv                        [created by Step 0]
+  CellposeEmbedding/embeddings/A3_cell_embeddings.npz   [created by Step 1]
+  GFP_BF_Fusion/embeddings/A3_bf_at_gfp_onset.npz      [created by Step 2]
+  cache/python_export/model_df.csv                      labels + onset times

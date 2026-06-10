@@ -1,32 +1,50 @@
 #!/usr/bin/env python3
 """
-Extract 256-dim Cellpose SAM neck embeddings for 291 productive A2 cells.
-Embedding taken at the GFP onset frame (first GFP-positive frame per cell).
+Extract 256-dim Cellpose SAM neck embeddings from the GFP channel at the
+GFP onset frame for each productive cell.
 
-Output:
-  embeddings/A2_cell_embeddings.npz  -- keys: track_ids (int64), embeddings (float32, N×256)
-  embeddings/A2_cell_embeddings.csv  -- track_id + emb_0 … emb_255
-  figures/sample_crops_5.png         -- 256×256 GFP crops for 5 random cells
+Productive = finite delay_green_to_red AND finite delay_green_to_blue
+             (i.e. finite delay_blue_to_red).
+
+Usage:
+  python 01_extract_embeddings.py --dataset A2   # default
+  python 01_extract_embeddings.py --dataset A3
+
+Output (dataset-specific):
+  embeddings/{DATASET}_cell_embeddings.npz  -- track_ids (int64), embeddings (float32, N×256)
+  embeddings/{DATASET}_cell_embeddings.csv  -- track_id + emb_0 … emb_255
+  figures/sample_crops_gfp_{DATASET}.png   -- 5 random 256×256 GFP crops
 """
 
-import sys
+import argparse
 import numpy as np
 import pandas as pd
 import tifffile
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import torch
 from pathlib import Path
 
+# ── CLI ────────────────────────────────────────────────────────────────────
+parser = argparse.ArgumentParser()
+parser.add_argument('--dataset', default='A2', choices=['A2', 'A3'],
+                    help='Which movie to process (default: A2)')
+args = parser.parse_args()
+DATASET = args.dataset
+
 # ── Paths ──────────────────────────────────────────────────────────────────
-BASE     = Path('/home/labs/ginossar/talfis/LiveImaging/CellposeEmbedding')
-LIVEIMG  = Path('/home/labs/ginossar/talfis/LiveImaging')
+BASE    = Path('/home/labs/ginossar/talfis/LiveImaging/CellposeEmbedding')
+LIVEIMG = Path('/home/labs/ginossar/talfis/LiveImaging')
 
 MODEL_PATH = str(BASE / 'Cellpose_Cells_Model' / 'cpsam_20260328_104454')
-GFP_TIFF   = BASE / 'A2_GFP_raw.tif'
-ONSET_CSV  = LIVEIMG / 'CompleteImage' / 'A2_gfp_onset.csv'
 MODEL_DF   = LIVEIMG / 'cache' / 'python_export' / 'model_df.csv'
+ONSET_CSV  = LIVEIMG / 'CompleteImage' / f'{DATASET}_gfp_onset.csv'
+
+GFP_TIFF_PATHS = {
+    'A2': BASE / 'A2_GFP_raw.tif',
+    'A3': LIVEIMG / 'CompleteImage' / 'A3_GFP.tif',
+}
+GFP_TIFF = GFP_TIFF_PATHS[DATASET]
 
 OUT_DIR     = BASE / 'embeddings'
 FIGURES_DIR = BASE / 'figures'
@@ -39,6 +57,8 @@ HALF           = CROP_SIZE // 2
 DIAMETER       = 40
 N_SAMPLE_CROPS = 5
 RANDOM_SEED    = 42
+
+print(f'Dataset: {DATASET}', flush=True)
 
 # ── Load model ─────────────────────────────────────────────────────────────
 print('Loading Cellpose model...', flush=True)
@@ -63,23 +83,27 @@ print('Loading metadata...', flush=True)
 df    = pd.read_csv(MODEL_DF)
 onset = pd.read_csv(ONSET_CSV)
 
-a2 = df[(df['dataset'] == 'A2') & np.isfinite(df['delay_green_to_red'])].copy()
-a2['track_id'] = a2['Track.ID'].str.replace('A2_', '', regex=False).astype(int)
+cells = df[
+    (df['dataset'] == DATASET) &
+    np.isfinite(df['delay_green_to_red']) &
+    np.isfinite(df['delay_green_to_blue'])
+].copy()
+cells['track_id'] = cells['Track.ID'].str.replace(f'{DATASET}_', '', regex=False).astype(int)
 onset_idx = onset.set_index('track_id')
 
-print(f'  Productive A2 cells: {len(a2)}', flush=True)
+print(f'  Productive {DATASET} cells (finite b2r): {len(cells)}', flush=True)
 
 rng        = np.random.default_rng(RANDOM_SEED)
-sample_ids = set(rng.choice(a2['track_id'].values, size=N_SAMPLE_CROPS, replace=False).tolist())
+sample_ids = set(rng.choice(cells['track_id'].values, size=N_SAMPLE_CROPS, replace=False).tolist())
 
 # ── Memmap GFP TIFF ────────────────────────────────────────────────────────
 print(f'Memmapping {GFP_TIFF.name}...', flush=True)
 gfp = tifffile.memmap(str(GFP_TIFF))
-T, H, W = gfp.shape
+_, H, W = gfp.shape
 print(f'  Shape: {gfp.shape}, dtype: {gfp.dtype}', flush=True)
 
 def get_crop(frame, cx, cy):
-    """256×256 uint8 crop centred on (cx, cy), zero-padded at image boundaries."""
+    """256×256 crop centred on (cx, cy), zero-padded at image boundaries."""
     y0, y1 = cy - HALF, cy + HALF
     x0, x1 = cx - HALF, cx + HALF
     iy0, iy1 = max(0, y0), min(H, y1)
@@ -93,11 +117,11 @@ def get_crop(frame, cx, cy):
 # ── Extract embeddings ─────────────────────────────────────────────────────
 track_ids_out  = []
 embeddings_out = []
-sample_crops   = {}   # track_id → crop
+sample_crops   = {}
 
-print(f'Extracting embeddings...', flush=True)
-n = len(a2)
-for i, (_, row) in enumerate(a2.iterrows()):
+print('Extracting embeddings...', flush=True)
+n = len(cells)
+for i, (_, row) in enumerate(cells.iterrows()):
     tid = int(row['track_id'])
 
     if tid not in onset_idx.index:
@@ -144,16 +168,16 @@ hook_handle.remove()
 
 # ── Save embeddings ────────────────────────────────────────────────────────
 track_ids_arr  = np.array(track_ids_out,  dtype=np.int64)
-embeddings_arr = np.array(embeddings_out, dtype=np.float32)   # (N, 256)
+embeddings_arr = np.array(embeddings_out, dtype=np.float32)
 
 print(f'\nEmbeddings shape : {embeddings_arr.shape}')
 print(f'Embedding stats  : mean={embeddings_arr.mean():.4f}  std={embeddings_arr.std():.4f}')
 
-npz_path = OUT_DIR / 'A2_cell_embeddings.npz'
+npz_path = OUT_DIR / f'{DATASET}_cell_embeddings.npz'
 np.savez(str(npz_path), track_ids=track_ids_arr, embeddings=embeddings_arr)
 print(f'Saved: {npz_path}')
 
-csv_path = OUT_DIR / 'A2_cell_embeddings.csv'
+csv_path = OUT_DIR / f'{DATASET}_cell_embeddings.csv'
 dim = embeddings_arr.shape[1]
 emb_df = pd.DataFrame(
     np.column_stack([track_ids_arr[:, None], embeddings_arr]),
@@ -171,9 +195,9 @@ for ax, (tid, (crop, frame)) in zip(axes, sample_crops.items()):
     ax.imshow(crop, cmap='gray', vmin=0, vmax=vmax)
     ax.set_title(f'Track {tid}\nframe {frame}', fontsize=9)
     ax.axis('off')
-fig.suptitle('GFP onset crops (256×256 px)', fontsize=11)
+fig.suptitle(f'GFP onset crops — {DATASET} (256×256 px)', fontsize=11)
 plt.tight_layout()
-png_path = FIGURES_DIR / 'sample_crops_5.png'
+png_path = FIGURES_DIR / f'sample_crops_gfp_{DATASET}.png'
 fig.savefig(str(png_path), dpi=150, bbox_inches='tight')
 plt.close(fig)
 print(f'Saved: {png_path}')

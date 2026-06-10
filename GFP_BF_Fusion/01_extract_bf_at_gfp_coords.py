@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """
 Extract 256-dim Cellpose SAM neck embeddings from the BF channel,
-cropped at the GFP cell's onset-frame coordinates (same x/y/frame as
-CellposeEmbedding/embeddings/A2_cell_embeddings.npz).
+cropped at the GFP cell's onset-frame coordinates.
 
-No BF<->GFP matching needed — GFP onset table is used directly.
-Guaranteed 100% cell overlap with GFP embeddings (same 291 track IDs).
+Productive = finite delay_green_to_red AND finite delay_green_to_blue
+             (i.e. finite delay_blue_to_red).
 
-Output:
-  embeddings/A2_bf_at_gfp_onset.npz  -- track_ids (int64), embeddings (float32, N×256)
-  embeddings/A2_bf_at_gfp_onset.csv  -- track_id + emb_0 … emb_255
-  figures/sample_crops_bf_at_gfp_onset.png
+Usage:
+  python 01_extract_bf_at_gfp_coords.py --dataset A2   # default
+  python 01_extract_bf_at_gfp_coords.py --dataset A3
+
+Output (dataset-specific):
+  embeddings/{DATASET}_bf_at_gfp_onset.npz  -- track_ids (int64), embeddings (float32, N×256)
+  embeddings/{DATASET}_bf_at_gfp_onset.csv  -- track_id + emb_0 … emb_255
+  figures/sample_crops_bf_at_gfp_onset_{DATASET}.png
 """
 
+import argparse
 import numpy as np
 import pandas as pd
 import tifffile
@@ -21,30 +25,43 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+# ── CLI ────────────────────────────────────────────────────────────────────
+parser = argparse.ArgumentParser()
+parser.add_argument('--dataset', default='A2', choices=['A2', 'A3'],
+                    help='Which movie to process (default: A2)')
+args = parser.parse_args()
+DATASET = args.dataset
+
 # ── Paths ──────────────────────────────────────────────────────────────────
 BASE    = Path('/home/labs/ginossar/talfis/LiveImaging/GFP_BF_Fusion')
 LIVEIMG = Path('/home/labs/ginossar/talfis/LiveImaging')
 
 BF_MODEL_PATH = str(LIVEIMG / 'BrightFieldEmbedding' / 'models' / 'cpsam_BrightField')
-BF_TIFF       = LIVEIMG / 'CompleteImage' / 'A2_BrightField_raw.tif'
-ONSET_CSV     = LIVEIMG / 'CompleteImage' / 'A2_gfp_onset.csv'
 MODEL_DF      = LIVEIMG / 'cache' / 'python_export' / 'model_df.csv'
+ONSET_CSV     = LIVEIMG / 'CompleteImage' / f'{DATASET}_gfp_onset.csv'
+
+BF_TIFF_PATHS = {
+    'A2': LIVEIMG / 'CompleteImage' / 'A2_BrightField_raw.tif',
+    'A3': LIVEIMG / 'CompleteImage' / 'A3_BrightField.tif',
+}
+BF_TIFF = BF_TIFF_PATHS[DATASET]
 
 OUT_DIR = BASE / 'embeddings'
 FIG_DIR = BASE / 'figures'
 OUT_DIR.mkdir(exist_ok=True)
 FIG_DIR.mkdir(exist_ok=True)
 
-PIXEL_SCALE    = 0.2871   # µm/px  (same as GFP extraction)
+PIXEL_SCALE    = 0.2871   # µm/px
 CROP_SIZE      = 256
 HALF           = CROP_SIZE // 2
 DIAMETER       = 40
 N_SAMPLE_CROPS = 5
 RANDOM_SEED    = 42
 
-# ── Guard ──────────────────────────────────────────────────────────────────
+print(f'Dataset: {DATASET}', flush=True)
+
 if not BF_TIFF.exists():
-    raise FileNotFoundError(f"BF raw tif not found: {BF_TIFF}")
+    raise FileNotFoundError(f"BF tif not found: {BF_TIFF}")
 
 # ── Load model ─────────────────────────────────────────────────────────────
 print('Loading BF Cellpose model...', flush=True)
@@ -66,23 +83,27 @@ print('Loading metadata...', flush=True)
 df    = pd.read_csv(MODEL_DF)
 onset = pd.read_csv(ONSET_CSV)
 
-a2 = df[(df['dataset'] == 'A2') & np.isfinite(df['delay_green_to_red'])].copy()
-a2['track_id'] = a2['Track.ID'].str.replace('A2_', '', regex=False).astype(int)
+cells = df[
+    (df['dataset'] == DATASET) &
+    np.isfinite(df['delay_green_to_red']) &
+    np.isfinite(df['delay_green_to_blue'])
+].copy()
+cells['track_id'] = cells['Track.ID'].str.replace(f'{DATASET}_', '', regex=False).astype(int)
 onset_idx = onset.set_index('track_id')
 
-print(f'  Productive A2 cells: {len(a2)}', flush=True)
+print(f'  Productive {DATASET} cells (finite b2r): {len(cells)}', flush=True)
 
 rng        = np.random.default_rng(RANDOM_SEED)
-sample_ids = set(rng.choice(a2['track_id'].values, size=N_SAMPLE_CROPS, replace=False).tolist())
+sample_ids = set(rng.choice(cells['track_id'].values, size=N_SAMPLE_CROPS, replace=False).tolist())
 
 # ── Memmap BF TIFF ─────────────────────────────────────────────────────────
 print(f'Memmapping {BF_TIFF.name}...', flush=True)
 bf = tifffile.memmap(str(BF_TIFF))
-T, H, W = bf.shape
+_, H, W = bf.shape
 print(f'  Shape: {bf.shape}, dtype: {bf.dtype}', flush=True)
 
 def get_crop(frame, cx, cy):
-    """256×256 uint8 crop centred on (cx, cy), zero-padded at boundaries."""
+    """256×256 crop centred on (cx, cy), zero-padded at boundaries."""
     y0, y1 = cy - HALF, cy + HALF
     x0, x1 = cx - HALF, cx + HALF
     iy0, iy1 = max(0, y0), min(H, y1)
@@ -99,8 +120,8 @@ embeddings_out = []
 sample_crops   = {}
 
 print('Extracting embeddings...', flush=True)
-n = len(a2)
-for i, (_, row) in enumerate(a2.iterrows()):
+n = len(cells)
+for i, (_, row) in enumerate(cells.iterrows()):
     tid = int(row['track_id'])
 
     if tid not in onset_idx.index:
@@ -151,11 +172,11 @@ embeddings_arr = np.array(embeddings_out, dtype=np.float32)
 print(f'\nEmbeddings shape : {embeddings_arr.shape}')
 print(f'Embedding stats  : mean={embeddings_arr.mean():.4f}  std={embeddings_arr.std():.4f}')
 
-npz_path = OUT_DIR / 'A2_bf_at_gfp_onset.npz'
+npz_path = OUT_DIR / f'{DATASET}_bf_at_gfp_onset.npz'
 np.savez(str(npz_path), track_ids=track_ids_arr, embeddings=embeddings_arr)
 print(f'Saved: {npz_path}')
 
-csv_path = OUT_DIR / 'A2_bf_at_gfp_onset.csv'
+csv_path = OUT_DIR / f'{DATASET}_bf_at_gfp_onset.csv'
 dim = embeddings_arr.shape[1]
 emb_df = pd.DataFrame(
     np.column_stack([track_ids_arr[:, None], embeddings_arr]),
@@ -173,9 +194,9 @@ for ax, (tid, (crop, frame)) in zip(axes, sample_crops.items()):
     ax.imshow(crop, cmap='gray', vmin=0, vmax=vmax)
     ax.set_title(f'Track {tid}\nframe {frame}', fontsize=9)
     ax.axis('off')
-fig.suptitle('BF crops at GFP onset coords (256×256 px)', fontsize=11)
+fig.suptitle(f'BF crops at GFP onset coords — {DATASET} (256×256 px)', fontsize=11)
 plt.tight_layout()
-png_path = FIG_DIR / 'sample_crops_bf_at_gfp_onset.png'
+png_path = FIG_DIR / f'sample_crops_bf_at_gfp_onset_{DATASET}.png'
 fig.savefig(str(png_path), dpi=150, bbox_inches='tight')
 plt.close(fig)
 print(f'Saved: {png_path}')
