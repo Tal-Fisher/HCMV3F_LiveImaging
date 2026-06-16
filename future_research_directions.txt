@@ -1,0 +1,500 @@
+Future Research Directions — HCMV Live Imaging Project
+=======================================================
+Generated: 2026-06-15
+
+Based on all analyses in this project and a literature review of the HCMV
+single-cell imaging field.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 1: Label-Free Pre-infection Morphology Predicts HCMV Infection Speed
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE CORE FINDING
+A single brightfield snapshot taken ~10 frames BEFORE any fluorescent reporter
+is visible predicts whether a cell will progress to late gene expression fast or
+slow (AUC = 0.876, BrightFieldEmbedding/07_bf_b2r_analysis.py). This beats:
+  - GFP at onset (AUC = 0.742)
+  - Tabular features at onset (AUC ~ 0.685)
+  - Any GFP+BF fusion tested (best: 0.712)
+
+WHY IT'S NOVEL
+No published paper reports deep morphological embeddings (Cellpose SAM) from
+brightfield alone as predictors of individual HCMV kinetics (continuous delay,
+not just who gets infected). Existing work uses coarse features (cell size, cell
+cycle phase from fluorescent reporters, manual scoring). This is a label-free,
+pre-infection signal with genuinely high predictive power.
+
+OPEN BIOLOGICAL QUESTION
+What in the cell's morphology is predictive? The Cellpose embedding is 256-dim
+and encodes nuclear shape, size, texture, etc. The literature implicates cell
+cycle phase as a source of infection heterogeneity. The key question: is BF at
+onset-10 just a proxy for cell cycle, or does it encode additional information?
+
+NEXT ANALYSES
+1. Interpret the embedding: UMAP on the 256-dim BF embeddings colored by b2r
+   delay. Which of the top-20 predictive dims correlate with interpretable
+   quantities (cell area, nuclear circularity, BF texture)?
+2. Decompose vs. cell cycle: Add FUCCI cell cycle reporter (or use nuclear area
+   as a proxy — G2/M cells are larger). Test whether BF embedding predicts speed
+   over and above cell cycle phase alone (partial correlation). If yes, this is
+   a genuinely new biological predictor beyond cell cycle.
+3. Attention on embedding dimensions: Use grad-CAM or saliency maps on the
+   Cellpose encoder to identify which spatial regions of the cell at onset-10
+   drive the prediction (nucleus? cytoplasm?). The Attention_maps/ directory
+   already exists in BrightFieldEmbedding/.
+4. Test at earlier timepoints: Does AUC hold at onset-20 or onset-30? Is the
+   predictive signal stable over time, or does it accumulate as the virus
+   approaches? This argues for/against a static cell state vs. a slowly building
+   host response. The more_time_test/ module is relevant here.
+5. Perturbation experiment: Treat cells with latrunculin A (cytoskeletal
+   disruption) or nocodazole (mitotic arrest) before infection. If the BF
+   predictor fails, this implicates cytoskeletal/nuclear organization as the
+   biological basis.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 2: Non-productive HCMV Infection — Survival Analysis & Predictability
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE FINDING
+~38% of GFP+ cells never turn mCherry+ during the movie. The KM analysis
+(future_infection/future_infection.py) shows the KM cure fraction is ~30%, and
+log-normal extrapolation suggests most non-productive cells are truly censored
+rather than permanently abortive. However, ~30% may represent a real cure
+fraction (cells that will never complete infection).
+
+WHY IT'S NOVEL
+No published HCMV live-imaging study has performed formal single-cell survival
+analysis properly accounting for individual censoring windows. Most papers
+report the fraction non-productive at movie end (naive counting). The
+methodology here — KM + parametric fitting with individual observation windows
+— is the rigorous approach and reaches a quantitatively different conclusion.
+
+OPEN BIOLOGICAL QUESTION
+Are non-productive cells a distinct pre-existing subpopulation, or are they
+stochastically sampled from the same distribution?
+
+NEXT ANALYSES
+1. Can BF at onset-10 discriminate productive from non-productive? Train the
+   same LogReg/Cellpose embedding pipeline with productive (label=1) vs.
+   non-productive (label=0) as target. The InfectedvsUninfected/ module already
+   predicts who gets infected — this asks whether you can predict who will
+   COMPLETE infection among already-GFP+ cells. Biologically deeper question.
+2. UMAP of BF embedding colored by productive status: do productive and
+   non-productive cells overlap, or does non-productive have a distinct
+   morphological niche?
+3. Competing-risks framing: Model infection speed (g2r) and productive outcome
+   jointly as competing risks — fast-progressors have lower censoring probability
+   than slow-progressors; this could bias the b2r cutoff if not accounted for.
+4. Experiment — ISG reporter: Non-productive cells often show strong
+   interferon-stimulated gene (ISG) expression. Add an ISG reporter (e.g.,
+   MxA-GFP) as a fourth channel. Test if non-productive cells are in a
+   pre-existing antiviral state that is visible in the BF embedding.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 3: Single-Cell Spatial Epidemiology of HCMV Infection Waves
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE FINDING
+proximity_analysis/proximity_analysis.py: n_infected_at_onset correlates with
+g2r delay (Spearman rho = -0.317, p < 0.001), but after partialling out onset
+timing the effect disappears (partial rho = -0.032, p = 0.46). This means
+early-onset cells have fewer infected neighbors — they are the initiators,
+physically isolated. Late-onset cells are near many already-infected cells —
+they were likely infected by cell-to-cell spread.
+
+WHY IT'S NOVEL
+Spatial autocorrelation of HCMV infection KINETICS (not just spread probability)
+has not been published. The literature confirms cell-to-cell spread produces
+radial infection foci, but whether cells infected by free virus vs. cell-to-cell
+spread have different g2r kinetics is unresolved.
+
+OPEN BIOLOGICAL QUESTION
+Does the mode of viral entry (free virus vs. cell-to-cell spread) determine
+infection speed?
+
+NEXT ANALYSES
+1. Moran's I for onset timing: Test for spatial autocorrelation of GFP onset
+   time across the well. Spatial clustering argues for a seeding-then-spread
+   model.
+2. Onset wave mapping: Visualize infection spread as a spatiotemporal movie —
+   cells colored by onset frame. Identify primary infection foci (early, no
+   infected neighbors) vs. secondary (late, surrounded by prior-infected cells).
+   Compare their b2r delay distributions directly.
+3. Mode-of-entry stratification: Cells that turned GFP+ early and in isolation
+   are candidate free-virus infections; cells that turned late with many
+   GFP+ neighbors are candidate cell-to-cell. Test whether b2r distributions
+   differ between these groups.
+4. Experiment — neutralizing antibody block: Add anti-HCMV neutralizing antibody
+   to block free-virus spread. All infections should then be cell-to-cell.
+   Compare g2r distributions vs. unblocked control. If cell-to-cell infected
+   cells have faster/slower g2r, this resolves the mechanism.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 4: GFP Kinetics as an Early Predictor of Late Gene Expression Timing
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE FINDING
+The Forecast/ module builds a TabICL trajectory predictor using 9 features x
+up to 275 frames. The mCherry trajectory can be predicted from prior context
+windows. The tensor is (497, 275, 9): GFP, Nuc_BFP, BF_mean, BF_contrast,
+Cell_area, Nuc_area, Speed, Circ_cell, Circ_nuc.
+
+WHY IT'S NOVEL
+Predicting HCMV late gene expression from the SHAPE of early IE (GFP) kinetics,
+rather than from a single snapshot, has not been systematically explored. The
+field knows IE levels matter (IE1/IE2 ratio), but the quantitative relationship
+between IE ramp-up speed and late onset at the single-cell level is unknown.
+
+OPEN BIOLOGICAL QUESTION
+Does the slope and peak of GFP accumulation in the first hours post-onset
+predict when mCherry will appear?
+
+NEXT ANALYSES
+1. GFP ramp features: Extract per-cell statistics from the GFP trajectory in
+   the first N frames post-onset: slope, AUC, time to half-max, peak value.
+   Correlate with g2r delay. More interpretable than the TabICL black box.
+2. Earliest predictive window: At what point (how many frames post-GFP onset)
+   does prediction of mCherry onset become better than chance? This tells you
+   how early the fate decision is encoded in the dynamics.
+3. GFP kinetics vs. BF morphology — head-to-head: does adding GFP trajectory
+   features to BF embedding at onset-10 improve AUC? GFP at onset (single
+   frame) doesn't beat BF alone at onset-10, but GFP TRAJECTORY may be
+   different.
+4. Experiment — IE2-specific reporter: IE2 (UL122) is the key transactivator
+   of late gene expression. A cell line with IE2-mScarlet and a late gene-GFP
+   would let you test if IE2 ramp-up specifically (not just total IE1/IE2) is
+   the predictive signal.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 5: Cross-Condition Transfer and Biological Generalizability
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE FINDING
+B3 transfer experiments (scripts/12_xgboost_transfer_B3.py,
+scripts/22_xgboost_transfer_B3_full.py) test whether models trained on A2/A3
+generalize to B3. Notable: BF alone on A3 gives AUC=0.783 vs. A2's 0.686,
+suggesting the conditions differ meaningfully.
+
+WHY IT MATTERS
+If BF morphological predictors are universal (not condition-specific), this is
+a major result — the same cell-intrinsic state that predicts speed in one
+experiment predicts it in another. If they fail to transfer, it points to
+condition-specific biology (e.g., MOI, cell passage, seeding time).
+
+NEXT ANALYSES
+1. Characterize A2 vs. A3 vs. B3 differences: Are these different cell
+   densities, MOIs, time post-seeding? Why does A3 BF alone outperform A2 BF?
+2. Latent space alignment: Project A2 and A3 BF embeddings into the same
+   UMAP/PCA space. Do fast cells from A2 and A3 cluster together? This tests
+   whether the predictive signal is the same biological phenomenon.
+3. Systematic condition variation experiment: Image cells at different time
+   points post-seeding (day 1, 2, 3 before infection) and test BF predictability.
+   If AUC rises with post-seeding time, cells are settling into a morphological
+   state that predicts fate.
+
+═════════════════════════════════════════════════════════════════════════
+PART II — EXPLORATION & CHARACTERIZATION OF SINGLE-CELL INFECTION DYNAMICS
+═════════════════════════════════════════════════════════════════════════
+Directions 1–5 are predictive (use the pre-infection state to forecast fate).
+Directions 6–9 below are descriptive: instead of asking "what predicts speed?"
+they ask "what actually happens to a cell, frame by frame, as HCMV takes it
+over?" These exploit per-frame TrackMate features that are currently used only
+as model inputs, never characterized in their own right. The raw tracks
+(CompleteImage/*_Merged_spots.csv, *_BrightField_spots.csv) carry, for every
+cell at every 15-min frame: X, Y, Area, Circ., Solidity, Shape index, elliptic
+long/short axis, and TrackMate motility-mode probabilities (P stuck,
+P diffusive). The Forecast tensor (497×275×9, Forecast/tensor_X.npz) already
+aligns 9 of these per cell. Pixel scale 0.2871 µm/px; ~68 h per movie.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 6: The Single-Cell Morphodynamic Signature of HCMV Infection
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE OPPORTUNITY
+We have the full morphometric time course of every cell across ~68 h at 15-min
+resolution, with three internal clocks per cell (green/blue/red onsets). The
+existing onset-aligned analyses (Brightfield_analysis/04_onset_aligned_speed.py,
+05_onset_aligned_size.py) align only single features to GFP onset. The
+opportunity is a unified, multi-feature "morphodynamic signature": the average
+trajectory of area, circularity, solidity, elongation, and speed, aligned not
+just to GFP onset but to each gene-expression milestone (green, blue, red),
+with a proper pre-infection baseline.
+
+WHY IT'S NOVEL
+HCMV cytopathic effect (cell rounding, enlargement, eventual detachment) is
+classically described qualitatively, by eye, at fixed endpoints — e.g. rounding
+and shrinkage first seen ~72 h post-infection by phase-contrast/EM (PubMed
+PMID 16546736). No published HCMV study resolves the *continuous timing* of each
+morphological change and locks it to the molecular program (IE→early→late) in
+the same cell. Converting "CPE appears around 3 days" into "circularity inflects
+X hours after IE onset and Y hours before late-gene onset" is a genuinely new,
+quantitative phenotyping of the cytopathic program.
+
+OPEN BIOLOGICAL QUESTION
+In what order, and with what lag relative to the gene-expression cascade, do the
+morphological hallmarks of infection appear — and is that ordering fixed across
+cells or does it vary with infection speed?
+
+NEXT ANALYSES
+1. Milestone-aligned multi-feature panel: For each feature (area, Circ.,
+   Solidity, Shape index, aspect ratio = El.long/El.short, speed), plot the
+   population-mean trajectory ± CI aligned separately to green, blue, and red
+   onset. Use the pre-GFP frames as the within-cell baseline (z-score each cell
+   to its own first ~10 frames) so changes are intrinsic, not absolute-scale.
+2. Change-point timing: Per cell, detect the inflection frame of each feature
+   (e.g. ruptures/PELT change-point detection). Report the distribution of
+   "frames from GFP onset to rounding onset," etc. This is the quantitative
+   replacement for "CPE at 72 h."
+3. Order-of-events map: Within each cell, rank the milestones (IE onset, area
+   inflection, rounding inflection, motility drop, late-gene onset) on the
+   shared clock. Is the sequence canonical (a fixed cascade) or shuffled?
+4. Speed-stratified morphodynamics: Split by g2r tertile (early/medium/late;
+   already defined in 02_build_3d_table.py) and overlay the signatures. Do
+   fast cells just run the same program compressed in time, or a different
+   program? Time-warping (DTW) alignment tests "same shape, different rate."
+5. Decouple from the cell-cycle prior: enlargement could be G2/M, not CPE. Use
+   nuclear-area baseline as a cycle proxy and confirm the post-onset trajectory
+   departs from any pre-onset cycle-driven drift.
+
+EXPERIMENT
+Phase/BF-only time lapse with a single IE-mScarlet reporter and a cell-cycle
+(FUCCI) reporter, no perturbation — a clean dataset to time the cytopathic
+program against both the viral clock and the cell-cycle clock simultaneously.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 7: Cytomegaly Kinetics — Cell and Nuclear Enlargement in Real Time
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE OPPORTUNITY
+"Cytomegalovirus" is literally named for the giant-cell phenotype it induces.
+We have per-frame Cell_area and Nuc_area for every cell (tensor dims 4 and 5;
+raw Area in *_Merged_spots.csv and *_nuclei_spots.csv). This lets us turn the
+defining phenotype of the virus into a measured single-cell growth curve.
+
+WHY IT'S NOVEL
+Cytomegaly is universally cited but, to our knowledge, never quantified as a
+continuous single-cell enlargement *rate* time-locked to gene expression.
+Whether the nucleus enlarges before, with, or after the cytoplasm — and whether
+the nucleus-to-cell area ratio rises (consistent with viral replication
+compartment expansion filling the nucleus) — is unresolved at single-cell,
+live resolution.
+
+OPEN BIOLOGICAL QUESTION
+Is cytomegaly a smooth post-IE swelling, or step-like at the early→late
+transition? Does the magnitude or rate of enlargement correlate with how fast
+(g2r) or whether (productive vs. non-productive) a cell completes infection?
+
+NEXT ANALYSES
+1. Single-cell growth curves: area(t) per cell, baseline-normalized, aligned to
+   each onset. Fit per-cell enlargement rate (µm²/h) and onset-of-enlargement.
+   Report fold-change from baseline to red onset; convert px² to µm² (×0.2871²).
+2. Nuclear vs. cytoplasmic enlargement: track Nuc_area/Cell_area ratio over
+   time. A rising ratio late = nucleus-dominated swelling (replication
+   compartment); flat ratio = whole-cell swelling.
+3. Couple to motility & rounding: enlargement should co-occur with rounding
+   (↑circularity) and a motility drop (Direction 8) — test the cross-feature
+   timing (does swelling precede or follow rounding?).
+4. Enlargement vs. fate: does enlargement rate differ between fast/slow (g2r)
+   and between productive and non-productive (Direction 2) cells? Non-productive
+   GFP+ cells that never enlarge would be a striking abortive phenotype.
+5. Cross-condition: compare cytomegaly kinetics across A2/A3/B3 — does a
+   condition with faster g2r also enlarge faster (Direction 5 link)?
+
+EXPERIMENT
+Membrane + NLS-tagged dual reporter (e.g. mScarlet-CAAX + BFP-NLS) for precise
+cytoplasmic and nuclear volume segmentation; add a viral DNA / replication-
+compartment marker (e.g. UL44-GFP) to test directly whether nuclear enlargement
+tracks replication-compartment growth.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 8: Motility Reprogramming of Infected Fibroblasts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE OPPORTUNITY
+Speed (px/frame) is already computed per cell per frame (01_compute_speed.py),
+and the raw tracks additionally carry TrackMate motility-mode probabilities
+(P stuck, P diffusive) and X,Y for directional analysis. Because the dataset
+includes uninfected/bystander tracks and non-productive GFP+ cells, we can
+contrast motility across infection status AND across infection stage within
+the same well.
+
+WHY IT'S NOVEL
+The HCMV motility literature is almost entirely about the viral chemokine
+receptor US28 driving *smooth-muscle-cell* migration (PubMed PMID 14506272,
+DOI 10.1074/jbc.M307936200; PMID 23303826, DOI 10.1099/vir.0.047290-0), and the
+MCMV homolog M33 explicitly induces SMC but NOT fibroblast migration (PMID
+16051870, DOI 10.1128/JVI.79.16.10788-10795.2005). So what HCMV does to
+*fibroblast* motility — the cell type imaged here — is essentially
+uncharacterized, and is the dominant model substrate for HCMV. A quantitative,
+stage-resolved motility trajectory in fibroblasts is new.
+
+OPEN BIOLOGICAL QUESTION
+Do infected fibroblasts speed up early (an active, virus-driven motile phase)
+and then arrest as cytomegaly/rounding sets in — and is the motility change a
+cause or merely a consequence of the morphological program?
+
+NEXT ANALYSES
+1. Speed trajectory by status & stage: mean speed aligned to GFP onset for
+   (a) uninfected, (b) productive-fast, (c) productive-slow, (d) non-productive
+   GFP+ cells. Extends 04_onset_aligned_speed.py to a status×stage grid.
+2. Motility-mode transitions: use P stuck / P diffusive to classify each
+   cell-frame as stuck/diffusive/directed; build the fraction-in-each-mode over
+   the infection clock. Does infection drive a diffusive→stuck transition, and
+   when relative to red onset?
+3. Directional persistence & MSD: from X,Y, compute per-window mean-squared
+   displacement and a persistence ratio (net/total path). Test whether early
+   infection transiently increases directed migration (the fibroblast analog of
+   the US28/SMC phenotype) before arrest.
+4. Motility vs. enlargement coupling: regress instantaneous speed on
+   instantaneous area within cell — is the arrest explained by size alone, or
+   independent?
+5. Spatial coupling (link to Direction 3): do cells that move more before onset
+   contribute to spreading infection to neighbors (track displacement vs.
+   becoming a future infection focus)?
+
+EXPERIMENT
+US28-deletion (ΔUS28) vs. wild-type HCMV, same imaging pipeline: test whether
+any infected-fibroblast motility change is US28-dependent (as in SMC) or a
+distinct fibroblast program. Optionally a scratch/wound-migration assay under
+infection to amplify directional signal.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECTION 9: An Unsupervised Atlas of Single-Cell Infection Trajectories
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE OPPORTUNITY
+Directions 6–8 characterize features one at a time. Direction 9 integrates them:
+treat each cell as a multivariate trajectory (the 497×275×9 tensor) and learn,
+without using fate labels, the natural archetypes of infection progression and
+the transitions between cell states. This reframes the project from "predict a
+scalar delay" to "map the landscape of infection trajectories."
+
+WHY IT'S NOVEL
+Morphological profiling and morphodynamic trajectory clustering are established
+in cell biology (e.g. deep morphology embeddings, Nature Methods 2024,
+s41592-024-02352-2, already cited below) but have not been applied to build an
+unsupervised state atlas of HCMV infection from live single-cell tracks. It also
+provides an interpretable counterpart to the black-box BF-embedding predictor
+(Direction 1): the predictive embedding lives at one timepoint; this is the
+whole movie.
+
+OPEN BIOLOGICAL QUESTION
+Are there discrete infection "routes" (e.g. enlarge-then-arrest vs.
+arrest-then-enlarge vs. abortive) or one continuum that cells traverse at
+different speeds? Do non-productive cells occupy a distinct branch?
+
+NEXT ANALYSES
+1. Trajectory clustering: time-warp-align (DTW) the per-cell 9-feature
+   trajectories and cluster (k-means on DTW, or a trajectory VAE / time-series
+   transformer latent). Characterize each cluster's morphodynamic profile.
+2. State-space embedding: PHATE/UMAP on per-frame feature vectors pooled across
+   cells, then overlay each cell's path as a curve through the state space —
+   visualize infection as flow on a manifold; mark green/blue/red onset points.
+3. Pseudotime: fit a pseudotime to the manifold and test how well it recovers
+   the true molecular clock (correlate pseudotime with g2r) — a morphology-only
+   ordering of infection progress.
+4. Branch vs. fate: relate clusters/branches to productive vs. non-productive
+   (Direction 2), g2r tertile, and condition (A2/A3/B3). Do morphodynamic
+   archetypes carry biological meaning the scalar delay misses?
+5. Tie back to prediction: do cells from different archetypes have different
+   Direction-1 BF-embedding signatures at onset-10? Links the descriptive atlas
+   to the predictive result.
+
+EXPERIMENT
+Higher-temporal-resolution imaging (e.g. 5-min frames) on a subset to test
+whether fast transitions seen as single steps at 15 min resolve into finer
+substructure — validates that the archetypes are not an artifact of sampling
+rate.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PUBLICATION FRAMING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The strongest standalone paper combines Directions 1 and 2:
+
+  "Pre-infection cell morphology predicts HCMV infection kinetics and
+   productive outcome at the single-cell level"
+
+Narrative arc:
+  1. Single HCMV-infected cells are highly heterogeneous in infection speed —
+     quantify rigorously with KM survival analysis (Direction 2, methodological
+     contribution).
+  2. This heterogeneity is partially encoded in the cell's morphological state
+     BEFORE infection is visible — show BF AUC = 0.876 (Direction 1, main
+     result).
+  3. The signal is label-free, outperforms handcrafted tabular features, and
+     is captured by deep morphological embeddings.
+  4. Predictive embedding dimensions point toward [cell cycle / nuclear
+     organization / cytoskeletal state] as the biological basis (new experiments
+     in Direction 1).
+
+KEY EXPERIMENT NEEDED BEFORE SUBMISSION:
+  FUCCI cell cycle reporter — because cell cycle is the existing prior in the
+  literature, you need to either confirm it explains the BF signal or show BF
+  adds information beyond cell cycle alone.
+
+A SECOND, COMPLEMENTARY PAPER combines Directions 6–9 (descriptive, not
+predictive):
+
+  "Real-time morphodynamic phenotyping of the HCMV cytopathic program at
+   single-cell resolution"
+
+Narrative arc:
+  1. The HCMV cytopathic effect — cytomegaly, rounding, motility arrest — has
+     only ever been described qualitatively at fixed endpoints. We measure it
+     continuously, per cell, time-locked to the IE→early→late molecular clock
+     (Directions 6–7).
+  2. Quantify when each hallmark appears relative to gene expression, and show
+     the program runs faster (not differently) in fast-progressing cells.
+  3. Fibroblast motility reprogramming is characterized for the first time, in
+     contrast to the SMC/US28-centric literature (Direction 8).
+  4. Integrate into an unsupervised trajectory atlas that distinguishes
+     productive routes from abortive ones (Direction 9), giving an interpretable
+     companion to the predictive embedding paper above.
+
+This pairs naturally with the predictive paper: paper 1 says the fate is
+pre-encoded; paper 2 shows the fate playing out. Together they argue HCMV
+infection speed is a cell-intrinsic, morphologically legible program.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY LITERATURE REFERENCES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Single-cell HCMV heterogeneity (live imaging):
+  https://pmc.ncbi.nlm.nih.gov/articles/PMC7566463/
+  https://pmc.ncbi.nlm.nih.gov/articles/PMC3993581/
+  https://pmc.ncbi.nlm.nih.gov/articles/PMC5007510/
+
+Cell cycle effects on HCMV IE expression:
+  https://pubmed.ncbi.nlm.nih.gov/34732895/
+  https://pubmed.ncbi.nlm.nih.gov/29695479/
+
+Chromatin/epigenetic control of MIEP:
+  https://pubmed.ncbi.nlm.nih.gov/27609809/
+
+Nuclear morphology changes during HCMV infection:
+  https://pubmed.ncbi.nlm.nih.gov/33293557/
+
+Cell-to-cell spread in CMV:
+  https://pubmed.ncbi.nlm.nih.gov/24023490/
+
+Deep learning morphological embeddings (non-HCMV context):
+  https://www.nature.com/articles/s41592-024-02352-2
+
+--- Added for Part II (verified via PubMed, 2026-06-16) ---
+
+HCMV cytopathic effect — cell rounding, shrinkage, detachment (Directions 6-7):
+  PMID 16546736 — HCMV induces apoptosis/CPE in endothelial-like cells; rounding
+    and shrinkage first seen ~72 h post-infection (phase-contrast + EM).
+
+CMV-encoded chemokine receptor drives migration — but in smooth muscle, not
+fibroblasts (motivates Direction 8's fibroblast focus):
+  PMID 14506272, DOI 10.1074/jbc.M307936200 — US28-induced SMC migration via
+    FAK/Src.
+  PMID 23303826, DOI 10.1099/vir.0.047290-0 — US28 increases cell migration on
+    CX3CL1 surfaces (time-lapse imaging).
+  PMID 16051870, DOI 10.1128/JVI.79.16.10788-10795.2005 — MCMV M33 (US28
+    homolog) induces SMC migration but NOT fibroblast migration.
+
+(Attribution: the four PMIDs above were retrieved and verified via PubMed;
+DOIs included as required by the PubMed data source.)
