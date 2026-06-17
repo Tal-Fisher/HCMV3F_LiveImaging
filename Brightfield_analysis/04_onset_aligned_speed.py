@@ -269,12 +269,6 @@ print(f'  Wilcoxon p={p_wilcoxon:.4g}  Mann-Whitney p={p_mw:.4g}')
 # ── Figure 1: onset-aligned speed trace ───────────────────────────────────────
 fig, ax = plt.subplots(figsize=(10, 4.5))
 
-# Non-infected reference band (horizontal)
-ax.axhspan(non_mean - non_sem, non_mean + non_sem,
-           color='#5b8be0', alpha=0.2, zorder=1)
-ax.axhline(non_mean, color='#5b8be0', lw=1.5, linestyle='--',
-           label=f'Non-infected mean ± SEM (n={n_non})', zorder=2)
-
 # Infected onset-aligned trace
 d = inf_ts
 ax.plot(d['t_rel'], d['mean'], color='#e05b5b', lw=2,
