@@ -1,0 +1,1456 @@
+subset,features,y_true,oof_prob
+all_b2r,GFP (top-20),0,0.570123
+all_b2r,GFP (top-20),0,0.150946
+all_b2r,GFP (top-20),0,0.538737
+all_b2r,GFP (top-20),0,0.523863
+all_b2r,GFP (top-20),0,0.47653
+all_b2r,GFP (top-20),0,0.510214
+all_b2r,GFP (top-20),1,0.483142
+all_b2r,GFP (top-20),0,0.462213
+all_b2r,GFP (top-20),0,0.501219
+all_b2r,GFP (top-20),0,0.551025
+all_b2r,GFP (top-20),0,0.566524
+all_b2r,GFP (top-20),0,0.526318
+all_b2r,GFP (top-20),0,0.562928
+all_b2r,GFP (top-20),0,0.313107
+all_b2r,GFP (top-20),0,0.432278
+all_b2r,GFP (top-20),0,0.504567
+all_b2r,GFP (top-20),0,0.32044
+all_b2r,GFP (top-20),0,0.573748
+all_b2r,GFP (top-20),0,0.812686
+all_b2r,GFP (top-20),1,0.539429
+all_b2r,GFP (top-20),0,0.537585
+all_b2r,GFP (top-20),0,0.377334
+all_b2r,GFP (top-20),0,0.491165
+all_b2r,GFP (top-20),0,0.410424
+all_b2r,GFP (top-20),1,0.495014
+all_b2r,GFP (top-20),1,0.565875
+all_b2r,GFP (top-20),0,0.499648
+all_b2r,GFP (top-20),0,0.544433
+all_b2r,GFP (top-20),1,0.525998
+all_b2r,GFP (top-20),0,0.446863
+all_b2r,GFP (top-20),0,0.44855
+all_b2r,GFP (top-20),0,0.394007
+all_b2r,GFP (top-20),1,0.516361
+all_b2r,GFP (top-20),0,0.474787
+all_b2r,GFP (top-20),1,0.575566
+all_b2r,GFP (top-20),0,0.407633
+all_b2r,GFP (top-20),0,0.47596
+all_b2r,GFP (top-20),0,0.567867
+all_b2r,GFP (top-20),0,0.614062
+all_b2r,GFP (top-20),0,0.596368
+all_b2r,GFP (top-20),1,0.652927
+all_b2r,GFP (top-20),1,0.50159
+all_b2r,GFP (top-20),0,0.33603
+all_b2r,GFP (top-20),0,0.546076
+all_b2r,GFP (top-20),0,0.99505
+all_b2r,GFP (top-20),1,0.491046
+all_b2r,GFP (top-20),0,0.537229
+all_b2r,GFP (top-20),0,0.579724
+all_b2r,GFP (top-20),0,0.502812
+all_b2r,GFP (top-20),0,0.468594
+all_b2r,GFP (top-20),0,0.483191
+all_b2r,GFP (top-20),1,0.443281
+all_b2r,GFP (top-20),0,0.52556
+all_b2r,GFP (top-20),0,0.48851
+all_b2r,GFP (top-20),0,0.476986
+all_b2r,GFP (top-20),0,0.750727
+all_b2r,GFP (top-20),0,0.482803
+all_b2r,GFP (top-20),0,0.471954
+all_b2r,GFP (top-20),0,0.495291
+all_b2r,GFP (top-20),0,0.237071
+all_b2r,GFP (top-20),0,0.41343
+all_b2r,GFP (top-20),0,0.521481
+all_b2r,GFP (top-20),1,0.521829
+all_b2r,GFP (top-20),0,0.420993
+all_b2r,GFP (top-20),1,0.258144
+all_b2r,GFP (top-20),0,0.523452
+all_b2r,GFP (top-20),0,0.445893
+all_b2r,GFP (top-20),0,0.406849
+all_b2r,GFP (top-20),0,0.545468
+all_b2r,GFP (top-20),0,0.42195
+all_b2r,GFP (top-20),1,0.530087
+all_b2r,GFP (top-20),0,0.447647
+all_b2r,GFP (top-20),0,0.501164
+all_b2r,GFP (top-20),0,0.537854
+all_b2r,GFP (top-20),0,0.491243
+all_b2r,GFP (top-20),0,0.497294
+all_b2r,GFP (top-20),0,0.371292
+all_b2r,GFP (top-20),1,0.327485
+all_b2r,GFP (top-20),0,0.459709
+all_b2r,GFP (top-20),0,0.448348
+all_b2r,GFP (top-20),0,0.460471
+all_b2r,GFP (top-20),0,0.363164
+all_b2r,GFP (top-20),0,0.487694
+all_b2r,GFP (top-20),0,0.41408
+all_b2r,GFP (top-20),0,0.49103
+all_b2r,GFP (top-20),0,0.587891
+all_b2r,GFP (top-20),0,0.469699
+all_b2r,GFP (top-20),0,0.538741
+all_b2r,GFP (top-20),0,0.501272
+all_b2r,GFP (top-20),0,0.502086
+all_b2r,GFP (top-20),0,0.538628
+all_b2r,GFP (top-20),0,0.428983
+all_b2r,GFP (top-20),0,0.485429
+all_b2r,GFP (top-20),0,0.349701
+all_b2r,GFP (top-20),0,0.516191
+all_b2r,GFP (top-20),0,0.552389
+all_b2r,GFP (top-20),0,0.521063
+all_b2r,GFP (top-20),0,0.510062
+all_b2r,GFP (top-20),0,0.507373
+all_b2r,GFP (top-20),0,0.422254
+all_b2r,GFP (top-20),0,0.562073
+all_b2r,GFP (top-20),0,0.292738
+all_b2r,GFP (top-20),0,0.530851
+all_b2r,GFP (top-20),1,0.491954
+all_b2r,GFP (top-20),0,0.711581
+all_b2r,GFP (top-20),1,0.382819
+all_b2r,GFP (top-20),0,0.376473
+all_b2r,GFP (top-20),0,0.511062
+all_b2r,GFP (top-20),0,0.748981
+all_b2r,GFP (top-20),0,0.458634
+all_b2r,GFP (top-20),0,0.482794
+all_b2r,GFP (top-20),0,0.5397
+all_b2r,GFP (top-20),0,0.451758
+all_b2r,GFP (top-20),0,0.509292
+all_b2r,GFP (top-20),0,0.429626
+all_b2r,GFP (top-20),0,0.47668
+all_b2r,GFP (top-20),0,0.517706
+all_b2r,GFP (top-20),0,0.436376
+all_b2r,GFP (top-20),0,0.488804
+all_b2r,GFP (top-20),0,0.527493
+all_b2r,GFP (top-20),0,0.406067
+all_b2r,GFP (top-20),0,0.655554
+all_b2r,GFP (top-20),1,0.084181
+all_b2r,GFP (top-20),0,0.514215
+all_b2r,GFP (top-20),0,0.456193
+all_b2r,GFP (top-20),0,0.519725
+all_b2r,GFP (top-20),0,0.305331
+all_b2r,GFP (top-20),0,0.408855
+all_b2r,GFP (top-20),0,0.4695
+all_b2r,GFP (top-20),1,0.498858
+all_b2r,GFP (top-20),0,0.432413
+all_b2r,GFP (top-20),0,0.449674
+all_b2r,GFP (top-20),1,0.515234
+all_b2r,GFP (top-20),0,0.414006
+all_b2r,GFP (top-20),0,0.797887
+all_b2r,GFP (top-20),0,0.44749
+all_b2r,GFP (top-20),0,0.437346
+all_b2r,GFP (top-20),0,0.438217
+all_b2r,GFP (top-20),1,0.443832
+all_b2r,GFP (top-20),0,0.475904
+all_b2r,GFP (top-20),0,0.584858
+all_b2r,GFP (top-20),0,0.52169
+all_b2r,GFP (top-20),1,0.760341
+all_b2r,GFP (top-20),1,0.489952
+all_b2r,GFP (top-20),0,0.556602
+all_b2r,GFP (top-20),1,0.469961
+all_b2r,GFP (top-20),0,0.461232
+all_b2r,GFP (top-20),1,0.625295
+all_b2r,GFP (top-20),0,0.452125
+all_b2r,GFP (top-20),0,0.557964
+all_b2r,GFP (top-20),1,0.528744
+all_b2r,GFP (top-20),0,0.535884
+all_b2r,GFP (top-20),0,0.87437
+all_b2r,GFP (top-20),0,0.547005
+all_b2r,GFP (top-20),0,0.49457
+all_b2r,GFP (top-20),0,0.517625
+all_b2r,GFP (top-20),0,0.445952
+all_b2r,GFP (top-20),0,0.269905
+all_b2r,GFP (top-20),0,0.762895
+all_b2r,GFP (top-20),0,0.040235
+all_b2r,GFP (top-20),0,0.457188
+all_b2r,GFP (top-20),0,0.93697
+all_b2r,GFP (top-20),0,0.542877
+all_b2r,GFP (top-20),0,0.331417
+all_b2r,GFP (top-20),0,0.449659
+all_b2r,GFP (top-20),0,0.55318
+all_b2r,GFP (top-20),0,0.479558
+all_b2r,GFP (top-20),0,0.46409
+all_b2r,GFP (top-20),0,0.462325
+all_b2r,GFP (top-20),0,0.441744
+all_b2r,GFP (top-20),0,0.44124
+all_b2r,GFP (top-20),0,0.43399
+all_b2r,GFP (top-20),0,0.482579
+all_b2r,GFP (top-20),0,0.419572
+all_b2r,GFP (top-20),0,0.549279
+all_b2r,GFP (top-20),0,0.331942
+all_b2r,GFP (top-20),1,0.593597
+all_b2r,GFP (top-20),1,0.492537
+all_b2r,GFP (top-20),0,0.457793
+all_b2r,GFP (top-20),0,0.347628
+all_b2r,GFP (top-20),0,0.449465
+all_b2r,GFP (top-20),0,0.417216
+all_b2r,GFP (top-20),0,0.441483
+all_b2r,GFP (top-20),0,0.483186
+all_b2r,GFP (top-20),0,0.485018
+all_b2r,GFP (top-20),0,0.390229
+all_b2r,GFP (top-20),0,0.471972
+all_b2r,GFP (top-20),0,0.407021
+all_b2r,GFP (top-20),0,0.538297
+all_b2r,GFP (top-20),1,0.445126
+all_b2r,GFP (top-20),1,0.315712
+all_b2r,GFP (top-20),0,0.473345
+all_b2r,GFP (top-20),0,0.483318
+all_b2r,GFP (top-20),0,0.378064
+all_b2r,GFP (top-20),1,0.386633
+all_b2r,GFP (top-20),0,0.446168
+all_b2r,GFP (top-20),0,0.485475
+all_b2r,GFP (top-20),1,0.489796
+all_b2r,GFP (top-20),0,0.464406
+all_b2r,GFP (top-20),0,0.562887
+all_b2r,GFP (top-20),0,0.549869
+all_b2r,GFP (top-20),1,0.470047
+all_b2r,GFP (top-20),0,0.439156
+all_b2r,GFP (top-20),0,0.473734
+all_b2r,GFP (top-20),1,0.433238
+all_b2r,GFP (top-20),0,0.477907
+all_b2r,GFP (top-20),0,0.490438
+all_b2r,GFP (top-20),0,0.69445
+all_b2r,GFP (top-20),0,0.477295
+all_b2r,GFP (top-20),1,0.68774
+all_b2r,GFP (top-20),0,0.499944
+all_b2r,GFP (top-20),0,0.332187
+all_b2r,GFP (top-20),0,0.644845
+all_b2r,GFP (top-20),1,0.473304
+all_b2r,GFP (top-20),0,0.390051
+all_b2r,GFP (top-20),1,0.481412
+all_b2r,GFP (top-20),0,0.538909
+all_b2r,GFP (top-20),0,0.459139
+all_b2r,GFP (top-20),1,0.554869
+all_b2r,GFP (top-20),0,0.515043
+all_b2r,GFP (top-20),0,0.520535
+all_b2r,GFP (top-20),0,0.377666
+all_b2r,GFP (top-20),0,0.644094
+all_b2r,GFP (top-20),0,0.450871
+all_b2r,GFP (top-20),0,0.160186
+all_b2r,GFP (top-20),0,0.174896
+all_b2r,GFP (top-20),0,0.562772
+all_b2r,GFP (top-20),0,0.54336
+all_b2r,GFP (top-20),0,0.444642
+all_b2r,GFP (top-20),0,0.338471
+all_b2r,GFP (top-20),1,0.20175
+all_b2r,GFP (top-20),0,0.496133
+all_b2r,GFP (top-20),0,0.488636
+all_b2r,GFP (top-20),1,0.620545
+all_b2r,GFP (top-20),0,0.454953
+all_b2r,GFP (top-20),0,0.530508
+all_b2r,GFP (top-20),1,0.559087
+all_b2r,GFP (top-20),0,0.547643
+all_b2r,GFP (top-20),0,0.263266
+all_b2r,GFP (top-20),0,0.476073
+all_b2r,GFP (top-20),0,0.534072
+all_b2r,GFP (top-20),0,0.412648
+all_b2r,GFP (top-20),0,0.469819
+all_b2r,GFP (top-20),0,0.327728
+all_b2r,GFP (top-20),0,0.447253
+all_b2r,GFP (top-20),1,0.540304
+all_b2r,GFP (top-20),0,0.25044
+all_b2r,GFP (top-20),0,0.462692
+all_b2r,GFP (top-20),0,0.36424
+all_b2r,GFP (top-20),0,0.521425
+all_b2r,GFP (top-20),0,0.424094
+all_b2r,GFP (top-20),0,0.493933
+all_b2r,GFP (top-20),0,0.476574
+all_b2r,GFP (top-20),0,0.551658
+all_b2r,GFP (top-20),0,0.482617
+all_b2r,GFP (top-20),0,0.150552
+all_b2r,GFP (top-20),0,0.461417
+all_b2r,GFP (top-20),0,0.448091
+all_b2r,GFP (top-20),0,0.481294
+all_b2r,GFP (top-20),0,0.51097
+all_b2r,GFP (top-20),1,0.481202
+all_b2r,GFP (top-20),0,0.519028
+all_b2r,GFP (top-20),0,0.433202
+all_b2r,GFP (top-20),0,0.447677
+all_b2r,GFP (top-20),0,0.425953
+all_b2r,GFP (top-20),0,0.449323
+all_b2r,GFP (top-20),0,0.467829
+all_b2r,GFP (top-20),0,0.563615
+all_b2r,GFP (top-20),0,0.482492
+all_b2r,GFP (top-20),0,0.415061
+all_b2r,GFP (top-20),0,0.446435
+all_b2r,GFP (top-20),0,0.511161
+all_b2r,GFP (top-20),0,0.446368
+all_b2r,GFP (top-20),0,0.482323
+all_b2r,GFP (top-20),0,0.508265
+all_b2r,GFP (top-20),0,0.480491
+all_b2r,GFP (top-20),0,0.441554
+all_b2r,GFP (top-20),0,0.496973
+all_b2r,GFP (top-20),0,0.708129
+all_b2r,GFP (top-20),0,0.551167
+all_b2r,GFP (top-20),0,0.407763
+all_b2r,GFP (top-20),0,0.467813
+all_b2r,GFP (top-20),0,0.489074
+all_b2r,GFP (top-20),0,0.481693
+all_b2r,GFP (top-20),0,0.482836
+all_b2r,GFP (top-20),0,0.483064
+all_b2r,GFP (top-20),0,0.30155
+all_b2r,GFP (top-20),1,0.442034
+all_b2r,GFP (top-20),0,0.495133
+all_b2r,GFP (top-20),0,0.497929
+all_b2r,GFP (top-20),0,0.413172
+all_b2r,BF (top-20),0,0.27042
+all_b2r,BF (top-20),0,0.246573
+all_b2r,BF (top-20),0,0.433232
+all_b2r,BF (top-20),0,0.614505
+all_b2r,BF (top-20),0,0.427467
+all_b2r,BF (top-20),0,0.003742
+all_b2r,BF (top-20),1,0.72412
+all_b2r,BF (top-20),0,0.053641
+all_b2r,BF (top-20),0,0.240712
+all_b2r,BF (top-20),0,0.8158
+all_b2r,BF (top-20),0,0.163439
+all_b2r,BF (top-20),0,0.54807
+all_b2r,BF (top-20),0,0.826575
+all_b2r,BF (top-20),0,0.115428
+all_b2r,BF (top-20),0,0.037789
+all_b2r,BF (top-20),0,0.248885
+all_b2r,BF (top-20),0,0.191119
+all_b2r,BF (top-20),0,0.186353
+all_b2r,BF (top-20),0,0.058723
+all_b2r,BF (top-20),1,0.530072
+all_b2r,BF (top-20),0,0.084826
+all_b2r,BF (top-20),0,0.431478
+all_b2r,BF (top-20),0,0.01399
+all_b2r,BF (top-20),0,0.312715
+all_b2r,BF (top-20),1,0.292236
+all_b2r,BF (top-20),1,0.588329
+all_b2r,BF (top-20),0,0.326367
+all_b2r,BF (top-20),0,0.880459
+all_b2r,BF (top-20),1,0.965758
+all_b2r,BF (top-20),0,0.329942
+all_b2r,BF (top-20),0,0.608013
+all_b2r,BF (top-20),0,0.039664
+all_b2r,BF (top-20),1,0.150382
+all_b2r,BF (top-20),0,0.019034
+all_b2r,BF (top-20),1,0.923281
+all_b2r,BF (top-20),0,0.007415
+all_b2r,BF (top-20),0,0.241328
+all_b2r,BF (top-20),0,0.901996
+all_b2r,BF (top-20),0,0.250677
+all_b2r,BF (top-20),0,0.867148
+all_b2r,BF (top-20),1,0.4312
+all_b2r,BF (top-20),1,0.486562
+all_b2r,BF (top-20),0,0.021829
+all_b2r,BF (top-20),0,0.150066
+all_b2r,BF (top-20),0,0.144169
+all_b2r,BF (top-20),1,0.584203
+all_b2r,BF (top-20),0,0.469656
+all_b2r,BF (top-20),0,0.075394
+all_b2r,BF (top-20),0,0.39595
+all_b2r,BF (top-20),0,0.012962
+all_b2r,BF (top-20),0,0.080723
+all_b2r,BF (top-20),1,0.287488
+all_b2r,BF (top-20),0,0.070298
+all_b2r,BF (top-20),0,0.346183
+all_b2r,BF (top-20),0,0.123657
+all_b2r,BF (top-20),0,0.161102
+all_b2r,BF (top-20),0,0.685602
+all_b2r,BF (top-20),0,0.02744
+all_b2r,BF (top-20),0,0.029863
+all_b2r,BF (top-20),0,0.090687
+all_b2r,BF (top-20),0,0.31507
+all_b2r,BF (top-20),0,0.030651
+all_b2r,BF (top-20),1,0.264654
+all_b2r,BF (top-20),0,0.787023
+all_b2r,BF (top-20),1,0.34551
+all_b2r,BF (top-20),0,0.39338
+all_b2r,BF (top-20),0,0.18635
+all_b2r,BF (top-20),0,0.122092
+all_b2r,BF (top-20),0,0.076627
+all_b2r,BF (top-20),0,0.277709
+all_b2r,BF (top-20),1,0.063887
+all_b2r,BF (top-20),0,0.191445
+all_b2r,BF (top-20),0,0.31031
+all_b2r,BF (top-20),0,0.32057
+all_b2r,BF (top-20),0,0.040534
+all_b2r,BF (top-20),0,0.516167
+all_b2r,BF (top-20),0,0.362333
+all_b2r,BF (top-20),1,0.100035
+all_b2r,BF (top-20),0,0.765612
+all_b2r,BF (top-20),0,0.843478
+all_b2r,BF (top-20),0,0.35057
+all_b2r,BF (top-20),0,0.154388
+all_b2r,BF (top-20),0,0.027167
+all_b2r,BF (top-20),0,0.473254
+all_b2r,BF (top-20),0,0.869207
+all_b2r,BF (top-20),0,0.301088
+all_b2r,BF (top-20),0,0.268339
+all_b2r,BF (top-20),0,0.796707
+all_b2r,BF (top-20),0,0.616101
+all_b2r,BF (top-20),0,0.581471
+all_b2r,BF (top-20),0,0.428652
+all_b2r,BF (top-20),0,0.534375
+all_b2r,BF (top-20),0,0.374034
+all_b2r,BF (top-20),0,0.789205
+all_b2r,BF (top-20),0,0.004102
+all_b2r,BF (top-20),0,0.123092
+all_b2r,BF (top-20),0,0.631273
+all_b2r,BF (top-20),0,0.416532
+all_b2r,BF (top-20),0,0.449744
+all_b2r,BF (top-20),0,0.491335
+all_b2r,BF (top-20),0,0.563198
+all_b2r,BF (top-20),0,0.06927
+all_b2r,BF (top-20),0,0.435373
+all_b2r,BF (top-20),1,0.646015
+all_b2r,BF (top-20),0,0.747581
+all_b2r,BF (top-20),1,0.319037
+all_b2r,BF (top-20),0,0.114479
+all_b2r,BF (top-20),0,0.028334
+all_b2r,BF (top-20),0,0.223997
+all_b2r,BF (top-20),0,0.219515
+all_b2r,BF (top-20),0,0.129796
+all_b2r,BF (top-20),0,0.008558
+all_b2r,BF (top-20),0,0.028286
+all_b2r,BF (top-20),0,0.324929
+all_b2r,BF (top-20),0,0.377405
+all_b2r,BF (top-20),0,0.060497
+all_b2r,BF (top-20),0,0.616194
+all_b2r,BF (top-20),0,0.08481
+all_b2r,BF (top-20),0,0.090739
+all_b2r,BF (top-20),0,0.240704
+all_b2r,BF (top-20),0,0.375939
+all_b2r,BF (top-20),0,0.503743
+all_b2r,BF (top-20),1,0.831375
+all_b2r,BF (top-20),0,0.783519
+all_b2r,BF (top-20),0,0.057835
+all_b2r,BF (top-20),0,0.174316
+all_b2r,BF (top-20),0,0.026306
+all_b2r,BF (top-20),0,0.820095
+all_b2r,BF (top-20),0,0.050968
+all_b2r,BF (top-20),1,0.692795
+all_b2r,BF (top-20),0,0.987144
+all_b2r,BF (top-20),0,0.06652
+all_b2r,BF (top-20),1,0.627516
+all_b2r,BF (top-20),0,0.107265
+all_b2r,BF (top-20),0,0.02152
+all_b2r,BF (top-20),0,0.208241
+all_b2r,BF (top-20),0,0.370303
+all_b2r,BF (top-20),0,0.031461
+all_b2r,BF (top-20),1,0.872585
+all_b2r,BF (top-20),0,0.279827
+all_b2r,BF (top-20),0,0.148916
+all_b2r,BF (top-20),0,0.653808
+all_b2r,BF (top-20),1,0.968677
+all_b2r,BF (top-20),1,0.965648
+all_b2r,BF (top-20),0,0.531835
+all_b2r,BF (top-20),1,0.833147
+all_b2r,BF (top-20),0,0.181118
+all_b2r,BF (top-20),1,0.915106
+all_b2r,BF (top-20),0,0.587332
+all_b2r,BF (top-20),0,0.364973
+all_b2r,BF (top-20),1,0.406599
+all_b2r,BF (top-20),0,0.773572
+all_b2r,BF (top-20),0,0.258586
+all_b2r,BF (top-20),0,0.566092
+all_b2r,BF (top-20),0,0.261062
+all_b2r,BF (top-20),0,0.634228
+all_b2r,BF (top-20),0,0.276732
+all_b2r,BF (top-20),0,0.012268
+all_b2r,BF (top-20),0,0.305121
+all_b2r,BF (top-20),0,0.110707
+all_b2r,BF (top-20),0,0.108057
+all_b2r,BF (top-20),0,0.088718
+all_b2r,BF (top-20),0,0.855676
+all_b2r,BF (top-20),0,0.114747
+all_b2r,BF (top-20),0,0.082572
+all_b2r,BF (top-20),0,0.175576
+all_b2r,BF (top-20),0,0.418429
+all_b2r,BF (top-20),0,0.226264
+all_b2r,BF (top-20),0,0.355242
+all_b2r,BF (top-20),0,0.234493
+all_b2r,BF (top-20),0,0.197203
+all_b2r,BF (top-20),0,0.285569
+all_b2r,BF (top-20),0,0.081321
+all_b2r,BF (top-20),0,0.061493
+all_b2r,BF (top-20),0,0.773981
+all_b2r,BF (top-20),0,0.628616
+all_b2r,BF (top-20),1,0.854868
+all_b2r,BF (top-20),1,0.750443
+all_b2r,BF (top-20),0,0.185956
+all_b2r,BF (top-20),0,0.800968
+all_b2r,BF (top-20),0,0.358592
+all_b2r,BF (top-20),0,0.511245
+all_b2r,BF (top-20),0,0.607675
+all_b2r,BF (top-20),0,0.286809
+all_b2r,BF (top-20),0,0.134427
+all_b2r,BF (top-20),0,0.208567
+all_b2r,BF (top-20),0,0.060504
+all_b2r,BF (top-20),0,0.244466
+all_b2r,BF (top-20),0,0.581931
+all_b2r,BF (top-20),1,0.50513
+all_b2r,BF (top-20),1,0.358192
+all_b2r,BF (top-20),0,0.167201
+all_b2r,BF (top-20),0,0.389121
+all_b2r,BF (top-20),0,0.875941
+all_b2r,BF (top-20),1,0.056868
+all_b2r,BF (top-20),0,0.107745
+all_b2r,BF (top-20),0,0.27877
+all_b2r,BF (top-20),1,0.86027
+all_b2r,BF (top-20),0,0.928312
+all_b2r,BF (top-20),0,0.21866
+all_b2r,BF (top-20),0,0.203132
+all_b2r,BF (top-20),1,0.674217
+all_b2r,BF (top-20),0,0.334485
+all_b2r,BF (top-20),0,0.023086
+all_b2r,BF (top-20),1,0.463959
+all_b2r,BF (top-20),0,0.086101
+all_b2r,BF (top-20),0,0.574148
+all_b2r,BF (top-20),0,0.311041
+all_b2r,BF (top-20),0,0.010756
+all_b2r,BF (top-20),1,0.133719
+all_b2r,BF (top-20),0,0.523695
+all_b2r,BF (top-20),0,0.093458
+all_b2r,BF (top-20),0,0.113425
+all_b2r,BF (top-20),1,0.797181
+all_b2r,BF (top-20),0,0.002428
+all_b2r,BF (top-20),1,0.414774
+all_b2r,BF (top-20),0,0.582564
+all_b2r,BF (top-20),0,0.020419
+all_b2r,BF (top-20),1,0.846722
+all_b2r,BF (top-20),0,0.679971
+all_b2r,BF (top-20),0,0.588792
+all_b2r,BF (top-20),0,0.142204
+all_b2r,BF (top-20),0,0.533995
+all_b2r,BF (top-20),0,0.121645
+all_b2r,BF (top-20),0,0.894536
+all_b2r,BF (top-20),0,0.212336
+all_b2r,BF (top-20),0,0.221565
+all_b2r,BF (top-20),0,0.227063
+all_b2r,BF (top-20),0,0.911638
+all_b2r,BF (top-20),0,0.519169
+all_b2r,BF (top-20),1,0.552555
+all_b2r,BF (top-20),0,0.164046
+all_b2r,BF (top-20),0,0.90327
+all_b2r,BF (top-20),1,0.809534
+all_b2r,BF (top-20),0,0.660839
+all_b2r,BF (top-20),0,0.173958
+all_b2r,BF (top-20),1,0.097356
+all_b2r,BF (top-20),0,0.521938
+all_b2r,BF (top-20),0,0.002857
+all_b2r,BF (top-20),0,0.05071
+all_b2r,BF (top-20),0,0.732835
+all_b2r,BF (top-20),0,0.244444
+all_b2r,BF (top-20),0,0.365736
+all_b2r,BF (top-20),0,0.034898
+all_b2r,BF (top-20),0,0.147419
+all_b2r,BF (top-20),1,0.543154
+all_b2r,BF (top-20),0,0.265737
+all_b2r,BF (top-20),0,0.317416
+all_b2r,BF (top-20),0,0.135282
+all_b2r,BF (top-20),0,0.503368
+all_b2r,BF (top-20),0,0.430072
+all_b2r,BF (top-20),0,0.292339
+all_b2r,BF (top-20),0,0.569698
+all_b2r,BF (top-20),0,0.130935
+all_b2r,BF (top-20),0,0.194822
+all_b2r,BF (top-20),0,0.14699
+all_b2r,BF (top-20),0,0.680969
+all_b2r,BF (top-20),0,0.585432
+all_b2r,BF (top-20),0,0.238391
+all_b2r,BF (top-20),0,0.897792
+all_b2r,BF (top-20),1,0.650423
+all_b2r,BF (top-20),0,0.501474
+all_b2r,BF (top-20),0,0.068805
+all_b2r,BF (top-20),0,0.099215
+all_b2r,BF (top-20),0,0.340377
+all_b2r,BF (top-20),0,0.601636
+all_b2r,BF (top-20),0,0.845682
+all_b2r,BF (top-20),0,0.15921
+all_b2r,BF (top-20),0,0.265461
+all_b2r,BF (top-20),0,0.443193
+all_b2r,BF (top-20),0,0.032273
+all_b2r,BF (top-20),0,0.086285
+all_b2r,BF (top-20),0,0.228488
+all_b2r,BF (top-20),0,0.159932
+all_b2r,BF (top-20),0,0.398422
+all_b2r,BF (top-20),0,0.139063
+all_b2r,BF (top-20),0,0.002878
+all_b2r,BF (top-20),0,0.635836
+all_b2r,BF (top-20),0,0.031362
+all_b2r,BF (top-20),0,0.261032
+all_b2r,BF (top-20),0,0.085666
+all_b2r,BF (top-20),0,0.487607
+all_b2r,BF (top-20),0,0.381704
+all_b2r,BF (top-20),0,0.046972
+all_b2r,BF (top-20),0,0.731439
+all_b2r,BF (top-20),0,0.322098
+all_b2r,BF (top-20),0,0.353133
+all_b2r,BF (top-20),1,0.579286
+all_b2r,BF (top-20),0,0.297859
+all_b2r,BF (top-20),0,0.195843
+all_b2r,BF (top-20),0,0.244613
+all_b2r,GFP+BF (top-40),0,0.611623
+all_b2r,GFP+BF (top-40),0,0.027628
+all_b2r,GFP+BF (top-40),0,0.549809
+all_b2r,GFP+BF (top-40),0,0.792424
+all_b2r,GFP+BF (top-40),0,0.381441
+all_b2r,GFP+BF (top-40),0,0.001713
+all_b2r,GFP+BF (top-40),1,0.77335
+all_b2r,GFP+BF (top-40),0,0.066101
+all_b2r,GFP+BF (top-40),0,0.075993
+all_b2r,GFP+BF (top-40),0,0.859756
+all_b2r,GFP+BF (top-40),0,0.081814
+all_b2r,GFP+BF (top-40),0,0.561895
+all_b2r,GFP+BF (top-40),0,0.572247
+all_b2r,GFP+BF (top-40),0,0.024612
+all_b2r,GFP+BF (top-40),0,0.015054
+all_b2r,GFP+BF (top-40),0,0.259081
+all_b2r,GFP+BF (top-40),0,0.098328
+all_b2r,GFP+BF (top-40),0,0.153066
+all_b2r,GFP+BF (top-40),0,0.328158
+all_b2r,GFP+BF (top-40),1,0.313348
+all_b2r,GFP+BF (top-40),0,0.034148
+all_b2r,GFP+BF (top-40),0,0.459939
+all_b2r,GFP+BF (top-40),0,0.003107
+all_b2r,GFP+BF (top-40),0,0.130795
+all_b2r,GFP+BF (top-40),1,0.363747
+all_b2r,GFP+BF (top-40),1,0.485013
+all_b2r,GFP+BF (top-40),0,0.285242
+all_b2r,GFP+BF (top-40),0,0.97042
+all_b2r,GFP+BF (top-40),1,0.944703
+all_b2r,GFP+BF (top-40),0,0.121575
+all_b2r,GFP+BF (top-40),0,0.212856
+all_b2r,GFP+BF (top-40),0,0.006851
+all_b2r,GFP+BF (top-40),1,0.154452
+all_b2r,GFP+BF (top-40),0,0.024668
+all_b2r,GFP+BF (top-40),1,0.879865
+all_b2r,GFP+BF (top-40),0,0.016481
+all_b2r,GFP+BF (top-40),0,0.424755
+all_b2r,GFP+BF (top-40),0,0.833579
+all_b2r,GFP+BF (top-40),0,0.222775
+all_b2r,GFP+BF (top-40),0,0.954264
+all_b2r,GFP+BF (top-40),1,0.87363
+all_b2r,GFP+BF (top-40),1,0.277439
+all_b2r,GFP+BF (top-40),0,0.020994
+all_b2r,GFP+BF (top-40),0,0.035705
+all_b2r,GFP+BF (top-40),0,0.967586
+all_b2r,GFP+BF (top-40),1,0.618005
+all_b2r,GFP+BF (top-40),0,0.426368
+all_b2r,GFP+BF (top-40),0,0.018349
+all_b2r,GFP+BF (top-40),0,0.381341
+all_b2r,GFP+BF (top-40),0,0.020477
+all_b2r,GFP+BF (top-40),0,0.002801
+all_b2r,GFP+BF (top-40),1,0.336375
+all_b2r,GFP+BF (top-40),0,0.031827
+all_b2r,GFP+BF (top-40),0,0.166417
+all_b2r,GFP+BF (top-40),0,0.151057
+all_b2r,GFP+BF (top-40),0,0.462586
+all_b2r,GFP+BF (top-40),0,0.568626
+all_b2r,GFP+BF (top-40),0,0.004428
+all_b2r,GFP+BF (top-40),0,0.006928
+all_b2r,GFP+BF (top-40),0,0.064996
+all_b2r,GFP+BF (top-40),0,0.101715
+all_b2r,GFP+BF (top-40),0,0.017684
+all_b2r,GFP+BF (top-40),1,0.159384
+all_b2r,GFP+BF (top-40),0,0.919648
+all_b2r,GFP+BF (top-40),1,0.279353
+all_b2r,GFP+BF (top-40),0,0.172485
+all_b2r,GFP+BF (top-40),0,0.192679
+all_b2r,GFP+BF (top-40),0,0.008449
+all_b2r,GFP+BF (top-40),0,0.038969
+all_b2r,GFP+BF (top-40),0,0.189147
+all_b2r,GFP+BF (top-40),1,0.011575
+all_b2r,GFP+BF (top-40),0,0.032849
+all_b2r,GFP+BF (top-40),0,0.293801
+all_b2r,GFP+BF (top-40),0,0.333653
+all_b2r,GFP+BF (top-40),0,0.02032
+all_b2r,GFP+BF (top-40),0,0.187492
+all_b2r,GFP+BF (top-40),0,0.098211
+all_b2r,GFP+BF (top-40),1,0.00495
+all_b2r,GFP+BF (top-40),0,0.574582
+all_b2r,GFP+BF (top-40),0,0.638307
+all_b2r,GFP+BF (top-40),0,0.12733
+all_b2r,GFP+BF (top-40),0,0.041449
+all_b2r,GFP+BF (top-40),0,0.007878
+all_b2r,GFP+BF (top-40),0,0.214881
+all_b2r,GFP+BF (top-40),0,0.660444
+all_b2r,GFP+BF (top-40),0,0.278047
+all_b2r,GFP+BF (top-40),0,0.068219
+all_b2r,GFP+BF (top-40),0,0.959577
+all_b2r,GFP+BF (top-40),0,0.508587
+all_b2r,GFP+BF (top-40),0,0.702903
+all_b2r,GFP+BF (top-40),0,0.693562
+all_b2r,GFP+BF (top-40),0,0.530802
+all_b2r,GFP+BF (top-40),0,0.465547
+all_b2r,GFP+BF (top-40),0,0.547644
+all_b2r,GFP+BF (top-40),0,0.000248
+all_b2r,GFP+BF (top-40),0,0.046916
+all_b2r,GFP+BF (top-40),0,0.591822
+all_b2r,GFP+BF (top-40),0,0.389847
+all_b2r,GFP+BF (top-40),0,0.519065
+all_b2r,GFP+BF (top-40),0,0.301919
+all_b2r,GFP+BF (top-40),0,0.631735
+all_b2r,GFP+BF (top-40),0,0.01068
+all_b2r,GFP+BF (top-40),0,0.651103
+all_b2r,GFP+BF (top-40),1,0.479143
+all_b2r,GFP+BF (top-40),0,0.870787
+all_b2r,GFP+BF (top-40),1,0.115035
+all_b2r,GFP+BF (top-40),0,0.049756
+all_b2r,GFP+BF (top-40),0,0.063127
+all_b2r,GFP+BF (top-40),0,0.541965
+all_b2r,GFP+BF (top-40),0,0.094371
+all_b2r,GFP+BF (top-40),0,0.07954
+all_b2r,GFP+BF (top-40),0,0.020459
+all_b2r,GFP+BF (top-40),0,0.003126
+all_b2r,GFP+BF (top-40),0,0.043872
+all_b2r,GFP+BF (top-40),0,0.023237
+all_b2r,GFP+BF (top-40),0,0.031962
+all_b2r,GFP+BF (top-40),0,0.792747
+all_b2r,GFP+BF (top-40),0,0.247695
+all_b2r,GFP+BF (top-40),0,0.014938
+all_b2r,GFP+BF (top-40),0,0.181281
+all_b2r,GFP+BF (top-40),0,0.401854
+all_b2r,GFP+BF (top-40),0,0.839665
+all_b2r,GFP+BF (top-40),1,0.119035
+all_b2r,GFP+BF (top-40),0,0.920057
+all_b2r,GFP+BF (top-40),0,0.004786
+all_b2r,GFP+BF (top-40),0,0.407325
+all_b2r,GFP+BF (top-40),0,0.020323
+all_b2r,GFP+BF (top-40),0,0.890941
+all_b2r,GFP+BF (top-40),0,0.034069
+all_b2r,GFP+BF (top-40),1,0.804757
+all_b2r,GFP+BF (top-40),0,0.991381
+all_b2r,GFP+BF (top-40),0,0.230159
+all_b2r,GFP+BF (top-40),1,0.590289
+all_b2r,GFP+BF (top-40),0,0.148176
+all_b2r,GFP+BF (top-40),0,0.055258
+all_b2r,GFP+BF (top-40),0,0.085316
+all_b2r,GFP+BF (top-40),0,0.108195
+all_b2r,GFP+BF (top-40),0,0.090467
+all_b2r,GFP+BF (top-40),1,0.916134
+all_b2r,GFP+BF (top-40),0,0.277936
+all_b2r,GFP+BF (top-40),0,0.095129
+all_b2r,GFP+BF (top-40),0,0.866178
+all_b2r,GFP+BF (top-40),1,0.95588
+all_b2r,GFP+BF (top-40),1,0.943942
+all_b2r,GFP+BF (top-40),0,0.627443
+all_b2r,GFP+BF (top-40),1,0.240352
+all_b2r,GFP+BF (top-40),0,0.102923
+all_b2r,GFP+BF (top-40),1,0.991724
+all_b2r,GFP+BF (top-40),0,0.264961
+all_b2r,GFP+BF (top-40),0,0.065195
+all_b2r,GFP+BF (top-40),1,0.18605
+all_b2r,GFP+BF (top-40),0,0.934802
+all_b2r,GFP+BF (top-40),0,0.710327
+all_b2r,GFP+BF (top-40),0,0.454388
+all_b2r,GFP+BF (top-40),0,0.120571
+all_b2r,GFP+BF (top-40),0,0.428224
+all_b2r,GFP+BF (top-40),0,0.099738
+all_b2r,GFP+BF (top-40),0,0.003828
+all_b2r,GFP+BF (top-40),0,0.311472
+all_b2r,GFP+BF (top-40),0,0.018398
+all_b2r,GFP+BF (top-40),0,0.01346
+all_b2r,GFP+BF (top-40),0,0.383057
+all_b2r,GFP+BF (top-40),0,0.900317
+all_b2r,GFP+BF (top-40),0,0.055175
+all_b2r,GFP+BF (top-40),0,0.086465
+all_b2r,GFP+BF (top-40),0,0.070655
+all_b2r,GFP+BF (top-40),0,0.194638
+all_b2r,GFP+BF (top-40),0,0.007508
+all_b2r,GFP+BF (top-40),0,0.498959
+all_b2r,GFP+BF (top-40),0,0.532504
+all_b2r,GFP+BF (top-40),0,0.083036
+all_b2r,GFP+BF (top-40),0,0.016194
+all_b2r,GFP+BF (top-40),0,0.005307
+all_b2r,GFP+BF (top-40),0,0.026762
+all_b2r,GFP+BF (top-40),0,0.925811
+all_b2r,GFP+BF (top-40),0,0.357262
+all_b2r,GFP+BF (top-40),1,0.832423
+all_b2r,GFP+BF (top-40),1,0.628231
+all_b2r,GFP+BF (top-40),0,0.101324
+all_b2r,GFP+BF (top-40),0,0.840298
+all_b2r,GFP+BF (top-40),0,0.079962
+all_b2r,GFP+BF (top-40),0,0.334991
+all_b2r,GFP+BF (top-40),0,0.652494
+all_b2r,GFP+BF (top-40),0,0.164516
+all_b2r,GFP+BF (top-40),0,0.065985
+all_b2r,GFP+BF (top-40),0,0.158005
+all_b2r,GFP+BF (top-40),0,0.014818
+all_b2r,GFP+BF (top-40),0,0.109471
+all_b2r,GFP+BF (top-40),0,0.916152
+all_b2r,GFP+BF (top-40),1,0.244586
+all_b2r,GFP+BF (top-40),1,0.11933
+all_b2r,GFP+BF (top-40),0,0.021654
+all_b2r,GFP+BF (top-40),0,0.111248
+all_b2r,GFP+BF (top-40),0,0.693926
+all_b2r,GFP+BF (top-40),1,0.062898
+all_b2r,GFP+BF (top-40),0,0.082974
+all_b2r,GFP+BF (top-40),0,0.242727
+all_b2r,GFP+BF (top-40),1,0.531901
+all_b2r,GFP+BF (top-40),0,0.940838
+all_b2r,GFP+BF (top-40),0,0.047727
+all_b2r,GFP+BF (top-40),0,0.411076
+all_b2r,GFP+BF (top-40),1,0.78393
+all_b2r,GFP+BF (top-40),0,0.277636
+all_b2r,GFP+BF (top-40),0,0.007686
+all_b2r,GFP+BF (top-40),1,0.289284
+all_b2r,GFP+BF (top-40),0,0.059777
+all_b2r,GFP+BF (top-40),0,0.703291
+all_b2r,GFP+BF (top-40),0,0.487905
+all_b2r,GFP+BF (top-40),0,0.008626
+all_b2r,GFP+BF (top-40),1,0.532179
+all_b2r,GFP+BF (top-40),0,0.424291
+all_b2r,GFP+BF (top-40),0,0.052073
+all_b2r,GFP+BF (top-40),0,0.186683
+all_b2r,GFP+BF (top-40),1,0.572454
+all_b2r,GFP+BF (top-40),0,0.003727
+all_b2r,GFP+BF (top-40),1,0.339102
+all_b2r,GFP+BF (top-40),0,0.569791
+all_b2r,GFP+BF (top-40),0,0.013167
+all_b2r,GFP+BF (top-40),1,0.968944
+all_b2r,GFP+BF (top-40),0,0.51094
+all_b2r,GFP+BF (top-40),0,0.813342
+all_b2r,GFP+BF (top-40),0,0.022193
+all_b2r,GFP+BF (top-40),0,0.431583
+all_b2r,GFP+BF (top-40),0,0.001682
+all_b2r,GFP+BF (top-40),0,0.588727
+all_b2r,GFP+BF (top-40),0,0.090832
+all_b2r,GFP+BF (top-40),0,0.385598
+all_b2r,GFP+BF (top-40),0,0.158313
+all_b2r,GFP+BF (top-40),0,0.835544
+all_b2r,GFP+BF (top-40),0,0.355937
+all_b2r,GFP+BF (top-40),1,0.10102
+all_b2r,GFP+BF (top-40),0,0.087827
+all_b2r,GFP+BF (top-40),0,0.865629
+all_b2r,GFP+BF (top-40),1,0.659932
+all_b2r,GFP+BF (top-40),0,0.712096
+all_b2r,GFP+BF (top-40),0,0.161787
+all_b2r,GFP+BF (top-40),1,0.011843
+all_b2r,GFP+BF (top-40),0,0.542817
+all_b2r,GFP+BF (top-40),0,0.000179
+all_b2r,GFP+BF (top-40),0,0.035953
+all_b2r,GFP+BF (top-40),0,0.855298
+all_b2r,GFP+BF (top-40),0,0.261028
+all_b2r,GFP+BF (top-40),0,0.212818
+all_b2r,GFP+BF (top-40),0,0.006882
+all_b2r,GFP+BF (top-40),0,0.201248
+all_b2r,GFP+BF (top-40),1,0.738026
+all_b2r,GFP+BF (top-40),0,0.037216
+all_b2r,GFP+BF (top-40),0,0.145566
+all_b2r,GFP+BF (top-40),0,0.032218
+all_b2r,GFP+BF (top-40),0,0.324419
+all_b2r,GFP+BF (top-40),0,0.294793
+all_b2r,GFP+BF (top-40),0,0.663528
+all_b2r,GFP+BF (top-40),0,0.624849
+all_b2r,GFP+BF (top-40),0,0.184047
+all_b2r,GFP+BF (top-40),0,0.189277
+all_b2r,GFP+BF (top-40),0,0.022525
+all_b2r,GFP+BF (top-40),0,0.341192
+all_b2r,GFP+BF (top-40),0,0.756029
+all_b2r,GFP+BF (top-40),0,0.333958
+all_b2r,GFP+BF (top-40),0,0.940043
+all_b2r,GFP+BF (top-40),1,0.71918
+all_b2r,GFP+BF (top-40),0,0.153821
+all_b2r,GFP+BF (top-40),0,0.032103
+all_b2r,GFP+BF (top-40),0,0.11756
+all_b2r,GFP+BF (top-40),0,0.228129
+all_b2r,GFP+BF (top-40),0,0.357339
+all_b2r,GFP+BF (top-40),0,0.784372
+all_b2r,GFP+BF (top-40),0,0.164667
+all_b2r,GFP+BF (top-40),0,0.441533
+all_b2r,GFP+BF (top-40),0,0.164968
+all_b2r,GFP+BF (top-40),0,0.005112
+all_b2r,GFP+BF (top-40),0,0.206577
+all_b2r,GFP+BF (top-40),0,0.428932
+all_b2r,GFP+BF (top-40),0,0.122422
+all_b2r,GFP+BF (top-40),0,0.527159
+all_b2r,GFP+BF (top-40),0,0.053244
+all_b2r,GFP+BF (top-40),0,6.9e-05
+all_b2r,GFP+BF (top-40),0,0.578393
+all_b2r,GFP+BF (top-40),0,0.032538
+all_b2r,GFP+BF (top-40),0,0.09762
+all_b2r,GFP+BF (top-40),0,0.032629
+all_b2r,GFP+BF (top-40),0,0.650963
+all_b2r,GFP+BF (top-40),0,0.522583
+all_b2r,GFP+BF (top-40),0,0.058396
+all_b2r,GFP+BF (top-40),0,0.803987
+all_b2r,GFP+BF (top-40),0,0.367939
+all_b2r,GFP+BF (top-40),0,0.302915
+all_b2r,GFP+BF (top-40),1,0.571243
+all_b2r,GFP+BF (top-40),0,0.192748
+all_b2r,GFP+BF (top-40),0,0.145917
+all_b2r,GFP+BF (top-40),0,0.151386
+all_b2r,Handcrafted (29 feat),0,0.487507
+all_b2r,Handcrafted (29 feat),0,0.474392
+all_b2r,Handcrafted (29 feat),0,0.497085
+all_b2r,Handcrafted (29 feat),0,0.484124
+all_b2r,Handcrafted (29 feat),0,0.552783
+all_b2r,Handcrafted (29 feat),0,0.455025
+all_b2r,Handcrafted (29 feat),1,0.468084
+all_b2r,Handcrafted (29 feat),0,0.4507
+all_b2r,Handcrafted (29 feat),0,0.542585
+all_b2r,Handcrafted (29 feat),0,0.572343
+all_b2r,Handcrafted (29 feat),0,0.20076
+all_b2r,Handcrafted (29 feat),0,0.311074
+all_b2r,Handcrafted (29 feat),0,0.253933
+all_b2r,Handcrafted (29 feat),0,0.374148
+all_b2r,Handcrafted (29 feat),0,0.448854
+all_b2r,Handcrafted (29 feat),0,0.503528
+all_b2r,Handcrafted (29 feat),0,0.482267
+all_b2r,Handcrafted (29 feat),0,0.367047
+all_b2r,Handcrafted (29 feat),0,0.470426
+all_b2r,Handcrafted (29 feat),1,0.468103
+all_b2r,Handcrafted (29 feat),0,0.531149
+all_b2r,Handcrafted (29 feat),0,0.467139
+all_b2r,Handcrafted (29 feat),0,0.474172
+all_b2r,Handcrafted (29 feat),0,0.491005
+all_b2r,Handcrafted (29 feat),1,0.520953
+all_b2r,Handcrafted (29 feat),1,0.590022
+all_b2r,Handcrafted (29 feat),0,0.517936
+all_b2r,Handcrafted (29 feat),0,0.51792
+all_b2r,Handcrafted (29 feat),1,0.519669
+all_b2r,Handcrafted (29 feat),0,0.202204
+all_b2r,Handcrafted (29 feat),0,0.484924
+all_b2r,Handcrafted (29 feat),0,0.506415
+all_b2r,Handcrafted (29 feat),1,0.643172
+all_b2r,Handcrafted (29 feat),0,0.453288
+all_b2r,Handcrafted (29 feat),1,0.536759
+all_b2r,Handcrafted (29 feat),0,0.427088
+all_b2r,Handcrafted (29 feat),0,0.482501
+all_b2r,Handcrafted (29 feat),0,0.411619
+all_b2r,Handcrafted (29 feat),0,0.636214
+all_b2r,Handcrafted (29 feat),0,0.461494
+all_b2r,Handcrafted (29 feat),1,0.47806
+all_b2r,Handcrafted (29 feat),1,0.587323
+all_b2r,Handcrafted (29 feat),0,0.496637
+all_b2r,Handcrafted (29 feat),0,0.546928
+all_b2r,Handcrafted (29 feat),0,0.525149
+all_b2r,Handcrafted (29 feat),1,0.515184
+all_b2r,Handcrafted (29 feat),0,0.462456
+all_b2r,Handcrafted (29 feat),0,0.366008
+all_b2r,Handcrafted (29 feat),0,0.416886
+all_b2r,Handcrafted (29 feat),0,0.522175
+all_b2r,Handcrafted (29 feat),0,0.453863
+all_b2r,Handcrafted (29 feat),1,0.50198
+all_b2r,Handcrafted (29 feat),0,0.425759
+all_b2r,Handcrafted (29 feat),0,0.468813
+all_b2r,Handcrafted (29 feat),0,0.524198
+all_b2r,Handcrafted (29 feat),0,0.478325
+all_b2r,Handcrafted (29 feat),0,0.410886
+all_b2r,Handcrafted (29 feat),0,0.481619
+all_b2r,Handcrafted (29 feat),0,0.431966
+all_b2r,Handcrafted (29 feat),0,0.548828
+all_b2r,Handcrafted (29 feat),0,0.262604
+all_b2r,Handcrafted (29 feat),0,0.5074
+all_b2r,Handcrafted (29 feat),1,0.500556
+all_b2r,Handcrafted (29 feat),0,0.494912
+all_b2r,Handcrafted (29 feat),1,0.438573
+all_b2r,Handcrafted (29 feat),0,0.428718
+all_b2r,Handcrafted (29 feat),0,0.45398
+all_b2r,Handcrafted (29 feat),0,0.515348
+all_b2r,Handcrafted (29 feat),0,0.58386
+all_b2r,Handcrafted (29 feat),0,0.478575
+all_b2r,Handcrafted (29 feat),1,0.648417
+all_b2r,Handcrafted (29 feat),0,0.477823
+all_b2r,Handcrafted (29 feat),0,0.466459
+all_b2r,Handcrafted (29 feat),0,0.518652
+all_b2r,Handcrafted (29 feat),0,0.484251
+all_b2r,Handcrafted (29 feat),0,0.470302
+all_b2r,Handcrafted (29 feat),0,0.481592
+all_b2r,Handcrafted (29 feat),1,0.367988
+all_b2r,Handcrafted (29 feat),0,0.47178
+all_b2r,Handcrafted (29 feat),0,0.477712
+all_b2r,Handcrafted (29 feat),0,0.454784
+all_b2r,Handcrafted (29 feat),0,0.354778
+all_b2r,Handcrafted (29 feat),0,0.485212
+all_b2r,Handcrafted (29 feat),0,0.454782
+all_b2r,Handcrafted (29 feat),0,0.492981
+all_b2r,Handcrafted (29 feat),0,0.543656
+all_b2r,Handcrafted (29 feat),0,0.503439
+all_b2r,Handcrafted (29 feat),0,0.492824
+all_b2r,Handcrafted (29 feat),0,0.468786
+all_b2r,Handcrafted (29 feat),0,0.466356
+all_b2r,Handcrafted (29 feat),0,0.605959
+all_b2r,Handcrafted (29 feat),0,0.452362
+all_b2r,Handcrafted (29 feat),0,0.428807
+all_b2r,Handcrafted (29 feat),0,0.469781
+all_b2r,Handcrafted (29 feat),0,0.492014
+all_b2r,Handcrafted (29 feat),0,0.415959
+all_b2r,Handcrafted (29 feat),0,0.456317
+all_b2r,Handcrafted (29 feat),0,0.474946
+all_b2r,Handcrafted (29 feat),0,0.525863
+all_b2r,Handcrafted (29 feat),0,0.424423
+all_b2r,Handcrafted (29 feat),0,0.485742
+all_b2r,Handcrafted (29 feat),0,0.14283
+all_b2r,Handcrafted (29 feat),0,0.442971
+all_b2r,Handcrafted (29 feat),1,0.451249
+all_b2r,Handcrafted (29 feat),0,0.420659
+all_b2r,Handcrafted (29 feat),1,0.618784
+all_b2r,Handcrafted (29 feat),0,0.558717
+all_b2r,Handcrafted (29 feat),0,0.456784
+all_b2r,Handcrafted (29 feat),0,0.452759
+all_b2r,Handcrafted (29 feat),0,0.478445
+all_b2r,Handcrafted (29 feat),0,0.471285
+all_b2r,Handcrafted (29 feat),0,0.46591
+all_b2r,Handcrafted (29 feat),0,0.440479
+all_b2r,Handcrafted (29 feat),0,0.463409
+all_b2r,Handcrafted (29 feat),0,0.32658
+all_b2r,Handcrafted (29 feat),0,0.437015
+all_b2r,Handcrafted (29 feat),0,0.426267
+all_b2r,Handcrafted (29 feat),0,0.51778
+all_b2r,Handcrafted (29 feat),0,0.494625
+all_b2r,Handcrafted (29 feat),0,0.474165
+all_b2r,Handcrafted (29 feat),0,0.465494
+all_b2r,Handcrafted (29 feat),0,0.455399
+all_b2r,Handcrafted (29 feat),1,0.506589
+all_b2r,Handcrafted (29 feat),0,0.492413
+all_b2r,Handcrafted (29 feat),0,0.489256
+all_b2r,Handcrafted (29 feat),0,0.504472
+all_b2r,Handcrafted (29 feat),0,0.556605
+all_b2r,Handcrafted (29 feat),0,0.318786
+all_b2r,Handcrafted (29 feat),0,0.48421
+all_b2r,Handcrafted (29 feat),1,0.495726
+all_b2r,Handcrafted (29 feat),0,0.4692
+all_b2r,Handcrafted (29 feat),0,0.578374
+all_b2r,Handcrafted (29 feat),1,0.507237
+all_b2r,Handcrafted (29 feat),0,0.471667
+all_b2r,Handcrafted (29 feat),0,0.474194
+all_b2r,Handcrafted (29 feat),0,0.466755
+all_b2r,Handcrafted (29 feat),0,0.462023
+all_b2r,Handcrafted (29 feat),0,0.526072
+all_b2r,Handcrafted (29 feat),1,0.412032
+all_b2r,Handcrafted (29 feat),0,0.454383
+all_b2r,Handcrafted (29 feat),0,0.542959
+all_b2r,Handcrafted (29 feat),0,0.499345
+all_b2r,Handcrafted (29 feat),1,0.500336
+all_b2r,Handcrafted (29 feat),1,0.512012
+all_b2r,Handcrafted (29 feat),0,0.478181
+all_b2r,Handcrafted (29 feat),1,0.428234
+all_b2r,Handcrafted (29 feat),0,0.438716
+all_b2r,Handcrafted (29 feat),1,0.485923
+all_b2r,Handcrafted (29 feat),0,0.469786
+all_b2r,Handcrafted (29 feat),0,0.464546
+all_b2r,Handcrafted (29 feat),1,0.612882
+all_b2r,Handcrafted (29 feat),0,0.567342
+all_b2r,Handcrafted (29 feat),0,0.4486
+all_b2r,Handcrafted (29 feat),0,0.379845
+all_b2r,Handcrafted (29 feat),0,0.475135
+all_b2r,Handcrafted (29 feat),0,0.5301
+all_b2r,Handcrafted (29 feat),0,0.421865
+all_b2r,Handcrafted (29 feat),0,0.476705
+all_b2r,Handcrafted (29 feat),0,0.40463
+all_b2r,Handcrafted (29 feat),0,0.481301
+all_b2r,Handcrafted (29 feat),0,0.230543
+all_b2r,Handcrafted (29 feat),0,0.460891
+all_b2r,Handcrafted (29 feat),0,0.533672
+all_b2r,Handcrafted (29 feat),0,0.502475
+all_b2r,Handcrafted (29 feat),0,0.400452
+all_b2r,Handcrafted (29 feat),0,0.572084
+all_b2r,Handcrafted (29 feat),0,0.421847
+all_b2r,Handcrafted (29 feat),0,0.471205
+all_b2r,Handcrafted (29 feat),0,0.463274
+all_b2r,Handcrafted (29 feat),0,0.498127
+all_b2r,Handcrafted (29 feat),0,0.303935
+all_b2r,Handcrafted (29 feat),0,0.448486
+all_b2r,Handcrafted (29 feat),0,0.483815
+all_b2r,Handcrafted (29 feat),0,0.260242
+all_b2r,Handcrafted (29 feat),0,0.475628
+all_b2r,Handcrafted (29 feat),0,0.431534
+all_b2r,Handcrafted (29 feat),1,0.547255
+all_b2r,Handcrafted (29 feat),1,0.47612
+all_b2r,Handcrafted (29 feat),0,0.478816
+all_b2r,Handcrafted (29 feat),0,0.479853
+all_b2r,Handcrafted (29 feat),0,0.540553
+all_b2r,Handcrafted (29 feat),0,0.521846
+all_b2r,Handcrafted (29 feat),0,0.524458
+all_b2r,Handcrafted (29 feat),0,0.450032
+all_b2r,Handcrafted (29 feat),0,0.460678
+all_b2r,Handcrafted (29 feat),0,0.463479
+all_b2r,Handcrafted (29 feat),0,0.687698
+all_b2r,Handcrafted (29 feat),0,0.465817
+all_b2r,Handcrafted (29 feat),0,0.555588
+all_b2r,Handcrafted (29 feat),1,0.482654
+all_b2r,Handcrafted (29 feat),1,0.534035
+all_b2r,Handcrafted (29 feat),0,0.304048
+all_b2r,Handcrafted (29 feat),0,0.496817
+all_b2r,Handcrafted (29 feat),0,0.456557
+all_b2r,Handcrafted (29 feat),1,0.502847
+all_b2r,Handcrafted (29 feat),0,0.419443
+all_b2r,Handcrafted (29 feat),0,0.468263
+all_b2r,Handcrafted (29 feat),1,0.517253
+all_b2r,Handcrafted (29 feat),0,0.464226
+all_b2r,Handcrafted (29 feat),0,0.396444
+all_b2r,Handcrafted (29 feat),0,0.562306
+all_b2r,Handcrafted (29 feat),1,0.530413
+all_b2r,Handcrafted (29 feat),0,0.449659
+all_b2r,Handcrafted (29 feat),0,0.635175
+all_b2r,Handcrafted (29 feat),1,0.506371
+all_b2r,Handcrafted (29 feat),0,0.423989
+all_b2r,Handcrafted (29 feat),0,0.503639
+all_b2r,Handcrafted (29 feat),0,0.505555
+all_b2r,Handcrafted (29 feat),0,0.445123
+all_b2r,Handcrafted (29 feat),1,0.479702
+all_b2r,Handcrafted (29 feat),0,0.454521
+all_b2r,Handcrafted (29 feat),0,0.527588
+all_b2r,Handcrafted (29 feat),0,0.572105
+all_b2r,Handcrafted (29 feat),1,0.424089
+all_b2r,Handcrafted (29 feat),0,0.478012
+all_b2r,Handcrafted (29 feat),1,0.4884
+all_b2r,Handcrafted (29 feat),0,0.541026
+all_b2r,Handcrafted (29 feat),0,0.427537
+all_b2r,Handcrafted (29 feat),1,0.584977
+all_b2r,Handcrafted (29 feat),0,0.452461
+all_b2r,Handcrafted (29 feat),0,0.450363
+all_b2r,Handcrafted (29 feat),0,0.322623
+all_b2r,Handcrafted (29 feat),0,0.530214
+all_b2r,Handcrafted (29 feat),0,0.501439
+all_b2r,Handcrafted (29 feat),0,0.549554
+all_b2r,Handcrafted (29 feat),0,0.482418
+all_b2r,Handcrafted (29 feat),0,0.497876
+all_b2r,Handcrafted (29 feat),0,0.452651
+all_b2r,Handcrafted (29 feat),0,0.500611
+all_b2r,Handcrafted (29 feat),0,0.479712
+all_b2r,Handcrafted (29 feat),1,0.604019
+all_b2r,Handcrafted (29 feat),0,0.483815
+all_b2r,Handcrafted (29 feat),0,0.491648
+all_b2r,Handcrafted (29 feat),1,0.47546
+all_b2r,Handcrafted (29 feat),0,0.475506
+all_b2r,Handcrafted (29 feat),0,0.425016
+all_b2r,Handcrafted (29 feat),1,0.705807
+all_b2r,Handcrafted (29 feat),0,0.386427
+all_b2r,Handcrafted (29 feat),0,0.325983
+all_b2r,Handcrafted (29 feat),0,0.481232
+all_b2r,Handcrafted (29 feat),0,0.521782
+all_b2r,Handcrafted (29 feat),0,0.573434
+all_b2r,Handcrafted (29 feat),0,0.480422
+all_b2r,Handcrafted (29 feat),0,0.240432
+all_b2r,Handcrafted (29 feat),0,0.484987
+all_b2r,Handcrafted (29 feat),1,0.458694
+all_b2r,Handcrafted (29 feat),0,0.391098
+all_b2r,Handcrafted (29 feat),0,0.515071
+all_b2r,Handcrafted (29 feat),0,0.537319
+all_b2r,Handcrafted (29 feat),0,0.3005
+all_b2r,Handcrafted (29 feat),0,0.618148
+all_b2r,Handcrafted (29 feat),0,0.447006
+all_b2r,Handcrafted (29 feat),0,0.46723
+all_b2r,Handcrafted (29 feat),0,0.465487
+all_b2r,Handcrafted (29 feat),0,0.479405
+all_b2r,Handcrafted (29 feat),0,0.438386
+all_b2r,Handcrafted (29 feat),0,0.490897
+all_b2r,Handcrafted (29 feat),0,0.335034
+all_b2r,Handcrafted (29 feat),0,0.495628
+all_b2r,Handcrafted (29 feat),0,0.744588
+all_b2r,Handcrafted (29 feat),1,0.539686
+all_b2r,Handcrafted (29 feat),0,0.564787
+all_b2r,Handcrafted (29 feat),0,0.473482
+all_b2r,Handcrafted (29 feat),0,0.462146
+all_b2r,Handcrafted (29 feat),0,0.447504
+all_b2r,Handcrafted (29 feat),0,0.531046
+all_b2r,Handcrafted (29 feat),0,0.59565
+all_b2r,Handcrafted (29 feat),0,0.52354
+all_b2r,Handcrafted (29 feat),0,0.42488
+all_b2r,Handcrafted (29 feat),0,0.482531
+all_b2r,Handcrafted (29 feat),0,0.419364
+all_b2r,Handcrafted (29 feat),0,0.456166
+all_b2r,Handcrafted (29 feat),0,0.444822
+all_b2r,Handcrafted (29 feat),0,0.468897
+all_b2r,Handcrafted (29 feat),0,0.430239
+all_b2r,Handcrafted (29 feat),0,0.502411
+all_b2r,Handcrafted (29 feat),0,0.333825
+all_b2r,Handcrafted (29 feat),0,0.514929
+all_b2r,Handcrafted (29 feat),0,0.31674
+all_b2r,Handcrafted (29 feat),0,0.369167
+all_b2r,Handcrafted (29 feat),0,0.491694
+all_b2r,Handcrafted (29 feat),0,0.64016
+all_b2r,Handcrafted (29 feat),0,0.432632
+all_b2r,Handcrafted (29 feat),0,0.501851
+all_b2r,Handcrafted (29 feat),0,0.497332
+all_b2r,Handcrafted (29 feat),0,0.436635
+all_b2r,Handcrafted (29 feat),0,0.447294
+all_b2r,Handcrafted (29 feat),1,0.3875
+all_b2r,Handcrafted (29 feat),0,0.523201
+all_b2r,Handcrafted (29 feat),0,0.461194
+all_b2r,Handcrafted (29 feat),0,0.400021
+all_b2r,HC + GFP+BF (top-40),0,0.012123
+all_b2r,HC + GFP+BF (top-40),0,0.014121
+all_b2r,HC + GFP+BF (top-40),0,0.062639
+all_b2r,HC + GFP+BF (top-40),0,0.931062
+all_b2r,HC + GFP+BF (top-40),0,0.99958
+all_b2r,HC + GFP+BF (top-40),0,0.001031
+all_b2r,HC + GFP+BF (top-40),1,0.042209
+all_b2r,HC + GFP+BF (top-40),0,0.040845
+all_b2r,HC + GFP+BF (top-40),0,0.286756
+all_b2r,HC + GFP+BF (top-40),0,0.976639
+all_b2r,HC + GFP+BF (top-40),0,0.000399
+all_b2r,HC + GFP+BF (top-40),0,0.276503
+all_b2r,HC + GFP+BF (top-40),0,0.682807
+all_b2r,HC + GFP+BF (top-40),0,0.109977
+all_b2r,HC + GFP+BF (top-40),0,0.020913
+all_b2r,HC + GFP+BF (top-40),0,0.088595
+all_b2r,HC + GFP+BF (top-40),0,0.061829
+all_b2r,HC + GFP+BF (top-40),0,0.000901
+all_b2r,HC + GFP+BF (top-40),0,0.01422
+all_b2r,HC + GFP+BF (top-40),1,0.178916
+all_b2r,HC + GFP+BF (top-40),0,0.175101
+all_b2r,HC + GFP+BF (top-40),0,0.076
+all_b2r,HC + GFP+BF (top-40),0,0.457517
+all_b2r,HC + GFP+BF (top-40),0,0.007509
+all_b2r,HC + GFP+BF (top-40),1,0.01473
+all_b2r,HC + GFP+BF (top-40),1,0.879524
+all_b2r,HC + GFP+BF (top-40),0,0.077158
+all_b2r,HC + GFP+BF (top-40),0,3.8e-05
+all_b2r,HC + GFP+BF (top-40),1,0.988922
+all_b2r,HC + GFP+BF (top-40),0,0.011849
+all_b2r,HC + GFP+BF (top-40),0,0.103577
+all_b2r,HC + GFP+BF (top-40),0,0.003785
+all_b2r,HC + GFP+BF (top-40),1,0.983895
+all_b2r,HC + GFP+BF (top-40),0,0.001753
+all_b2r,HC + GFP+BF (top-40),1,0.824338
+all_b2r,HC + GFP+BF (top-40),0,0.000507
+all_b2r,HC + GFP+BF (top-40),0,0.823488
+all_b2r,HC + GFP+BF (top-40),0,0.000143
+all_b2r,HC + GFP+BF (top-40),0,0.092683
+all_b2r,HC + GFP+BF (top-40),0,0.291552
+all_b2r,HC + GFP+BF (top-40),1,0.991377
+all_b2r,HC + GFP+BF (top-40),1,0.992999
+all_b2r,HC + GFP+BF (top-40),0,0.125175
+all_b2r,HC + GFP+BF (top-40),0,0.003028
+all_b2r,HC + GFP+BF (top-40),0,0.006256
+all_b2r,HC + GFP+BF (top-40),1,0.91793
+all_b2r,HC + GFP+BF (top-40),0,0.277833
+all_b2r,HC + GFP+BF (top-40),0,0.000429
+all_b2r,HC + GFP+BF (top-40),0,0.062171
+all_b2r,HC + GFP+BF (top-40),0,0.223011
+all_b2r,HC + GFP+BF (top-40),0,0.037069
+all_b2r,HC + GFP+BF (top-40),1,0.746386
+all_b2r,HC + GFP+BF (top-40),0,0.042761
+all_b2r,HC + GFP+BF (top-40),0,0.033903
+all_b2r,HC + GFP+BF (top-40),0,0.757906
+all_b2r,HC + GFP+BF (top-40),0,0.018178
+all_b2r,HC + GFP+BF (top-40),0,0.122472
+all_b2r,HC + GFP+BF (top-40),0,0.004817
+all_b2r,HC + GFP+BF (top-40),0,0.000299
+all_b2r,HC + GFP+BF (top-40),0,0.502027
+all_b2r,HC + GFP+BF (top-40),0,0.017428
+all_b2r,HC + GFP+BF (top-40),0,0.13372
+all_b2r,HC + GFP+BF (top-40),1,0.287342
+all_b2r,HC + GFP+BF (top-40),0,0.921833
+all_b2r,HC + GFP+BF (top-40),1,0.000826
+all_b2r,HC + GFP+BF (top-40),0,0.241825
+all_b2r,HC + GFP+BF (top-40),0,0.005091
+all_b2r,HC + GFP+BF (top-40),0,0.01903
+all_b2r,HC + GFP+BF (top-40),0,0.999943
+all_b2r,HC + GFP+BF (top-40),0,0.438887
+all_b2r,HC + GFP+BF (top-40),1,0.008564
+all_b2r,HC + GFP+BF (top-40),0,0.001259
+all_b2r,HC + GFP+BF (top-40),0,0.108672
+all_b2r,HC + GFP+BF (top-40),0,0.193488
+all_b2r,HC + GFP+BF (top-40),0,0.112839
+all_b2r,HC + GFP+BF (top-40),0,0.199047
+all_b2r,HC + GFP+BF (top-40),0,0.665593
+all_b2r,HC + GFP+BF (top-40),1,0.00024
+all_b2r,HC + GFP+BF (top-40),0,0.061309
+all_b2r,HC + GFP+BF (top-40),0,0.026865
+all_b2r,HC + GFP+BF (top-40),0,0.057902
+all_b2r,HC + GFP+BF (top-40),0,0.005636
+all_b2r,HC + GFP+BF (top-40),0,0.501613
+all_b2r,HC + GFP+BF (top-40),0,0.269675
+all_b2r,HC + GFP+BF (top-40),0,0.986582
+all_b2r,HC + GFP+BF (top-40),0,0.803965
+all_b2r,HC + GFP+BF (top-40),0,0.786815
+all_b2r,HC + GFP+BF (top-40),0,0.99862
+all_b2r,HC + GFP+BF (top-40),0,0.224341
+all_b2r,HC + GFP+BF (top-40),0,0.023508
+all_b2r,HC + GFP+BF (top-40),0,0.438437
+all_b2r,HC + GFP+BF (top-40),0,0.312235
+all_b2r,HC + GFP+BF (top-40),0,0.001761
+all_b2r,HC + GFP+BF (top-40),0,0.493792
+all_b2r,HC + GFP+BF (top-40),0,2.3e-05
+all_b2r,HC + GFP+BF (top-40),0,0.097674
+all_b2r,HC + GFP+BF (top-40),0,0.46237
+all_b2r,HC + GFP+BF (top-40),0,0.013989
+all_b2r,HC + GFP+BF (top-40),0,0.342541
+all_b2r,HC + GFP+BF (top-40),0,0.050043
+all_b2r,HC + GFP+BF (top-40),0,0.153554
+all_b2r,HC + GFP+BF (top-40),0,0.000114
+all_b2r,HC + GFP+BF (top-40),0,0.15318
+all_b2r,HC + GFP+BF (top-40),1,0.11662
+all_b2r,HC + GFP+BF (top-40),0,0.001547
+all_b2r,HC + GFP+BF (top-40),1,0.727367
+all_b2r,HC + GFP+BF (top-40),0,0.043252
+all_b2r,HC + GFP+BF (top-40),0,0.004173
+all_b2r,HC + GFP+BF (top-40),0,0.422652
+all_b2r,HC + GFP+BF (top-40),0,0.087052
+all_b2r,HC + GFP+BF (top-40),0,0.005155
+all_b2r,HC + GFP+BF (top-40),0,0.001021
+all_b2r,HC + GFP+BF (top-40),0,2e-06
+all_b2r,HC + GFP+BF (top-40),0,0.000111
+all_b2r,HC + GFP+BF (top-40),0,0.134413
+all_b2r,HC + GFP+BF (top-40),0,0.001685
+all_b2r,HC + GFP+BF (top-40),0,0.143187
+all_b2r,HC + GFP+BF (top-40),0,0.484768
+all_b2r,HC + GFP+BF (top-40),0,0.002203
+all_b2r,HC + GFP+BF (top-40),0,0.03231
+all_b2r,HC + GFP+BF (top-40),0,0.013596
+all_b2r,HC + GFP+BF (top-40),0,0.389547
+all_b2r,HC + GFP+BF (top-40),1,0.034213
+all_b2r,HC + GFP+BF (top-40),0,0.305099
+all_b2r,HC + GFP+BF (top-40),0,0.233896
+all_b2r,HC + GFP+BF (top-40),0,0.593568
+all_b2r,HC + GFP+BF (top-40),0,0.011854
+all_b2r,HC + GFP+BF (top-40),0,0.649838
+all_b2r,HC + GFP+BF (top-40),0,0.00152
+all_b2r,HC + GFP+BF (top-40),1,0.034264
+all_b2r,HC + GFP+BF (top-40),0,0.992491
+all_b2r,HC + GFP+BF (top-40),0,0.670044
+all_b2r,HC + GFP+BF (top-40),1,0.600094
+all_b2r,HC + GFP+BF (top-40),0,0.054739
+all_b2r,HC + GFP+BF (top-40),0,0.001804
+all_b2r,HC + GFP+BF (top-40),0,0.01299
+all_b2r,HC + GFP+BF (top-40),0,0.047459
+all_b2r,HC + GFP+BF (top-40),0,0.776781
+all_b2r,HC + GFP+BF (top-40),1,0.875007
+all_b2r,HC + GFP+BF (top-40),0,0.131387
+all_b2r,HC + GFP+BF (top-40),0,0.54258
+all_b2r,HC + GFP+BF (top-40),0,0.502807
+all_b2r,HC + GFP+BF (top-40),1,0.788046
+all_b2r,HC + GFP+BF (top-40),1,0.45988
+all_b2r,HC + GFP+BF (top-40),0,0.289178
+all_b2r,HC + GFP+BF (top-40),1,0.100919
+all_b2r,HC + GFP+BF (top-40),0,0.007901
+all_b2r,HC + GFP+BF (top-40),1,0.849087
+all_b2r,HC + GFP+BF (top-40),0,0.248388
+all_b2r,HC + GFP+BF (top-40),0,0.011854
+all_b2r,HC + GFP+BF (top-40),1,0.998898
+all_b2r,HC + GFP+BF (top-40),0,0.023451
+all_b2r,HC + GFP+BF (top-40),0,0.051932
+all_b2r,HC + GFP+BF (top-40),0,0.065159
+all_b2r,HC + GFP+BF (top-40),0,0.743751
+all_b2r,HC + GFP+BF (top-40),0,0.694216
+all_b2r,HC + GFP+BF (top-40),0,0.075324
+all_b2r,HC + GFP+BF (top-40),0,0.000588
+all_b2r,HC + GFP+BF (top-40),0,0.449007
+all_b2r,HC + GFP+BF (top-40),0,0.000423
+all_b2r,HC + GFP+BF (top-40),0,0.000982
+all_b2r,HC + GFP+BF (top-40),0,0.082818
+all_b2r,HC + GFP+BF (top-40),0,0.771274
+all_b2r,HC + GFP+BF (top-40),0,0.458049
+all_b2r,HC + GFP+BF (top-40),0,0.09549
+all_b2r,HC + GFP+BF (top-40),0,0.009005
+all_b2r,HC + GFP+BF (top-40),0,0.17536
+all_b2r,HC + GFP+BF (top-40),0,6e-06
+all_b2r,HC + GFP+BF (top-40),0,0.939038
+all_b2r,HC + GFP+BF (top-40),0,0.461642
+all_b2r,HC + GFP+BF (top-40),0,0.012642
+all_b2r,HC + GFP+BF (top-40),0,0.001244
+all_b2r,HC + GFP+BF (top-40),0,1.4e-05
+all_b2r,HC + GFP+BF (top-40),0,0.01084
+all_b2r,HC + GFP+BF (top-40),0,0.041097
+all_b2r,HC + GFP+BF (top-40),0,0.011563
+all_b2r,HC + GFP+BF (top-40),1,0.104932
+all_b2r,HC + GFP+BF (top-40),1,0.157472
+all_b2r,HC + GFP+BF (top-40),0,0.125747
+all_b2r,HC + GFP+BF (top-40),0,0.246762
+all_b2r,HC + GFP+BF (top-40),0,0.30682
+all_b2r,HC + GFP+BF (top-40),0,0.987339
+all_b2r,HC + GFP+BF (top-40),0,0.127589
+all_b2r,HC + GFP+BF (top-40),0,0.022946
+all_b2r,HC + GFP+BF (top-40),0,0.030805
+all_b2r,HC + GFP+BF (top-40),0,0.003949
+all_b2r,HC + GFP+BF (top-40),0,0.233936
+all_b2r,HC + GFP+BF (top-40),0,1.6e-05
+all_b2r,HC + GFP+BF (top-40),0,0.568951
+all_b2r,HC + GFP+BF (top-40),1,0.251495
+all_b2r,HC + GFP+BF (top-40),1,0.993216
+all_b2r,HC + GFP+BF (top-40),0,0.010414
+all_b2r,HC + GFP+BF (top-40),0,0.355929
+all_b2r,HC + GFP+BF (top-40),0,0.446745
+all_b2r,HC + GFP+BF (top-40),1,0.008204
+all_b2r,HC + GFP+BF (top-40),0,0.329279
+all_b2r,HC + GFP+BF (top-40),0,0.134713
+all_b2r,HC + GFP+BF (top-40),1,0.977774
+all_b2r,HC + GFP+BF (top-40),0,0.952552
+all_b2r,HC + GFP+BF (top-40),0,0.00547
+all_b2r,HC + GFP+BF (top-40),0,0.867771
+all_b2r,HC + GFP+BF (top-40),1,0.991677
+all_b2r,HC + GFP+BF (top-40),0,0.270775
+all_b2r,HC + GFP+BF (top-40),0,0.00406
+all_b2r,HC + GFP+BF (top-40),1,0.673072
+all_b2r,HC + GFP+BF (top-40),0,0.002155
+all_b2r,HC + GFP+BF (top-40),0,0.841329
+all_b2r,HC + GFP+BF (top-40),0,0.488756
+all_b2r,HC + GFP+BF (top-40),0,0.002402
+all_b2r,HC + GFP+BF (top-40),1,0.236568
+all_b2r,HC + GFP+BF (top-40),0,0.215787
+all_b2r,HC + GFP+BF (top-40),0,0.256038
+all_b2r,HC + GFP+BF (top-40),0,0.020895
+all_b2r,HC + GFP+BF (top-40),1,0.268004
+all_b2r,HC + GFP+BF (top-40),0,0.00018
+all_b2r,HC + GFP+BF (top-40),1,0.449385
+all_b2r,HC + GFP+BF (top-40),0,0.706371
+all_b2r,HC + GFP+BF (top-40),0,0.194244
+all_b2r,HC + GFP+BF (top-40),1,0.94629
+all_b2r,HC + GFP+BF (top-40),0,0.116881
+all_b2r,HC + GFP+BF (top-40),0,0.271696
+all_b2r,HC + GFP+BF (top-40),0,0.000483
+all_b2r,HC + GFP+BF (top-40),0,0.298791
+all_b2r,HC + GFP+BF (top-40),0,0.00147
+all_b2r,HC + GFP+BF (top-40),0,0.839917
+all_b2r,HC + GFP+BF (top-40),0,0.530011
+all_b2r,HC + GFP+BF (top-40),0,0.455787
+all_b2r,HC + GFP+BF (top-40),0,0.045779
+all_b2r,HC + GFP+BF (top-40),0,0.072221
+all_b2r,HC + GFP+BF (top-40),0,0.198832
+all_b2r,HC + GFP+BF (top-40),1,0.999845
+all_b2r,HC + GFP+BF (top-40),0,0.000356
+all_b2r,HC + GFP+BF (top-40),0,0.881684
+all_b2r,HC + GFP+BF (top-40),1,0.099126
+all_b2r,HC + GFP+BF (top-40),0,0.910492
+all_b2r,HC + GFP+BF (top-40),0,0.105375
+all_b2r,HC + GFP+BF (top-40),1,0.018049
+all_b2r,HC + GFP+BF (top-40),0,0.048878
+all_b2r,HC + GFP+BF (top-40),0,1e-06
+all_b2r,HC + GFP+BF (top-40),0,0.01808
+all_b2r,HC + GFP+BF (top-40),0,0.57393
+all_b2r,HC + GFP+BF (top-40),0,0.752657
+all_b2r,HC + GFP+BF (top-40),0,0.100427
+all_b2r,HC + GFP+BF (top-40),0,8.8e-05
+all_b2r,HC + GFP+BF (top-40),0,0.255009
+all_b2r,HC + GFP+BF (top-40),1,0.582204
+all_b2r,HC + GFP+BF (top-40),0,0.006992
+all_b2r,HC + GFP+BF (top-40),0,0.023355
+all_b2r,HC + GFP+BF (top-40),0,0.041827
+all_b2r,HC + GFP+BF (top-40),0,0.072939
+all_b2r,HC + GFP+BF (top-40),0,0.405566
+all_b2r,HC + GFP+BF (top-40),0,0.793371
+all_b2r,HC + GFP+BF (top-40),0,0.057487
+all_b2r,HC + GFP+BF (top-40),0,0.04155
+all_b2r,HC + GFP+BF (top-40),0,0.007546
+all_b2r,HC + GFP+BF (top-40),0,0.005136
+all_b2r,HC + GFP+BF (top-40),0,2e-06
+all_b2r,HC + GFP+BF (top-40),0,0.422598
+all_b2r,HC + GFP+BF (top-40),0,0.014466
+all_b2r,HC + GFP+BF (top-40),0,0.997393
+all_b2r,HC + GFP+BF (top-40),1,0.922484
+all_b2r,HC + GFP+BF (top-40),0,0.482982
+all_b2r,HC + GFP+BF (top-40),0,0.006721
+all_b2r,HC + GFP+BF (top-40),0,0.617617
+all_b2r,HC + GFP+BF (top-40),0,0.001123
+all_b2r,HC + GFP+BF (top-40),0,0.197882
+all_b2r,HC + GFP+BF (top-40),0,0.72125
+all_b2r,HC + GFP+BF (top-40),0,0.007425
+all_b2r,HC + GFP+BF (top-40),0,0.116135
+all_b2r,HC + GFP+BF (top-40),0,0.004226
+all_b2r,HC + GFP+BF (top-40),0,0.276509
+all_b2r,HC + GFP+BF (top-40),0,0.011489
+all_b2r,HC + GFP+BF (top-40),0,0.324243
+all_b2r,HC + GFP+BF (top-40),0,0.508339
+all_b2r,HC + GFP+BF (top-40),0,0.218028
+all_b2r,HC + GFP+BF (top-40),0,0.08389
+all_b2r,HC + GFP+BF (top-40),0,1e-06
+all_b2r,HC + GFP+BF (top-40),0,0.94899
+all_b2r,HC + GFP+BF (top-40),0,0.000609
+all_b2r,HC + GFP+BF (top-40),0,0.028652
+all_b2r,HC + GFP+BF (top-40),0,0.29976
+all_b2r,HC + GFP+BF (top-40),0,0.505575
+all_b2r,HC + GFP+BF (top-40),0,0.005758
+all_b2r,HC + GFP+BF (top-40),0,0.008131
+all_b2r,HC + GFP+BF (top-40),0,0.323011
+all_b2r,HC + GFP+BF (top-40),0,0.116941
+all_b2r,HC + GFP+BF (top-40),0,0.945645
+all_b2r,HC + GFP+BF (top-40),1,0.89447
+all_b2r,HC + GFP+BF (top-40),0,0.008848
+all_b2r,HC + GFP+BF (top-40),0,0.102341
+all_b2r,HC + GFP+BF (top-40),0,0.128361
